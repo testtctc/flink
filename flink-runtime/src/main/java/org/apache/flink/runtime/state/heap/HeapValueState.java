@@ -25,6 +25,7 @@ import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.runtime.state.internal.InternalValueState;
 
 /**
+ * 
  * Heap-backed partitioned {@link ValueState} that is snapshotted into files.
  *
  * @param <K> The type of the key.

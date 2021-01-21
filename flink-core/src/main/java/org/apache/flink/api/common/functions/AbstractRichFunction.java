@@ -24,6 +24,7 @@ import org.apache.flink.configuration.Configuration;
 import java.io.Serializable;
 
 /**
+ * 基本类
  * An abstract stub implementation for rich user-defined functions.
  * Rich functions have additional methods for initialization ({@link #open(Configuration)}) and
  * teardown ({@link #close()}), as well as access to their runtime execution context via

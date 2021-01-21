@@ -22,6 +22,7 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.configuration.Configuration;
 
 /**
+ * 设计模式之工厂函数：https://blog.csdn.net/jason0539/article/details/23020989
  * A factory for selecting and instantiating the adequate {@link PipelineExecutor}
  * based on a provided {@link Configuration}.
  */
@@ -34,6 +35,7 @@ public interface PipelineExecutorFactory {
 	String getName();
 
 	/**
+	 * 是否与配置兼容
 	 * Returns {@code true} if this factory is compatible with the options in the
 	 * provided configuration, {@code false} otherwise.
 	 */

@@ -34,6 +34,7 @@ public class CountEvictor<W extends Window> implements Evictor<Object, W> {
 	private static final long serialVersionUID = 1L;
 
 	private final long maxCount;
+	//方向
 	private final boolean doEvictAfter;
 
 	private CountEvictor(long count, boolean doEvictAfter) {
@@ -60,6 +61,7 @@ public class CountEvictor<W extends Window> implements Evictor<Object, W> {
 		}
 	}
 
+	//默认删除前面的数据
 	private void evict(Iterable<TimestampedValue<Object>> elements, int size, EvictorContext ctx) {
 		if (size <= maxCount) {
 			return;

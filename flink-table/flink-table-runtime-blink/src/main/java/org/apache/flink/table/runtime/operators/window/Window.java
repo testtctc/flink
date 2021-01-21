@@ -29,6 +29,7 @@ package org.apache.flink.table.runtime.operators.window;
 public abstract class Window implements Comparable<Window> {
 
 	/**
+	 * 最大时间
 	 * Gets the largest timestamp that still belongs to this window.
 	 *
 	 * @return The largest timestamp that still belongs to this window.

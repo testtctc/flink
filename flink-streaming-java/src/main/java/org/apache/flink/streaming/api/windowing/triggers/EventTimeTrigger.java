@@ -36,14 +36,16 @@ public class EventTimeTrigger extends Trigger<Object, TimeWindow> {
 	@Override
 	public TriggerResult onElement(Object element, long timestamp, TimeWindow window, TriggerContext ctx) throws Exception {
 		if (window.maxTimestamp() <= ctx.getCurrentWatermark()) {
+			//依赖水印
 			// if the watermark is already past the window fire immediately
 			return TriggerResult.FIRE;
 		} else {
+			//注册定时器
 			ctx.registerEventTimeTimer(window.maxTimestamp());
 			return TriggerResult.CONTINUE;
 		}
 	}
-
+	//基于时点
 	@Override
 	public TriggerResult onEventTime(long time, TimeWindow window, TriggerContext ctx) {
 		return time == window.maxTimestamp() ?
@@ -56,6 +58,7 @@ public class EventTimeTrigger extends Trigger<Object, TimeWindow> {
 		return TriggerResult.CONTINUE;
 	}
 
+	//清除定时器
 	@Override
 	public void clear(TimeWindow window, TriggerContext ctx) throws Exception {
 		ctx.deleteEventTimeTimer(window.maxTimestamp());
@@ -73,6 +76,7 @@ public class EventTimeTrigger extends Trigger<Object, TimeWindow> {
 		// this is in line with the logic in onElement(). If the watermark is past the end of
 		// the window onElement() will fire and setting a timer here would fire the window twice.
 		long windowMaxTimestamp = window.maxTimestamp();
+		// 注册定时器
 		if (windowMaxTimestamp > ctx.getCurrentWatermark()) {
 			ctx.registerEventTimeTimer(windowMaxTimestamp);
 		}
@@ -84,6 +88,7 @@ public class EventTimeTrigger extends Trigger<Object, TimeWindow> {
 	}
 
 	/**
+	 * 创建
 	 * Creates an event-time trigger that fires once the watermark passes the end of the window.
 	 *
 	 * <p>Once the trigger fires all elements are discarded. Elements that arrive late immediately

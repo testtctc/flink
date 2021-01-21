@@ -46,7 +46,9 @@ import org.apache.flink.runtime.taskexecutor.GlobalAggregateManager;
 
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
+
 /**
+ * 任务运行时信息-->正对某个任务实例
  * In implementation of the {@link Environment}.
  */
 public class RuntimeEnvironment implements Environment {

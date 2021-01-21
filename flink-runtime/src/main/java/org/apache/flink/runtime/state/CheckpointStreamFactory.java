@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 保存checkpoint的流
  * A factory for checkpoint output streams, which are used to persist data for checkpoints.
  *
  * <p>Stream factories can be created from the {@link CheckpointStorage} through
@@ -61,6 +62,7 @@ public interface CheckpointStreamFactory {
 	abstract class CheckpointStateOutputStream extends FSDataOutputStream {
 
 		/**
+		 * 返回一个输入流
 		 * Closes the stream and gets a state handle that can create an input stream
 		 * producing the data written to this stream.
 		 *

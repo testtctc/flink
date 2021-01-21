@@ -31,7 +31,7 @@ import java.io.IOException;
  * {@code end} (exclusive).
  */
 public class TimeWindow extends Window {
-
+	//开始时间 结束时间
 	private final long start;
 	private final long end;
 
@@ -61,6 +61,7 @@ public class TimeWindow extends Window {
 	}
 
 	/**
+	 * 左开右闭
 	 * Gets the largest timestamp that still belongs to this window.
 	 *
 	 * <p>This timestamp is identical to {@code getEnd() - 1}.
@@ -97,6 +98,7 @@ public class TimeWindow extends Window {
 	}
 
 	/**
+	 *
 	 * Compute the inverse of (odd) x mod 2^32.
 	 */
 	private int modInverse(int x) {
@@ -118,6 +120,7 @@ public class TimeWindow extends Window {
 	}
 
 	/**
+	 * 两个窗口是否有交集
 	 * Returns {@code true} if this window intersects the given window.
 	 */
 	public boolean intersects(TimeWindow other) {
@@ -125,6 +128,7 @@ public class TimeWindow extends Window {
 	}
 
 	/**
+	 * 最小包庇本窗口的窗口
 	 * Returns the minimal window covers both this window and the given window.
 	 */
 	public TimeWindow cover(TimeWindow other) {
@@ -209,6 +213,7 @@ public class TimeWindow extends Window {
 		}
 
 		/**
+		 * 序列化配置
 		 * Serializer configuration snapshot for compatibility and format evolution.
 		 */
 		@SuppressWarnings("WeakerAccess")
@@ -225,6 +230,7 @@ public class TimeWindow extends Window {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 基于当前时间点为结束时间的开始时间
 	 * Method to get the window start for a timestamp.
 	 *
 	 * @param timestamp  epoch millisecond to get the window start.

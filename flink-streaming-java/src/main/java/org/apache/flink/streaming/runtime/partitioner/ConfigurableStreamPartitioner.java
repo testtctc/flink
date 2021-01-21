@@ -19,6 +19,7 @@
 package org.apache.flink.streaming.runtime.partitioner;
 
 /**
+ * 可照
  * Interface for {@link StreamPartitioner} which have to be configured with the maximum parallelism
  * of the stream transformation. The configure method is called by the StreamGraph when adding
  * internal edges.
@@ -30,6 +31,7 @@ package org.apache.flink.streaming.runtime.partitioner;
 public interface ConfigurableStreamPartitioner {
 
 	/**
+	 * 配置下游的最大并行度
 	 * Configure the {@link StreamPartitioner} with the maximum parallelism of the down stream
 	 * operator.
 	 *

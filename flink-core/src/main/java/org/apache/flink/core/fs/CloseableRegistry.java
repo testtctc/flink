@@ -31,6 +31,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
+ *
+ * 可关闭对象注册中心
  * This class allows to register instances of {@link Closeable}, which are all closed if this registry is closed.
  *
  * <p>Registering to an already closed registry will throw an exception and close the provided {@link Closeable}
@@ -48,11 +50,13 @@ public class CloseableRegistry extends AbstractCloseableRegistry<Closeable, Obje
 		super(new LinkedHashMap<>());
 	}
 
+	//注册
 	@Override
 	protected void doRegister(@Nonnull Closeable closeable, @Nonnull Map<Closeable, Object> closeableMap) {
 		closeableMap.put(closeable, DUMMY);
 	}
 
+	//注销
 	@Override
 	protected boolean doUnRegister(@Nonnull Closeable closeable, @Nonnull Map<Closeable, Object> closeableMap) {
 		return closeableMap.remove(closeable) != null;

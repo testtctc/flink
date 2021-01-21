@@ -27,6 +27,7 @@ import java.io.IOException;
 import static org.apache.flink.api.common.typeutils.TypeSerializerConfigSnapshot.ADAPTER_VERSION;
 
 /**
+ * 序列化器的快照--配置
  * A {@code TypeSerializerSnapshot} is a point-in-time view of a {@link TypeSerializer}'s configuration.
  * The configuration snapshot of a serializer is persisted within checkpoints
  * as a single source of meta information about the schema of serialized data in the checkpoint.

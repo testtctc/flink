@@ -23,6 +23,7 @@ import org.apache.flink.annotation.Public;
 import java.io.Serializable;
 
 /**
+ * 累加器
  * Accumulators collect distributed statistics or aggregates in a from user functions
  * and operators. Each parallel instance creates and updates its own accumulator object,
  * and the different parallel instances of the accumulator are later merged.
@@ -68,6 +69,7 @@ public interface Accumulator<V, R extends Serializable> extends Serializable, Cl
 	void merge(Accumulator<V, R> other);
 
 	/**
+	 * 克隆
 	 * Duplicates the accumulator. All subclasses need to properly implement
 	 * cloning and cannot throw a {@link java.lang.CloneNotSupportedException}
 	 *

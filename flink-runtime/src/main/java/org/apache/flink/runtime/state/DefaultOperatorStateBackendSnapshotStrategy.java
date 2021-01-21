@@ -35,15 +35,18 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 /**
+ * 快照策略
  * Snapshot strategy for this backend.
  */
 class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrategy<OperatorStateHandle> {
 	private final ClassLoader userClassLoader;
 	private final boolean asynchronousSnapshots;
+	//算子状态
 	private final Map<String, PartitionableListState<?>> registeredOperatorStates;
 	private final Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStates;
 	private final CloseableRegistry closeStreamOnCancelRegistry;
 
+	//传入快照信息
 	protected DefaultOperatorStateBackendSnapshotStrategy(
 		ClassLoader userClassLoader,
 		boolean asynchronousSnapshots,
@@ -66,10 +69,15 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 		@Nonnull final CheckpointStreamFactory streamFactory,
 		@Nonnull final CheckpointOptions checkpointOptions) throws IOException {
 
+		//实现思路：先拷贝一份，然后在执行异步备份
+
+
+
+		//空时直接完成
 		if (registeredOperatorStates.isEmpty() && registeredBroadcastStates.isEmpty()) {
 			return DoneFuture.of(SnapshotResult.empty());
 		}
-
+		//容器
 		final Map<String, PartitionableListState<?>> registeredOperatorStatesDeepCopies =
 			new HashMap<>(registeredOperatorStates.size());
 		final Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStatesDeepCopies =
@@ -85,6 +93,7 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 				for (Map.Entry<String, PartitionableListState<?>> entry : registeredOperatorStates.entrySet()) {
 					PartitionableListState<?> listState = entry.getValue();
 					if (null != listState) {
+						//深度拷贝
 						listState = listState.deepCopy();
 					}
 					registeredOperatorStatesDeepCopies.put(entry.getKey(), listState);
@@ -103,10 +112,11 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 		} finally {
 			Thread.currentThread().setContextClassLoader(snapshotClassLoader);
 		}
-
+		//
 		AsyncSnapshotCallable<SnapshotResult<OperatorStateHandle>> snapshotCallable =
 			new AsyncSnapshotCallable<SnapshotResult<OperatorStateHandle>>() {
 
+				//返回快照结果
 				@Override
 				protected SnapshotResult<OperatorStateHandle> callInternal() throws Exception {
 
@@ -138,6 +148,7 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 					OperatorBackendSerializationProxy backendSerializationProxy =
 						new OperatorBackendSerializationProxy(operatorMetaInfoSnapshots, broadcastMetaInfoSnapshots);
 
+					//写入快照元信息
 					backendSerializationProxy.write(dov);
 
 					// ... and then go for the states ...
@@ -145,6 +156,9 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 					// we put BOTH normal and broadcast state metadata here
 					int initialMapCapacity =
 						registeredOperatorStatesDeepCopies.size() + registeredBroadcastStatesDeepCopies.size();
+					//算子状态的所有信息
+					//key:
+					//value
 					final Map<String, OperatorStateHandle.StateMetaInfo> writtenStatesMetaData =
 						new HashMap<>(initialMapCapacity);
 
@@ -152,6 +166,7 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 						registeredOperatorStatesDeepCopies.entrySet()) {
 
 						PartitionableListState<?> value = entry.getValue();
+						//吸入到数据中
 						long[] partitionOffsets = value.write(localOut);
 						OperatorStateHandle.Mode mode = value.getStateMetaInfo().getAssignmentMode();
 						writtenStatesMetaData.put(
@@ -175,13 +190,14 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 					OperatorStateHandle retValue = null;
 
 					if (snapshotCloseableRegistry.unregisterCloseable(localOut)) {
-
+						//获取输入流
 						StreamStateHandle stateHandle = localOut.closeAndGetHandle();
 
 						if (stateHandle != null) {
+							//写入流
 							retValue = new OperatorStreamStateHandle(writtenStatesMetaData, stateHandle);
 						}
-
+						//仅仅备份在jobmanager
 						return SnapshotResult.of(retValue);
 					} else {
 						throw new IOException("Stream was already unregistered.");
@@ -203,7 +219,7 @@ class DefaultOperatorStateBackendSnapshotStrategy extends AbstractSnapshotStrate
 
 		final FutureTask<SnapshotResult<OperatorStateHandle>> task =
 			snapshotCallable.toAsyncSnapshotFutureTask(closeStreamOnCancelRegistry);
-
+		//如果不是异步，则直接执行
 		if (!asynchronousSnapshots) {
 			task.run();
 		}

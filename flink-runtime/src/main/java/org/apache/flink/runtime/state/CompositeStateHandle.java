@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * 注册共享状态
  * Base of all snapshots that are taken by {@link StateBackend}s and some other
  * components in tasks.
  *
@@ -52,4 +53,4 @@ public interface CompositeStateHandle extends StateObject {
 	 * @param stateRegistry The registry where shared states are registered.
 	 */
 	void registerSharedStates(SharedStateRegistry stateRegistry);
-}
+	}

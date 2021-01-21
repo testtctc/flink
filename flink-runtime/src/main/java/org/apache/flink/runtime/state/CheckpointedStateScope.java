@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * state是否共享
  * The scope for a chunk of checkpointed state. Defines whether state is owned by one
  * checkpoint, or whether it is shared by multiple checkpoints.
  *
@@ -28,11 +29,13 @@ package org.apache.flink.runtime.state;
 public enum CheckpointedStateScope {
 
 	/**
+	 * 独占状态-->专门术语某一次的快照
 	 * Exclusive state belongs exclusively to one specific checkpoint / savepoint.
 	 */
 	EXCLUSIVE,
 
 	/**
+	 *  共享状态
 	 * Shared state may belong to more than one checkpoint.
 	 *
 	 * <p>Shared state is typically used for incremental or differential checkpointing

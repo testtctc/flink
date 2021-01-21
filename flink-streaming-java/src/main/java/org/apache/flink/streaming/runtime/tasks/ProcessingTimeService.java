@@ -29,11 +29,14 @@ import java.util.concurrent.ScheduledFuture;
 public interface ProcessingTimeService {
 
 	/**
+	 * 获取当前时间点
 	 * Returns the current processing time.
 	 */
 	long getCurrentProcessingTime();
 
 	/**
+	 * 注册任务
+	 * 任务可以取消
 	 * Registers a task to be executed when (processing) time is {@code timestamp}.
 	 *
 	 * @param timestamp   Time when the task is to be executed (in processing time)
@@ -45,6 +48,7 @@ public interface ProcessingTimeService {
 	ScheduledFuture<?> registerTimer(long timestamp, ProcessingTimeCallback target);
 
 	/**
+	 * 固定的间隔注册任务
 	 * Registers a task to be executed repeatedly at a fixed rate.
 	 *
 	 * @param callback to be executed after the initial delay and then after each period

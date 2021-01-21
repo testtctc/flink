@@ -60,6 +60,7 @@ public abstract class StreamCompressionDecorator implements Serializable {
 	}
 
 	/**
+	 * 返回压缩过的流
 	 * @param stream the stream to decorate
 	 * @return an output stream that is decorated by the compression scheme.
 	 */

@@ -44,6 +44,7 @@ import java.util.Set;
 import java.util.concurrent.RunnableFuture;
 
 /**
+ * 后端：各类的状态的存储后端
  * Default implementation of OperatorStateStore that provides the ability to make snapshots.
  */
 @Internal
@@ -57,11 +58,13 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 	public static final String DEFAULT_OPERATOR_STATE_NAME = "_default_";
 
 	/**
+	 * 注册的算子状态
 	 * Map for all registered operator states. Maps state name -> state
 	 */
 	private final Map<String, PartitionableListState<?>> registeredOperatorStates;
 
 	/**
+	 * 注册过的状态
 	 * Map for all registered operator broadcast states. Maps state name -> state
 	 */
 	private final Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStates;
@@ -72,6 +75,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 	private final CloseableRegistry closeStreamOnCancelRegistry;
 
 	/**
+	 * 默认的序列化器
 	 * Default typeSerializer. Only used for the default operator state.
 	 */
 	private final JavaSerializer<Serializable> deprecatedDefaultJavaSerializer = new JavaSerializer<>();
@@ -82,6 +86,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 	private final ExecutionConfig executionConfig;
 
 	/**
+	 * 可以使用的缓存
 	 * Cache of already accessed states.
 	 *
 	 * <p>In contrast to {@link #registeredOperatorStates} which may be repopulated
@@ -93,8 +98,10 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 	 */
 	private final Map<String, PartitionableListState<?>> accessedStatesByName;
 
+	// 访问过的状态
 	private final Map<String, BackendWritableBroadcastState<?, ?>> accessedBroadcastStatesByName;
 
+	//快照策略
 	private final AbstractSnapshotStrategy<OperatorStateHandle> snapshotStrategy;
 
 	public DefaultOperatorStateBackend(
@@ -118,6 +125,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		return executionConfig;
 	}
 
+	//快照名字
 	@Override
 	public Set<String> getRegisteredStateNames() {
 		return registeredOperatorStates.keySet();
@@ -128,11 +136,13 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		return registeredBroadcastStates.keySet();
 	}
 
+	//关闭
 	@Override
 	public void close() throws IOException {
 		closeStreamOnCancelRegistry.close();
 	}
 
+	//清理
 	@Override
 	public void dispose() {
 		IOUtils.closeQuietly(closeStreamOnCancelRegistry);
@@ -151,6 +161,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		Preconditions.checkNotNull(stateDescriptor);
 		String name = Preconditions.checkNotNull(stateDescriptor.getName());
 
+		//之前保存的
 		BackendWritableBroadcastState<K, V> previous =
 			(BackendWritableBroadcastState<K, V>) accessedBroadcastStatesByName.get(name);
 
@@ -163,6 +174,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 			return previous;
 		}
 
+		//状态不存在时
 		stateDescriptor.initializeSerializerUnlessSet(getExecutionConfig());
 		TypeSerializer<K> broadcastStateKeySerializer = Preconditions.checkNotNull(stateDescriptor.getKeySerializer());
 		TypeSerializer<V> broadcastStateValueSerializer = Preconditions.checkNotNull(stateDescriptor.getValueSerializer());
@@ -171,6 +183,8 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 			(BackendWritableBroadcastState<K, V>) registeredBroadcastStates.get(name);
 
 		if (broadcastState == null) {
+			//基于堆的实现
+			//状态可写入后端
 			broadcastState = new HeapBroadcastState<>(
 					new RegisteredBroadcastStateBackendMetaInfo<>(
 							name,
@@ -205,6 +219,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 			broadcastState.setStateMetaInfo(restoredBroadcastStateMetaInfo);
 		}
 
+		//直接用
 		accessedBroadcastStatesByName.put(name, broadcastState);
 		return broadcastState;
 	}
@@ -245,7 +260,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 	}
 
 	// -------------------------------------------------------------------------------------------
-	//  Snapshot
+	//  Snapshot拍下快照
 	// -------------------------------------------------------------------------------------------
 	@Nonnull
 	@Override
@@ -256,7 +271,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		@Nonnull CheckpointOptions checkpointOptions) throws Exception {
 
 		long syncStartTime = System.currentTimeMillis();
-
+		//异步执行
 		RunnableFuture<SnapshotResult<OperatorStateHandle>> snapshotRunner =
 			snapshotStrategy.snapshot(checkpointId, timestamp, streamFactory, checkpointOptions);
 
@@ -264,6 +279,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		return snapshotRunner;
 	}
 
+	//获取列表状态
 	private <S> ListState<S> getListState(
 			ListStateDescriptor<S> stateDescriptor,
 			OperatorStateHandle.Mode mode) throws StateMigrationException {
@@ -271,6 +287,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		Preconditions.checkNotNull(stateDescriptor);
 		String name = Preconditions.checkNotNull(stateDescriptor.getName());
 
+		//注册
 		@SuppressWarnings("unchecked")
 		PartitionableListState<S> previous = (PartitionableListState<S>) accessedStatesByName.get(name);
 		if (previous != null) {
@@ -330,6 +347,7 @@ public class DefaultOperatorStateBackend implements OperatorStateBackend {
 		return partitionableListState;
 	}
 
+	//检查名字与时间
 	private static void checkStateNameAndMode(
 			String actualName,
 			String expectedName,

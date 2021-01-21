@@ -88,6 +88,7 @@ public class CountWindow extends Window {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 单例
 	 * The serializer used to write the CountWindow type.
 	 */
 	public static class Serializer extends TypeSerializerSingleton<CountWindow> {

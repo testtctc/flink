@@ -107,6 +107,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 执行环境
  * The StreamExecutionEnvironment is the context in which a streaming program is executed. A
  * {@link LocalStreamEnvironment} will cause execution in the current JVM, a
  * {@link RemoteStreamEnvironment} will cause execution on a remote setup.
@@ -130,6 +131,7 @@ public class StreamExecutionEnvironment {
 	private static final long DEFAULT_NETWORK_BUFFER_TIMEOUT = 100L;
 
 	/**
+	 * 工厂函数
 	 * The environment of the context (local by default, cluster if invoked through command line).
 	 */
 	private static StreamExecutionEnvironmentFactory contextEnvironmentFactory = null;
@@ -142,12 +144,14 @@ public class StreamExecutionEnvironment {
 
 	// ------------------------------------------------------------------------
 
-	/** The execution configuration for this environment. */
+	/**
+	 *
+	 * The execution configuration for this environment. */
 	private final ExecutionConfig config = new ExecutionConfig();
 
 	/** Settings that control the checkpointing behavior. */
 	private final CheckpointConfig checkpointCfg = new CheckpointConfig();
-
+	//转换
 	protected final List<Transformation<?>> transformations = new ArrayList<>();
 
 	private long bufferTimeout = DEFAULT_NETWORK_BUFFER_TIMEOUT;
@@ -159,7 +163,7 @@ public class StreamExecutionEnvironment {
 
 	/** The time characteristic used by the data streams. */
 	private TimeCharacteristic timeCharacteristic = DEFAULT_TIME_CHARACTERISTIC;
-
+	//缓存
 	protected final List<Tuple2<String, DistributedCache.DistributedCacheEntry>> cacheFile = new ArrayList<>();
 
 	private final PipelineExecutorServiceLoader executorServiceLoader;
@@ -1812,6 +1816,7 @@ public class StreamExecutionEnvironment {
 	}
 
 	/**
+	 * 闭包
 	 * Returns a "closure-cleaned" version of the given function. Cleans only if closure cleaning
 	 * is not disabled in the {@link org.apache.flink.api.common.ExecutionConfig}
 	 */
@@ -1820,6 +1825,7 @@ public class StreamExecutionEnvironment {
 		if (getConfig().isClosureCleanerEnabled()) {
 			ClosureCleaner.clean(f, getConfig().getClosureCleanerLevel(), true);
 		}
+		//必须可以序列化
 		ClosureCleaner.ensureSerializable(f);
 		return f;
 	}
@@ -1845,6 +1851,7 @@ public class StreamExecutionEnvironment {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 获取执行环境
 	 * Creates an execution environment that represents the context in which the
 	 * program is currently executed. If the program is invoked standalone, this
 	 * method returns a local execution environment, as returned by
@@ -2050,11 +2057,12 @@ public class StreamExecutionEnvironment {
 	//  Methods to control the context and local environments for execution from packaged programs
 	// --------------------------------------------------------------------------------------------
 
+	//初始化上下文
 	protected static void initializeContextEnvironment(StreamExecutionEnvironmentFactory ctx) {
 		contextEnvironmentFactory = ctx;
 		threadLocalContextEnvironmentFactory.set(contextEnvironmentFactory);
 	}
-
+	//重置上下文
 	protected static void resetContextEnvironment() {
 		contextEnvironmentFactory = null;
 		threadLocalContextEnvironmentFactory.remove();

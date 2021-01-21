@@ -19,12 +19,14 @@
 package org.apache.flink.runtime.io.network.buffer;
 
 /**
+ * 监听器
  * Interface of the availability of buffers. Listeners can opt for a one-time only
  * notification or to be notified repeatedly.
  */
 public interface BufferListener {
 
 	/**
+	 * 通知结果
 	 * Status of the notification result from the buffer listener.
 	 */
 	enum NotificationResult {
@@ -77,6 +79,7 @@ public interface BufferListener {
 	NotificationResult notifyBufferAvailable(Buffer buffer);
 
 	/**
+	 * 通知销毁
 	 * Notification callback if the buffer provider is destroyed.
 	 */
 	void notifyBufferDestroyed();

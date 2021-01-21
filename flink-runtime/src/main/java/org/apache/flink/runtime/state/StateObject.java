@@ -38,6 +38,7 @@ import java.io.Serializable;
 public interface StateObject extends Serializable {
 
 	/**
+	 * 丢弃状态
 	 * Discards the state referred to and solemnly owned by this handle, to free up resources in
 	 * the persistent storage. This method is called when the state represented by this
 	 * object will not be used any more.
@@ -45,6 +46,7 @@ public interface StateObject extends Serializable {
 	void discardState() throws Exception;
 
 	/**
+	 * 获取状态大小
 	 * Returns the size of the state in bytes. If the size is not known, this
 	 * method should return {@code 0}.
 	 * 

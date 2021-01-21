@@ -23,12 +23,13 @@ import org.apache.flink.api.common.state.ListState;
 import java.util.List;
 
 /**
+ * 内部实现的liststate
  * The peer to the {@link ListState} in the internal state type hierarchy.
  * 
  * <p>See {@link InternalKvState} for a description of the internal state hierarchy.
  *
  * @param <K> The type of key the state is associated to
- * @param <N> The type of the namespace
+ * @param <N> The type of the namespace 命名空间
  * @param <T> The type of elements in the list
  */
 public interface InternalListState<K, N, T> extends InternalMergingState<K, N, T, List<T>, Iterable<T>>, ListState<T> {

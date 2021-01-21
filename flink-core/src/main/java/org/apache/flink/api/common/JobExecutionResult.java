@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class JobExecutionResult extends JobSubmissionResult {
 
 	private final long netRuntime;
-
+	//累加器结果
 	private final Map<String, OptionalFailure<Object>> accumulatorResults;
 
 	/**

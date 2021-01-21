@@ -40,6 +40,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 实现InternalTimerService
  * {@link InternalTimerService} that stores timers on the Java heap.
  */
 public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
@@ -49,20 +50,24 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	private final KeyContext keyContext;
 
 	/**
+	 * 队列
 	 * Processing time timers that are currently in-flight.
 	 */
 	private final KeyGroupedInternalPriorityQueue<TimerHeapInternalTimer<K, N>> processingTimeTimersQueue;
 
 	/**
+	 * 队列
 	 * Event time timers that are currently in-flight.
 	 */
 	private final KeyGroupedInternalPriorityQueue<TimerHeapInternalTimer<K, N>> eventTimeTimersQueue;
 
 	/**
+	 * keygroup 范围
 	 * Information concerning the local key-group range.
 	 */
 	private final KeyGroupRange localKeyGroupRange;
 
+	//开始index
 	private final int localKeyGroupRangeStartIdx;
 
 	/**
@@ -72,6 +77,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	private long currentWatermark = Long.MIN_VALUE;
 
 	/**
+	 * 立马将要执行的定时器
 	 * The one and only Future (if any) registered to execute the
 	 * next {@link Triggerable} action, when its (processing) time arrives.
 	 * */
@@ -85,6 +91,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 
 	private Triggerable<K, N> triggerTarget;
 
+	//是否已经初始化
 	private volatile boolean isInitialized;
 
 	private TypeSerializer<K> keyDeserializer;
@@ -94,6 +101,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	/** The restored timers snapshot, if any. */
 	private InternalTimersSnapshot<K, N> restoredTimersSnapshot;
 
+	//构造函数
 	InternalTimerServiceImpl(
 		KeyGroupRange localKeyGroupRange,
 		KeyContext keyContext,
@@ -107,6 +115,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 		this.processingTimeTimersQueue = checkNotNull(processingTimeTimersQueue);
 		this.eventTimeTimersQueue = checkNotNull(eventTimeTimersQueue);
 
+		//找到最小索引
 		// find the starting index of the local key-group range
 		int startIdx = Integer.MAX_VALUE;
 		for (Integer keyGroupIdx : localKeyGroupRange) {
@@ -116,6 +125,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	}
 
 	/**
+	 * 开始时间服务
 	 * Starts the local {@link InternalTimerServiceImpl} by:
 	 * <ol>
 	 *     <li>Setting the {@code keySerialized} and {@code namespaceSerializer} for the timers it will contain.</li>
@@ -130,7 +140,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 			Triggerable<K, N> triggerTarget) {
 
 		if (!isInitialized) {
-
+			//
 			if (keySerializer == null || namespaceSerializer == null) {
 				throw new IllegalArgumentException("The TimersService serializers cannot be null.");
 			}
@@ -140,6 +150,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 			}
 
 			// the following is the case where we restore
+			// 重建
 			if (restoredTimersSnapshot != null) {
 				TypeSerializerSchemaCompatibility<K> keySerializerCompatibility =
 					restoredTimersSnapshot.getKeySerializerSnapshot().resolveSchemaCompatibility(keySerializer);
@@ -180,6 +191,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 			}
 			this.isInitialized = true;
 		} else {
+			//当初始化之后不允许注册新的序列化器
 			if (!(this.keySerializer.equals(keySerializer) && this.namespaceSerializer.equals(namespaceSerializer))) {
 				throw new IllegalArgumentException("Already initialized Timer Service " +
 					"tried to be initialized with different key and namespace serializers.");
@@ -222,11 +234,13 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 		processingTimeTimersQueue.remove(new TimerHeapInternalTimer<>(time, (K) keyContext.getCurrentKey(), namespace));
 	}
 
+	//删除事件时间定时器
 	@Override
 	public void deleteEventTimeTimer(N namespace, long time) {
 		eventTimeTimersQueue.remove(new TimerHeapInternalTimer<>(time, (K) keyContext.getCurrentKey(), namespace));
 	}
 
+	//轮训事件
 	@Override
 	public void forEachEventTimeTimer(BiConsumerWithException<N, Long, Exception> consumer) throws Exception {
 		foreachTimer(consumer, eventTimeTimersQueue);
@@ -237,6 +251,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 		foreachTimer(consumer, processingTimeTimersQueue);
 	}
 
+	//消费timer
 	private void foreachTimer(BiConsumerWithException<N, Long, Exception> consumer, KeyGroupedInternalPriorityQueue<TimerHeapInternalTimer<K, N>> queue) throws Exception {
 		try (final CloseableIterator<TimerHeapInternalTimer<K, N>> iterator = queue.iterator()) {
 			while (iterator.hasNext()) {
@@ -247,6 +262,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 		}
 	}
 
+	//处理事件
 	private void onProcessingTime(long time) throws Exception {
 		// null out the timer in case the Triggerable calls registerProcessingTimeTimer()
 		// inside the callback.
@@ -260,11 +276,13 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 			triggerTarget.onProcessingTime(timer);
 		}
 
+		//注册下次事件
 		if (timer != null && nextTimer == null) {
 			nextTimer = processingTimeService.registerTimer(timer.getTimestamp(), this::onProcessingTime);
 		}
 	}
 
+	//移动水印
 	public void advanceWatermark(long time) throws Exception {
 		currentWatermark = time;
 
@@ -278,6 +296,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	}
 
 	/**
+	 * 获取快照
 	 * Snapshots the timers (both processing and event time ones) for a given {@code keyGroupIdx}.
 	 *
 	 * @param keyGroupIdx the id of the key-group to be put in the snapshot.
@@ -300,6 +319,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 	}
 
 	/**
+	 * 恢复定时器
 	 * Restore the timers (both processing and event time ones) for a given {@code keyGroupIdx}.
 	 *
 	 * @param restoredSnapshot the restored snapshot containing the key-group's timers,
@@ -382,6 +402,7 @@ public class InternalTimerServiceImpl<K, N> implements InternalTimerService<N> {
 		return partitionElementsByKeyGroup(processingTimeTimersQueue);
 	}
 
+	//根据keygroup 做分区
 	private <T> List<Set<T>> partitionElementsByKeyGroup(KeyGroupedInternalPriorityQueue<T> keyGroupedQueue) {
 		List<Set<T>> result = new ArrayList<>(localKeyGroupRange.getNumberOfKeyGroups());
 		for (int keyGroup : localKeyGroupRange) {

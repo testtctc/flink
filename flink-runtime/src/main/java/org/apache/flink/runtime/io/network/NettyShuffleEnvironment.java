@@ -66,6 +66,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 混洗
  * The implementation of {@link ShuffleEnvironment} based on netty network communication, local memory and disk files.
  * The network environment contains the data structures that keep track of all intermediate results
  * and shuffle data exchanges.

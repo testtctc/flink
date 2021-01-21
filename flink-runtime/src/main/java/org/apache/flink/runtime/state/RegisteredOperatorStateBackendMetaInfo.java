@@ -31,6 +31,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * 算子快照元信息
  * Compound meta information for a registered state in an operator state backend.
  * This contains the state name, assignment mode, and state partition serializer.
  *
@@ -156,6 +157,7 @@ public class RegisteredOperatorStateBackendMetaInfo<S> extends RegisteredStateMe
 			'}';
 	}
 
+	//元信息快照
 	@Nonnull
 	private StateMetaInfoSnapshot computeSnapshot() {
 		Map<String, String> optionsMap = Collections.singletonMap(

@@ -30,6 +30,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
+ * 工厂函数-->创建优先队列
  * Factory for {@link HeapPriorityQueueSet}.
  */
 public class HeapPriorityQueueSetFactory implements PriorityQueueSetFactory {

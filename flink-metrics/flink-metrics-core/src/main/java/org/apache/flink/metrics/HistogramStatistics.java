@@ -27,6 +27,7 @@ package org.apache.flink.metrics;
 public abstract class HistogramStatistics {
 
 	/**
+	 * 获取分位数
 	 * Returns the value for the given quantile based on the represented histogram statistics.
 	 *
 	 * @param quantile Quantile to calculate the value for

@@ -40,6 +40,11 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 /**
+ * 状态表
+ *
+ *
+ * 一个任务下面有多个keygroup,每个keygroup下面包含多个key
+ *
  * Base class for state tables. Accesses to state are typically scoped by the currently active key, as provided
  * through the {@link InternalKeyContext}.
  *
@@ -71,6 +76,7 @@ public abstract class StateTable<K, N, S>
 	protected final int keyGroupOffset;
 
 	/**
+	 * 保存的状态
 	 * Map for holding the actual state objects. The outer array represents the key-groups.
 	 * All array positions will be initialized with an empty state map.
 	 */
@@ -233,6 +239,8 @@ public abstract class StateTable<K, N, S>
 	// ------------------------------------------------------------------------
 
 	private S get(K key, int keyGroupIndex, N namespace) {
+		//先获取组，然后会根据key,namespace获取组
+
 		checkKeyNamespacePreconditions(key, namespace);
 
 		StateMap<K, N, S> stateMap = getMapForKeyGroup(keyGroupIndex);

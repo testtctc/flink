@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * kv状态服务
  * KvState related components of each {@link TaskExecutor} instance. This service can
  * create the kvState registration for a single task.
  */

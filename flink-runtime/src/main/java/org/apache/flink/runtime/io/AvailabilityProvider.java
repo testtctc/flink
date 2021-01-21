@@ -22,6 +22,7 @@ import org.apache.flink.annotation.Internal;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 可用性
  * Interface defining couple of essential methods for listening on data availability using
  * {@link CompletableFuture}. For usage check out for example {@link PullingAsyncDataInput}.
  */

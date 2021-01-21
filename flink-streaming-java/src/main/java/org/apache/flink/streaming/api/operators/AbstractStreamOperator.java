@@ -78,6 +78,8 @@ import java.io.Serializable;
 import java.util.Locale;
 
 /**
+ *
+ * 基本类
  * Base class for all stream operators. Operators that contain a user function should extend the class
  * {@link AbstractUdfStreamOperator} instead (which is a specialized subclass of this class).
  *
@@ -107,14 +109,20 @@ public abstract class AbstractStreamOperator<OUT>
 
 	// ---------------- runtime fields ------------------
 
-	/** The task that contains this operator (and other operators in the same chain). */
+
+
+	/**
+	 * task 容器
+	 * The task that contains this operator (and other operators in the same chain). */
 	private transient StreamTask<?, ?> container;
 
 	protected transient StreamConfig config;
 
 	protected transient Output<StreamRecord<OUT>> output;
 
-	/** The runtime context for UDFs. */
+	/**
+	 * 运行时上下文
+	 * The runtime context for UDFs. */
 	private transient StreamingRuntimeContext runtimeContext;
 
 	// ---------------- key/value state ------------------
@@ -138,7 +146,9 @@ public abstract class AbstractStreamOperator<OUT>
 	/** Backend for keyed state. This might be empty if we're not on a keyed stream. */
 	private transient AbstractKeyedStateBackend<?> keyedStateBackend;
 
-	/** Keyed state store view on the keyed backend. */
+	/**
+	 * 存储后端视图
+	 * Keyed state store view on the keyed backend. */
 	private transient DefaultKeyedStateStore keyedStateStore;
 
 	// ---------------- operator state ------------------
@@ -148,12 +158,14 @@ public abstract class AbstractStreamOperator<OUT>
 
 	// --------------- Metrics ---------------------------
 
-	/** Metric group for the operator. */
+	/**
+	 * 指标组
+	 * Metric group for the operator. */
 	protected transient OperatorMetricGroup metrics;
 
 	protected transient LatencyStats latencyStats;
 
-	// ---------------- time handler ------------------
+	// ---------------- time handler 时间处理器 ------------------
 
 	private transient ProcessingTimeService processingTimeService;
 	protected transient InternalTimeServiceManager<?> timeServiceManager;
@@ -572,6 +584,7 @@ public abstract class AbstractStreamOperator<OUT>
 		return getPartitionedState(VoidNamespace.INSTANCE, VoidNamespaceSerializer.INSTANCE, stateDescriptor);
 	}
 
+	//获取状态
 	protected <N, S extends State, T> S getOrCreateKeyedState(
 			TypeSerializer<N> namespaceSerializer,
 			StateDescriptor<S, T> stateDescriptor) throws Exception {
@@ -587,6 +600,7 @@ public abstract class AbstractStreamOperator<OUT>
 	}
 
 	/**
+	 * 获取分区状态--以命名空间作为识别号
 	 * Creates a partitioned state handle, using the state backend configured for this task.
 	 *
 	 * @throws IllegalStateException Thrown, if the key/value state was already initialized.
@@ -747,6 +761,7 @@ public abstract class AbstractStreamOperator<OUT>
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 获取时间服务
 	 * Returns a {@link InternalTimerService} that can be used to query current processing time
 	 * and event time and to set timers. An operator can have several timer services, where
 	 * each has its own namespace serializer. Timer services are differentiated by the string
@@ -782,6 +797,7 @@ public abstract class AbstractStreamOperator<OUT>
 		return keyedTimeServiceHandler.getInternalTimerService(name, timerSerializer, triggerable);
 	}
 
+
 	public void processWatermark(Watermark mark) throws Exception {
 		if (timeServiceManager != null) {
 			timeServiceManager.advanceWatermark(mark);
@@ -789,6 +805,7 @@ public abstract class AbstractStreamOperator<OUT>
 		output.emitWatermark(mark);
 	}
 
+	//检查时间服务是否初始化
 	private void checkTimerServiceInitialization() {
 		if (getKeyedStateBackend() == null) {
 			throw new UnsupportedOperationException("Timers can only be used on keyed operators.");
@@ -797,6 +814,7 @@ public abstract class AbstractStreamOperator<OUT>
 		}
 	}
 
+	//处理算子1的水印
 	public void processWatermark1(Watermark mark) throws Exception {
 		input1Watermark = mark.getTimestamp();
 		long newMin = Math.min(input1Watermark, input2Watermark);

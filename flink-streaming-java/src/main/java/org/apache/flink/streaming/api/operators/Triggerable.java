@@ -21,6 +21,7 @@ package org.apache.flink.streaming.api.operators;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 可触发对象
  * Interface for things that can be called by {@link InternalTimerService}.
  *
  * @param <K> Type of the keys to which timers are scoped.
@@ -30,6 +31,7 @@ import org.apache.flink.annotation.Internal;
 public interface Triggerable<K, N> {
 
 	/**
+	 * 处理事件时间
 	 * Invoked when an event-time timer fires.
 	 */
 	void onEventTime(InternalTimer<K, N> timer) throws Exception;

@@ -37,6 +37,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
+ * 实现思路：使用一个数组 PQ[] keyGroupedHeaps，keygroup -> 优先队列
+ *
  * This implementation of {@link InternalPriorityQueue} is internally partitioned into sub-queues per key-group and
  * essentially works as a heap-of-heaps. Instances will have set semantics for elements if the sub-queues have set
  * semantics.
@@ -175,8 +178,11 @@ public class KeyGroupPartitionedPriorityQueue<T, PQ extends InternalPriorityQueu
 	}
 
 	private int computeKeyGroupIndex(T element) {
+		//获取key
 		final Object extractKeyFromElement = keyExtractor.extractKeyFromElement(element);
+		//计算组id
 		final int keyGroupId = KeyGroupRangeAssignment.assignToKeyGroup(extractKeyFromElement, totalKeyGroups);
+		//本地组索引
 		return globalKeyGroupToLocalIndex(keyGroupId);
 	}
 

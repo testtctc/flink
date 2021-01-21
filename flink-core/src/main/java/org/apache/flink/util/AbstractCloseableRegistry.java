@@ -47,7 +47,9 @@ public abstract class AbstractCloseableRegistry<C extends Closeable, T> implemen
 	/** Lock that guards state of this registry. **/
 	private final Object lock;
 
-	/** Map from tracked Closeables to some associated meta data. */
+	/**
+	 * 可关闭对象的的字典
+	 * Map from tracked Closeables to some associated meta data. */
 	@GuardedBy("lock")
 	protected final Map<Closeable, T> closeableToRef;
 

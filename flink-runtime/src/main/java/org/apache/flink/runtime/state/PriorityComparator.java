@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * 优先级对比器
  * This interface works similar to {@link Comparable} and is used to prioritize between two objects. The main difference
  * between this interface and {@link Comparable} is it is not require to follow the usual contract between that
  * {@link Comparable#compareTo(Object)} and {@link Object#equals(Object)}. The contract of this interface is:
@@ -42,6 +43,7 @@ public interface PriorityComparator<T> {
 	 */
 	int comparePriority(T left, T right);
 
+	//这里有明显的要求
 	@SuppressWarnings("unchecked")
 	static <T extends PriorityComparable<?>> PriorityComparator<T> forPriorityComparableObjects() {
 		return (PriorityComparator<T>) FOR_PRIORITY_COMPARABLE_OBJECTS;

@@ -25,6 +25,7 @@ import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 包装类--收集器
  * Wrapper around an {@link Output} for user functions that expect a {@link Output}.
  * Before giving the {@link TimestampedCollector} to a user function you must set
  * the timestamp that should be attached to emitted elements. Most operators

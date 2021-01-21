@@ -28,6 +28,7 @@ package org.apache.flink.core.fs;
 import org.apache.flink.annotation.Public;
 
 /**
+ * 文件状态
  * Interface that represents the client side information for a file
  * independent of the file system.
  */
@@ -77,6 +78,7 @@ public interface FileStatus {
 	boolean isDir();
 
 	/**
+	 * 返回路径
 	 * Returns the corresponding Path to the FileStatus.
 	 *
 	 * @return the corresponding Path to the FileStatus

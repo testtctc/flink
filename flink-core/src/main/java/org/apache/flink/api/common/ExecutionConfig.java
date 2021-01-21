@@ -45,6 +45,8 @@ import java.util.stream.Collectors;
 import static org.apache.flink.util.Preconditions.checkArgument;
 
 /**
+ * 执行时的配置
+ *
  * A config to define the behavior of the program execution. It allows to define (among other
  * options) the following settings:
  *
@@ -70,7 +72,7 @@ public class ExecutionConfig implements Serializable, Archiveable<ArchivedExecut
 
 	private static final long serialVersionUID = 1L;
 
-	/**
+	/** 最大并行度
 	 * The constant to use for the parallelism, if the system should use the number
 	 * of currently available slots.
 	 */
@@ -1034,6 +1036,7 @@ public class ExecutionConfig implements Serializable, Archiveable<ArchivedExecut
 			defaultInputDependencyConstraint);
 	}
 
+	//信息
 	@Override
 	public String toString() {
 		return "ExecutionConfig{" +
@@ -1072,7 +1075,8 @@ public class ExecutionConfig implements Serializable, Archiveable<ArchivedExecut
 	public boolean canEqual(Object obj) {
 		return obj instanceof ExecutionConfig;
 	}
-	
+
+	//存档信息
 	@Override
 	@Internal
 	public ArchivedExecutionConfig archive() {
@@ -1131,6 +1135,7 @@ public class ExecutionConfig implements Serializable, Archiveable<ArchivedExecut
 	}
 
 	/**
+	 * 闭包清理级别
 	 * Configuration settings for the closure cleaner.
 	 */
 	public enum ClosureCleanerLevel {

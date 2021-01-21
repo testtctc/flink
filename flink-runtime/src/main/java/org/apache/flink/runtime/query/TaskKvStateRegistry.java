@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 状态注册--单个任务--只要一份
  * A helper for KvState registrations of a single task.
  */
 public class TaskKvStateRegistry {
@@ -36,7 +37,9 @@ public class TaskKvStateRegistry {
 	/** KvStateRegistry for KvState instance registrations. */
 	private final KvStateRegistry registry;
 
-	/** JobID of the task. */
+	/**
+	 * 作业id
+	 * JobID of the task. */
 	private final JobID jobId;
 
 	/** JobVertexID of the task. */
@@ -52,6 +55,7 @@ public class TaskKvStateRegistry {
 	}
 
 	/**
+	 * 注册kvstate
 	 * Registers the KvState instance at the KvStateRegistry.
 	 *
 	 * @param keyGroupRange    Key group range the KvState instance belongs to
@@ -75,10 +79,11 @@ public class TaskKvStateRegistry {
 	}
 
 	/**
+	 * 元信息
 	 * 3-tuple holding registered KvState meta data.
 	 */
 	private static class KvStateInfo {
-
+		//范围
 		private final KeyGroupRange keyGroupRange;
 
 		private final String registrationName;

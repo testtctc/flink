@@ -34,6 +34,9 @@ import java.util.Set;
 import static org.apache.flink.util.Preconditions.checkArgument;
 
 /**
+ * 基于堆的优先队列
+ * 单独简历一个数组，用于存放数据
+ *
  * A heap-based priority queue with set semantics, based on {@link HeapPriorityQueue}. The heap is supported by hash
  * set for fast contains (de-duplication) and deletes. Object identification happens based on {@link #equals(Object)}.
  *
@@ -56,6 +59,7 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 	private final KeyExtractorFunction<T> keyExtractor;
 
 	/**
+	 * 字典的数组
 	 * This array contains one hash set per key-group. The sets are used for fast de-duplication and deletes of elements.
 	 */
 	private final HashMap<T, T>[] deduplicationMapsByKeyGroup;
@@ -93,8 +97,9 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 
 		this.totalNumberOfKeyGroups = totalNumberOfKeyGroups;
 		this.keyGroupRange = keyGroupRange;
-
+		//keygroup数量
 		final int keyGroupsInLocalRange = keyGroupRange.getNumberOfKeyGroups();
+		//字典的初始化数据量
 		final int deduplicationSetSize = 1 + minimumCapacity / keyGroupsInLocalRange;
 		this.deduplicationMapsByKeyGroup = new HashMap[keyGroupsInLocalRange];
 		for (int i = 0; i < keyGroupsInLocalRange; ++i) {
@@ -102,6 +107,7 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 		}
 	}
 
+	//取出元素
 	@Override
 	@Nullable
 	public T poll() {
@@ -110,6 +116,7 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 	}
 
 	/**
+	 * 添加元素
 	 * Adds the element to the queue. In contrast to the superclass and to maintain set semantics, this happens only if
 	 * no such element is already contained (determined by {@link #equals(Object)}).
 	 *
@@ -142,6 +149,7 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 		}
 	}
 
+	//获取去重之后的字典
 	private HashMap<T, T> getDedupMapForKeyGroup(
 		@Nonnegative int keyGroupId) {
 		return deduplicationMapsByKeyGroup[globalKeyGroupToLocalIndex(keyGroupId)];
@@ -154,11 +162,13 @@ public class HeapPriorityQueueSet<T extends HeapPriorityQueueElement>
 		return getDedupMapForKeyGroup(keyGroup);
 	}
 
+	//转为本地index
 	private int globalKeyGroupToLocalIndex(int keyGroup) {
 		checkArgument(keyGroupRange.contains(keyGroup), "%s does not contain key group %s", keyGroupRange, keyGroup);
 		return keyGroup - keyGroupRange.getStartKeyGroup();
 	}
 
+	//获取组
 	@Nonnull
 	@Override
 	public Set<T> getSubsetForKeyGroup(int keyGroupId) {

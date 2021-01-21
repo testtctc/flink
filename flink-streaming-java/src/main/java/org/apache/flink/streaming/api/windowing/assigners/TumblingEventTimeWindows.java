@@ -31,6 +31,8 @@ import java.util.Collection;
 import java.util.Collections;
 
 /**
+ *
+ * 思路：给定时间，计算窗口开始时间，形成一个可系列化的窗口
  * A {@link WindowAssigner} that windows elements into windows based on the timestamp of the
  * elements. Windows cannot overlap.
  *

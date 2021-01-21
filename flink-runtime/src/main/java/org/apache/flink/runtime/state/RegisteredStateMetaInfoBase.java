@@ -27,7 +27,9 @@ import javax.annotation.Nonnull;
  */
 public abstract class RegisteredStateMetaInfoBase {
 
-	/** The name of the state */
+	/**
+	 *名字
+	 * The name of the state */
 	@Nonnull
 	protected final String name;
 
@@ -39,9 +41,10 @@ public abstract class RegisteredStateMetaInfoBase {
 	public String getName() {
 		return name;
 	}
-
+	//元信息快照
 	@Nonnull
 	public abstract StateMetaInfoSnapshot snapshot();
+
 
 	public static RegisteredStateMetaInfoBase fromMetaInfoSnapshot(@Nonnull StateMetaInfoSnapshot snapshot) {
 

@@ -101,6 +101,7 @@ public final class TimerHeapInternalTimer<K, N> implements InternalTimer<K, N>, 
 	}
 
 	/**
+	 * 移除数据
 	 * This method can be called to indicate that the timer is no longer managed be a timer heap, e.g. because it as
 	 * removed.
 	 */
@@ -124,6 +125,9 @@ public final class TimerHeapInternalTimer<K, N> implements InternalTimer<K, N>, 
 				", namespace=" + namespace +
 				'}';
 	}
+
+
+	//对比时，仅仅对时间
 
 	@Override
 	public int comparePriorityTo(@Nonnull InternalTimer<?, ?> other) {

@@ -23,6 +23,7 @@ import org.apache.flink.api.common.ExecutionConfig;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 /**
+ * 设置输出类型
  * Stream operators can implement this interface if they need access to the output type information
  * at {@link org.apache.flink.streaming.api.graph.StreamGraph} generation. This can be useful for
  * cases where the output type is specified by the returns method and, thus, after the stream

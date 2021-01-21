@@ -65,10 +65,11 @@ public abstract class AbstractRuntimeUDFContext implements RuntimeContext {
 
 	private final ExecutionConfig executionConfig;
 
+	//累加器
 	private final Map<String, Accumulator<?, ?>> accumulators;
-
+	//分布式缓存
 	private final DistributedCache distributedCache;
-
+	//指标组
 	private final MetricGroup metrics;
 
 	public AbstractRuntimeUDFContext(TaskInfo taskInfo,

@@ -24,6 +24,7 @@ import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import java.util.Random;
 
 /**
+ * 随机写
  * Partitioner that distributes the data equally by selecting one output channel
  * randomly.
  *

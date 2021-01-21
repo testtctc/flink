@@ -67,6 +67,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * 基于堆的内存
  * A {@link AbstractKeyedStateBackend} that keeps state on the Java Heap and will serialize state to
  * streams provided by a {@link CheckpointStreamFactory} upon checkpointing.
  *
@@ -107,6 +108,7 @@ public class HeapKeyedStateBackend<K> extends AbstractKeyedStateBackend<K> {
 	private final HeapSnapshotStrategy<K> snapshotStrategy;
 
 	/**
+	 * 优先队列创建工厂
 	 * Factory for state that is organized as priority queue.
 	 */
 	private final HeapPriorityQueueSetFactory priorityQueueSetFactory;
@@ -377,6 +379,7 @@ public class HeapKeyedStateBackend<K> extends AbstractKeyedStateBackend<K> {
 		return localRecoveryConfig;
 	}
 
+	//状态工厂函数
 	private interface StateFactory {
 		<K, N, SV, S extends State, IS extends S> IS createState(
 			StateDescriptor<S, SV> stateDesc,

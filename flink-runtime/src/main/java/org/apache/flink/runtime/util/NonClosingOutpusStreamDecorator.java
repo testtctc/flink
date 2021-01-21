@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 忽略close的流
  * Decorator for input streams that ignores calls to {@link OutputStream#close()}.
  */
 @Internal

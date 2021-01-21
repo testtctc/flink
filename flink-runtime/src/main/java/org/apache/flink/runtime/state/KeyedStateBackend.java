@@ -50,6 +50,7 @@ public interface KeyedStateBackend<K>
 	TypeSerializer<K> getKeySerializer();
 
 	/**
+	 * 运用于所有key
 	 * Applies the provided {@link KeyedStateFunction} to the state with the provided
 	 * {@link StateDescriptor} of all the currently active keys.
 	 *
@@ -68,6 +69,7 @@ public interface KeyedStateBackend<K>
 			final KeyedStateFunction<K, S> function) throws Exception;
 
 	/**
+	 * 获取键 ：状态名+命名空间
 	 * @return A stream of all keys for the given state and namespace. Modifications to the state during iterating
 	 * 		   over it keys are not supported.
 	 * @param state State variable for which existing keys will be returned.
@@ -76,6 +78,7 @@ public interface KeyedStateBackend<K>
 	<N> Stream<K> getKeys(String state, N namespace);
 
 	/**
+	 *
 	 * Creates or retrieves a keyed state backed by this state backend.
 	 *
 	 * @param namespaceSerializer The serializer used for the namespace type of the state
@@ -93,6 +96,7 @@ public interface KeyedStateBackend<K>
 			StateDescriptor<S, T> stateDescriptor) throws Exception;
 
 	/**
+	 * 获取分区state--提供命名空间
 	 * Creates or retrieves a partitioned state backed by this state backend.
 	 *
 	 * TODO: NOTE: This method does a lot of work caching / retrieving states just to update the namespace.
@@ -120,13 +124,16 @@ public interface KeyedStateBackend<K>
 	void registerKeySelectionListener(KeySelectionListener<K> listener);
 
 	/**
+	 * 停止监听
 	 * Stop calling listener registered in {@link #registerKeySelectionListener}.
 	 *
 	 * @return returns true iff listener was registered before.
 	 */
 	boolean deregisterKeySelectionListener(KeySelectionListener<K> listener);
 
-	/** Listener is given a callback when {@link #setCurrentKey} is called (key context changes). */
+	/**
+	 * 事件监听
+	 * Listener is given a callback when {@link #setCurrentKey} is called (key context changes). */
 	@FunctionalInterface
 	interface KeySelectionListener<K> {
 		/** Callback when key context is switched. */

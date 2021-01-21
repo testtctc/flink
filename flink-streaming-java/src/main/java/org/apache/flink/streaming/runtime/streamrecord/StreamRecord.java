@@ -20,6 +20,7 @@ package org.apache.flink.streaming.runtime.streamrecord;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 容器 记录
  * One value in a data stream. This stores the value and an optional associated timestamp.
  *
  * @param <T> The type encapsulated with the stream record.
@@ -94,6 +95,7 @@ public final class StreamRecord<T> extends StreamElement {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 仅仅替换值，时间不变
 	 * Replace the currently stored value by the given new value. This returns a StreamElement
 	 * with the generic type parameter that matches the new value while keeping the old
 	 * timestamp.

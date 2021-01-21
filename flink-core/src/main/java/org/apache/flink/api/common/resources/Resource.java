@@ -28,6 +28,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 抽象类  资源
  * Base class for resources one can specify.
  */
 @Internal

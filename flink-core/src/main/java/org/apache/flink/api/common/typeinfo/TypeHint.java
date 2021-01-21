@@ -24,6 +24,7 @@ import org.apache.flink.api.java.typeutils.TypeExtractor;
 import org.apache.flink.util.FlinkRuntimeException;
 
 /**
+ * 泛型类型工具
  * A utility class for describing generic types. It can be used to obtain a type information via:
  *
  * <pre>{@code

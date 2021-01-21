@@ -107,7 +107,9 @@ public class MemoryStateBackend extends AbstractFileStateBackend implements Conf
 
 	private static final long serialVersionUID = 4109305377809414635L;
 
-	/** The default maximal size that the snapshotted memory state may have (5 MiBytes). */
+	/**
+	 * 最大存储
+	 * The default maximal size that the snapshotted memory state may have (5 MiBytes). */
 	public static final int DEFAULT_MAX_STATE_SIZE = 5 * 1024 * 1024;
 
 	/** The maximal size that the snapshotted memory state may have. */
@@ -297,6 +299,7 @@ public class MemoryStateBackend extends AbstractFileStateBackend implements Conf
 
 	// ------------------------------------------------------------------------
 	//  state holding structures
+	//  任务状态
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -331,6 +334,7 @@ public class MemoryStateBackend extends AbstractFileStateBackend implements Conf
 		TaskStateManager taskStateManager = env.getTaskStateManager();
 		HeapPriorityQueueSetFactory priorityQueueSetFactory =
 			new HeapPriorityQueueSetFactory(keyGroupRange, numberOfKeyGroups, 128);
+		//默认实现
 		return new HeapKeyedStateBackendBuilder<>(
 			kvStateRegistry,
 			keySerializer,

@@ -28,6 +28,8 @@ import java.nio.ByteOrder;
 import java.nio.ReadOnlyBufferException;
 
 /**
+ *
+ * 内存段--可以放堆上也可以堆外
  * This class represents a piece of memory managed by Flink.
  * The segment may be backed by heap memory (byte array) or by off-heap memory.
  *
@@ -103,12 +105,14 @@ public abstract class MemorySegment {
 	protected static final sun.misc.Unsafe UNSAFE = MemoryUtils.UNSAFE;
 
 	/**
+	 * 字节数组开始索引
 	 * The beginning of the byte array contents, relative to the byte array object.
 	 */
 	@SuppressWarnings("restriction")
 	protected static final long BYTE_ARRAY_BASE_OFFSET = UNSAFE.arrayBaseOffset(byte[].class);
 
 	/**
+	 * 是否是小端
 	 * Constant that flags the byte order. Because this is a boolean constant, the JIT compiler can
 	 * use this well to aggressively eliminate the non-applicable code paths.
 	 */
@@ -117,6 +121,7 @@ public abstract class MemorySegment {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 堆上内存
 	 * The heap byte array object relative to which we access the memory.
 	 *
 	 * <p>Is non-<tt>null</tt> if the memory is on the heap, and is <tt>null</tt>, if the memory is
@@ -127,12 +132,14 @@ public abstract class MemorySegment {
 	protected final byte[] heapMemory;
 
 	/**
+	 * 数据的地址
 	 * The address to the data, relative to the heap memory byte array. If the heap memory byte
 	 * array is <tt>null</tt>, this becomes an absolute memory address outside the heap.
 	 */
 	protected long address;
 
 	/**
+	 * 地址的限制
 	 * The address one byte after the last addressable byte, i.e. <tt>address + size</tt> while the
 	 * segment is not disposed.
 	 */
@@ -144,6 +151,7 @@ public abstract class MemorySegment {
 	protected final int size;
 
 	/**
+	 * 所有者
 	 * Optional owner of the memory segment.
 	 */
 	private final Object owner;

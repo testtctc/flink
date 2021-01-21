@@ -34,6 +34,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
+ * 定时器序列化
  * A serializer for {@link TimerHeapInternalTimer} objects that produces a serialization format that is
  * lexicographically aligned the priority of the timers.
  *
@@ -84,11 +85,12 @@ public class TimerSerializer<K, N> extends TypeSerializer<TimerHeapInternalTimer
 		this.immutableType = immutableType;
 	}
 
+	//字节数
 	private static int computeTotalByteLength(
 		TypeSerializer<?> keySerializer,
 		TypeSerializer<?> namespaceSerializer) {
 		if (keySerializer.getLength() >= 0 && namespaceSerializer.getLength() >= 0) {
-			// timestamp + key + namespace
+			// timestamp + key + namespace 8字节时间 + key + namespace
 			return Long.BYTES + keySerializer.getLength() + namespaceSerializer.getLength();
 		} else {
 			return -1;

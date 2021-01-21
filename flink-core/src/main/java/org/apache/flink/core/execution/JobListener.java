@@ -46,6 +46,7 @@ public interface JobListener {
 	void onJobSubmitted(@Nullable JobClient jobClient, @Nullable Throwable throwable);
 
 	/**
+	 * 当任务完成之后
 	 * Callback on job execution finished, successfully or unsuccessfully. It is only called
 	 * back when you call {@code execute()} instead of {@code executeAsync()} methods of execution
 	 * environments.

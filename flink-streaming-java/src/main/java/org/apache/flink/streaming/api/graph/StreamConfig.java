@@ -48,6 +48,7 @@ import java.util.Map;
 import static org.apache.flink.util.Preconditions.checkArgument;
 
 /**
+ * 算子配置
  * Internal configuration for a {@link StreamOperator}. This is created and populated by the
  * {@link StreamingJobGraphGenerator}.
  */

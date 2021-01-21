@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 字典状态
  * {@link State} interface for partitioned key-value state. The key-value pair can be
  * added, updated and retrieved.
  *

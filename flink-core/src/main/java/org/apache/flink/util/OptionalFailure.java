@@ -31,6 +31,7 @@ import java.util.Objects;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ *  类似于scala option
  * Wrapper around an object representing either a success (with a given value) or a failure cause.
  */
 public class OptionalFailure<T> implements Serializable {

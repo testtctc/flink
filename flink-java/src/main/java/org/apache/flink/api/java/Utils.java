@@ -47,7 +47,7 @@ import java.util.Random;
 public final class Utils {
 
 	public static final Random RNG = new Random();
-
+	//利用堆栈获取调用点的信息
 	public static String getCallLocationName() {
 		return getCallLocationName(4);
 	}

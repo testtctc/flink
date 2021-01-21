@@ -51,6 +51,7 @@ public final class KeyGroupRangeAssignment {
 	}
 
 	/**
+	 * 分配给key组
 	 * Assigns the given key to a key-group index.
 	 *
 	 * @param key the key to assign
@@ -102,6 +103,7 @@ public final class KeyGroupRangeAssignment {
 	}
 
 	/**
+	 * 计算某个算子的子任务索引
 	 * Computes the index of the operator to which a key-group belongs under the given parallelism and maximum
 	 * parallelism.
 	 *

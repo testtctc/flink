@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * 算子运行时上下文
  * A RuntimeContext contains information about the context in which functions are executed. Each parallel instance
  * of the function will have a context through which it can access static contextual information (such as
  * the current parallelism) and other constructs like accumulators and broadcast variables.
@@ -72,6 +73,7 @@ public interface RuntimeContext {
 	MetricGroup getMetricGroup();
 
 	/**
+	 * 获取并行度
 	 * Gets the parallelism with which the parallel task runs.
 	 *
 	 * @return The parallelism with which the parallel task runs.
@@ -79,6 +81,7 @@ public interface RuntimeContext {
 	int getNumberOfParallelSubtasks();
 
 	/**
+	 * 获取最大并行度
 	 * Gets the number of max-parallelism with which the parallel task runs.
 	 *
 	 * @return The max-parallelism with which the parallel task runs.
@@ -87,6 +90,7 @@ public interface RuntimeContext {
 	int getMaxNumberOfParallelSubtasks();
 
 	/**
+	 * 获取索引
 	 * Gets the number of this parallel subtask. The numbering starts from 0 and goes up to
 	 * parallelism-1 (parallelism as returned by {@link #getNumberOfParallelSubtasks()}).
 	 *
@@ -95,6 +99,7 @@ public interface RuntimeContext {
 	int getIndexOfThisSubtask();
 
 	/**
+	 * 获取尝试次数
 	 * Gets the attempt number of this parallel subtask. First attempt is numbered 0.
 	 *
 	 * @return Attempt number of the subtask.

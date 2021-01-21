@@ -63,6 +63,7 @@ public interface JobClient {
 	CompletableFuture<String> stopWithSavepoint(boolean advanceToEndOfEventTime, @Nullable String savepointDirectory);
 
 	/**
+	 * 触发save point
 	 * Triggers a savepoint for the associated job. The savepoint will be written to the given savepoint directory,
 	 * or {@link org.apache.flink.configuration.CheckpointingOptions#SAVEPOINT_DIRECTORY} if it is null.
 	 *

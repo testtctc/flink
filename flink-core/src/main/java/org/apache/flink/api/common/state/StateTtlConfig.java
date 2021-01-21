@@ -59,7 +59,7 @@ public class StateTtlConfig implements Serializable {
 	 * This option value configures when to update last access timestamp which prolongs state TTL.
 	 */
 	public enum UpdateType {
-		/** TTL is disabled. State does not expire. */
+		/** TTL is disabled. State does not expire.  状态不过期 */
 		Disabled,
 		/** Last access timestamp is initialised when state is created and updated on every write operation. */
 		OnCreateAndWrite,
@@ -68,6 +68,7 @@ public class StateTtlConfig implements Serializable {
 	}
 
 	/**
+	 * 可见性
 	 * This option configures whether expired user value can be returned or not.
 	 */
 	public enum StateVisibility {
@@ -78,6 +79,7 @@ public class StateTtlConfig implements Serializable {
 	}
 
 	/**
+	 * 仅仅只有process time
 	 * This option configures time scale to use for ttl.
 	 */
 	public enum TtlTimeCharacteristic {

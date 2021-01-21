@@ -29,6 +29,7 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * 窗口分配器
  * A {@code WindowAssigner} assigns zero or more {@link Window Windows} to an element.
  *
  * <p>In a window operation, elements are grouped by their key (if available) and by the windows to
@@ -65,12 +66,14 @@ public abstract class WindowAssigner<T, W extends Window> implements Serializabl
 	public abstract TypeSerializer<W> getWindowSerializer(ExecutionConfig executionConfig);
 
 	/**
+	 * 是否是事件时间
 	 * Returns {@code true} if elements are assigned to windows based on event time,
 	 * {@code false} otherwise.
 	 */
 	public abstract boolean isEventTime();
 
 	/**
+	 * 查询当前时间
 	 * A context provided to the {@link WindowAssigner} that allows it to query the
 	 * current processing time.
 	 *

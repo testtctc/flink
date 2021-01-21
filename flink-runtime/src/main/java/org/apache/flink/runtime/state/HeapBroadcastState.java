@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
+ * 基于内存的广播状态
  * A {@link BroadcastState Broadcast State} backed a heap-based {@link Map}.
  *
  * @param <K> The key type of the elements in the {@link BroadcastState Broadcast State}.
@@ -45,6 +46,7 @@ public class HeapBroadcastState<K, V> implements BackendWritableBroadcastState<K
 	private RegisteredBroadcastStateBackendMetaInfo<K, V> stateMetaInfo;
 
 	/**
+	 * 内部实现
 	 * The internal map the holds the elements of the state.
 	 */
 	private final Map<K, V> backingMap;
@@ -98,6 +100,7 @@ public class HeapBroadcastState<K, V> implements BackendWritableBroadcastState<K
 				'}';
 	}
 
+	//写入文件系统
 	@Override
 	public long write(FSDataOutputStream out) throws IOException {
 		long partitionOffset = out.getPos();

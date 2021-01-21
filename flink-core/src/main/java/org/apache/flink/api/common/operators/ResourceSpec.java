@@ -36,6 +36,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 资源声明 ：包含cpu 堆内 对外内存
  * Describe the different resource factors of the operator with UDF.
  *
  * <p>Resource provides {@link #merge(ResourceSpec)} method for chained operators when generating job graph.
@@ -66,6 +67,7 @@ public final class ResourceSpec implements Serializable {
 	public static final ResourceSpec DEFAULT = UNKNOWN;
 
 	/**
+	 * 0资源
 	 * A ResourceSpec that indicates zero amount of resources.
 	 */
 	public static final ResourceSpec ZERO = ResourceSpec.newBuilder(0.0, 0).build();

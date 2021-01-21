@@ -23,5 +23,6 @@ import java.io.Serializable;
 
 @Internal
 public interface Archiveable<T extends Serializable> {
+	//存档
 	T archive();
 }

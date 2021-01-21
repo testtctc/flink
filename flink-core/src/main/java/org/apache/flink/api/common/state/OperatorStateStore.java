@@ -24,12 +24,14 @@ import java.io.Serializable;
 import java.util.Set;
 
 /**
+ * 算子的状态
  * This interface contains methods for registering operator state with a managed store.
  */
 @PublicEvolving
 public interface OperatorStateStore {
 
 	/**
+	 * 获取广播状态
 	 * Creates (or restores) a {@link BroadcastState broadcast state}. This type of state can only be created to store
 	 * the state of a {@code BroadcastStream}. Each state is registered under a unique name.
 	 * The provided serializer is used to de/serialize the state in case of checkpointing (snapshot/restore).
@@ -54,6 +56,7 @@ public interface OperatorStateStore {
 	<K, V> BroadcastState<K, V> getBroadcastState(MapStateDescriptor<K, V> stateDescriptor) throws Exception;
 
 	/**
+	 * 新接口
 	 * Creates (or restores) a list state. Each state is registered under a unique name.
 	 * The provided serializer is used to de/serialize the state in case of checkpointing (snapshot/restore).
 	 *
@@ -76,6 +79,7 @@ public interface OperatorStateStore {
 	<S> ListState<S> getListState(ListStateDescriptor<S> stateDescriptor) throws Exception;
 
 	/**
+	 * 获取所有的状态
 	 * Creates (or restores) a list state. Each state is registered under a unique name.
 	 * The provided serializer is used to de/serialize the state in case of checkpointing (snapshot/restore).
 	 *
@@ -99,6 +103,7 @@ public interface OperatorStateStore {
 	<S> ListState<S> getUnionListState(ListStateDescriptor<S> stateDescriptor) throws Exception;
 
 	/**
+	 * 获取注册的名字
 	 * Returns a set with the names of all currently registered states.
 	 *
 	 * @return set of names for all registered states.
@@ -117,6 +122,7 @@ public interface OperatorStateStore {
 	// -------------------------------------------------------------------------------------------
 
 	/**
+	 * 很久名字获取状态
 	 * Creates (or restores) a list state. Each state is registered under a unique name.
 	 * The provided serializer is used to de/serialize the state in case of checkpointing (snapshot/restore).
 	 *

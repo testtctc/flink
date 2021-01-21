@@ -21,11 +21,13 @@ package org.apache.flink.runtime.io.network.buffer;
 import java.io.IOException;
 
 /**
+ * 创建bufferpool工厂函数
  * A factory for buffer pools.
  */
 public interface BufferPoolFactory {
 
 	/**
+	 * 创建
 	 * Tries to create a buffer pool, which is guaranteed to provide at least the number of required
 	 * buffers.
 	 *
@@ -54,6 +56,7 @@ public interface BufferPoolFactory {
 	BufferPool createBufferPool(int numRequiredBuffers, int maxUsedBuffers, BufferPoolOwner bufferPoolOwner) throws IOException;
 
 	/**
+	 * 销毁
 	 * Destroy callback for updating factory book keeping.
 	 */
 	void destroyBufferPool(BufferPool bufferPool) throws IOException;

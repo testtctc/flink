@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 
 /**
+ * 内部实现的有限队列
  * Interface for collection that gives in order access to elements w.r.t their priority.
  *
  * @param <T> type of elements in the ordered set.
@@ -36,6 +37,7 @@ import java.util.Collection;
 public interface InternalPriorityQueue<T> {
 
 	/**
+	 * 移除第一个元素
 	 * Retrieves and removes the first element (w.r.t. the order) of this set,
 	 * or returns {@code null} if this set is empty.
 	 *
@@ -45,6 +47,7 @@ public interface InternalPriorityQueue<T> {
 	T poll();
 
 	/**
+	 * 偷看
 	 * Retrieves, but does not remove, the element (w.r.t. order) of this set,
 	 * or returns {@code null} if this set is empty.
 	 *
@@ -54,6 +57,7 @@ public interface InternalPriorityQueue<T> {
 	T peek();
 
 	/**
+	 * 添加元素
 	 * Adds the given element to the set, if it is not already contained.
 	 *
 	 * @param toAdd the element to add to the set.
@@ -92,6 +96,7 @@ public interface InternalPriorityQueue<T> {
 	void addAll(@Nullable Collection<? extends T> toAdd);
 
 	/**
+	 * 迭代
 	 * Iterator over all elements, no order guaranteed. Iterator must be closed after usage.
 	 */
 	@Nonnull

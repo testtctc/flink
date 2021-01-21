@@ -44,9 +44,9 @@ import static java.util.Objects.requireNonNull;
  */
 @PublicEvolving
 public class BroadcastStream<T> {
-
+	//静态环境
 	private final StreamExecutionEnvironment environment;
-
+	//输入流
 	private final DataStream<T> inputStream;
 
 	/**

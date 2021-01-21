@@ -21,6 +21,7 @@ package org.apache.flink.streaming.runtime.tasks;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 定时任务
  * Interface for processing-time callbacks that can be registered at a
  * {@link ProcessingTimeService}.
  */
@@ -28,6 +29,7 @@ import org.apache.flink.annotation.Internal;
 public interface ProcessingTimeCallback {
 
 	/**
+	 * 在给定时间点上操作
 	 * This method is invoked with the timestamp for which the trigger was scheduled.
 	 *
 	 * <p>If the triggering is delayed for whatever reason (trigger timer was blocked, JVM stalled

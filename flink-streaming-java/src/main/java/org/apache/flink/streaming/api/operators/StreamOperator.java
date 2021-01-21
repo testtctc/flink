@@ -29,6 +29,7 @@ import org.apache.flink.util.Disposable;
 import java.io.Serializable;
 
 /**
+ * ，流计算基本算子
  * Basic interface for stream operators. Implementers would implement one of
  * {@link org.apache.flink.streaming.api.operators.OneInputStreamOperator} or
  * {@link org.apache.flink.streaming.api.operators.TwoInputStreamOperator} to create operators
@@ -51,6 +52,7 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 打开
 	 * This method is called immediately before any elements are processed, it should contain the
 	 * operator's initialization logic.
 	 *
@@ -63,6 +65,7 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 	void open() throws Exception;
 
 	/**
+	 * 关闭
 	 * This method is called after all records have been added to the operators via the methods
 	 * {@link org.apache.flink.streaming.api.operators.OneInputStreamOperator#processElement(StreamRecord)}, or
 	 * {@link org.apache.flink.streaming.api.operators.TwoInputStreamOperator#processElement1(StreamRecord)} and
@@ -77,6 +80,7 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 	void close() throws Exception;
 
 	/**
+	 *
 	 * This method is called at the very end of the operator's life, both in the case of a successful
 	 * completion of the operation, and in the case of a failure and canceling.
 	 *
@@ -91,6 +95,7 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 在释放barrier之前的操作
 	 * This method is called when the operator should do a snapshot, before it emits its
 	 * own checkpoint barrier.
 	 *
@@ -125,6 +130,7 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 		CheckpointStreamFactory storageLocation) throws Exception;
 
 	/**
+	 * 初始化
 	 * Provides a context to initialize all state in the operator.
 	 */
 	void initializeState() throws Exception;
@@ -136,12 +142,12 @@ public interface StreamOperator<OUT> extends CheckpointListener, KeyContext, Dis
 	void setKeyContextElement1(StreamRecord<?> record) throws Exception;
 
 	void setKeyContextElement2(StreamRecord<?> record) throws Exception;
-
+	//连接策略
 	ChainingStrategy getChainingStrategy();
 
 	void setChainingStrategy(ChainingStrategy strategy);
-
+	//指标组
 	MetricGroup getMetricGroup();
-
+	//id
 	OperatorID getOperatorID();
 }

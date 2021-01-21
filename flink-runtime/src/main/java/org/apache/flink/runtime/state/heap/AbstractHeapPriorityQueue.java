@@ -33,6 +33,7 @@ import java.util.NoSuchElementException;
 import static org.apache.flink.util.CollectionUtil.MAX_ARRAY_SIZE;
 
 /**
+ * 基于堆的优先队列
  * Abstract base class for heap (object array) based implementations of priority queues, with support for fast deletes
  * via {@link HeapPriorityQueueElement}.
  *
@@ -105,13 +106,16 @@ public abstract class AbstractHeapPriorityQueue<T extends HeapPriorityQueueEleme
 		}
 	}
 
+	//写入到数组
 	@SuppressWarnings({"unchecked"})
 	@Nonnull
 	public <O> O[] toArray(O[] out) {
 		final int heapArrayOffset = getHeadElementIndex();
+		//空间不足
 		if (out.length < size) {
 			return (O[]) Arrays.copyOfRange(queue, heapArrayOffset, heapArrayOffset + size, out.getClass());
 		} else {
+			//空间足够
 			System.arraycopy(queue, heapArrayOffset, out, 0, size);
 			if (out.length > size) {
 				out[size] = null;
@@ -133,6 +137,7 @@ public abstract class AbstractHeapPriorityQueue<T extends HeapPriorityQueueEleme
 	}
 
 	/**
+	 * 清空
 	 * Clears the queue.
 	 */
 	public void clear() {
@@ -148,6 +153,7 @@ public abstract class AbstractHeapPriorityQueue<T extends HeapPriorityQueueEleme
 		}
 	}
 
+	//通过拷贝的方式调整队列长度
 	protected void resizeQueueArray(int desiredSize, int minRequiredSize) {
 		if (isValidArraySize(desiredSize)) {
 			queue = Arrays.copyOf(queue, desiredSize);
@@ -159,12 +165,14 @@ public abstract class AbstractHeapPriorityQueue<T extends HeapPriorityQueueEleme
 		}
 	}
 
+	//移动元素
 	protected void moveElementToIdx(T element, int idx) {
 		queue[idx] = element;
 		element.setInternalIndex(idx);
 	}
 
 	/**
+	 * 删除
 	 * Implements how to remove the element at the given index from the queue.
 	 *
 	 * @param elementIndex the index to remove.
@@ -180,15 +188,18 @@ public abstract class AbstractHeapPriorityQueue<T extends HeapPriorityQueueEleme
 	protected abstract void addInternal(@Nonnull T toAdd);
 
 	/**
+	 * 获取第一个元素的索引
 	 * Returns the start index of the queue elements in the array.
 	 */
 	protected abstract int getHeadElementIndex();
+
 
 	private static boolean isValidArraySize(int size) {
 		return size >= 0 && size <= MAX_ARRAY_SIZE;
 	}
 
 	/**
+	 * 实现迭代
 	 * {@link Iterator} implementation for {@link HeapPriorityQueue}.
 	 * {@link Iterator#remove()} is not supported.
 	 */

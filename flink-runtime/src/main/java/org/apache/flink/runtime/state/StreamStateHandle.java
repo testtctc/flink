@@ -23,12 +23,14 @@ import org.apache.flink.core.fs.FSDataInputStream;
 import java.io.IOException;
 
 /**
+ *  重新读取
  * A {@link StateObject} that represents state that was written to a stream. The data can be read
  * back via {@link #openInputStream()}.
  */
 public interface StreamStateHandle extends StateObject {
 
 	/**
+	 * 打开读取流
 	 * Returns an {@link FSDataInputStream} that can be used to read back the data that
 	 * was previously written to the stream.
 	 */

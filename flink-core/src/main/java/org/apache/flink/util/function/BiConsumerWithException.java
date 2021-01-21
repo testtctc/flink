@@ -23,11 +23,13 @@ import org.apache.flink.util.ExceptionUtils;
 import java.util.function.BiConsumer;
 
 /**
+ * 二元消费者
  * A checked extension of the {@link BiConsumer} interface.
  *
  * @param <T> type of the first argument
  * @param <U> type of the second argument
  * @param <E> type of the thrown exception
+
  */
 @FunctionalInterface
 public interface BiConsumerWithException<T, U, E extends Throwable> {
@@ -42,6 +44,7 @@ public interface BiConsumerWithException<T, U, E extends Throwable> {
 	void accept(T t, U u) throws E;
 
 	/**
+	 * 返回一个函数
 	 * Convert a {@link BiConsumerWithException} into a {@link BiConsumer}.
 	 *
 	 * @param biConsumerWithException BiConsumer with exception to convert into a {@link BiConsumer}.

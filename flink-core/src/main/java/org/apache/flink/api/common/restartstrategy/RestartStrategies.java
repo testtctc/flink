@@ -86,6 +86,7 @@ public class RestartStrategies {
 	}
 
 	/**
+	 * 重启策略
 	 * Abstract configuration for restart strategies.
 	 */
 	public abstract static class RestartStrategyConfiguration implements Serializable {

@@ -37,6 +37,7 @@ import org.apache.flink.streaming.util.functions.StreamingFunctionUtils;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * 抽象类--UDF算子，作为基础存在
  * This is used as the base class for operators that have a user-defined
  * function. This class handles the opening and closing of the user-defined functions,
  * as part of the operator life cycle.
@@ -57,7 +58,9 @@ public abstract class AbstractUdfStreamOperator<OUT, F extends Function>
 	/** The user function. */
 	protected final F userFunction;
 
-	/** Flag to prevent duplicate function.close() calls in close() and dispose(). */
+	/**
+	 * 避免反复使用
+	 * Flag to prevent duplicate function.close() calls in close() and dispose(). */
 	private transient boolean functionsClosed = false;
 
 	public AbstractUdfStreamOperator(F userFunction) {
@@ -80,6 +83,7 @@ public abstract class AbstractUdfStreamOperator<OUT, F extends Function>
 	@Override
 	public void setup(StreamTask<?, ?> containingTask, StreamConfig config, Output<StreamRecord<OUT>> output) {
 		super.setup(containingTask, config, output);
+		//设置运行时上下文
 		FunctionUtils.setFunctionRuntimeContext(userFunction, getRuntimeContext());
 
 	}
@@ -155,6 +159,7 @@ public abstract class AbstractUdfStreamOperator<OUT, F extends Function>
 		return new Configuration();
 	}
 
+	//不允许同时继承两个接口
 	private void checkUdfCheckpointingPreconditions() {
 
 		if (userFunction instanceof CheckpointedFunction

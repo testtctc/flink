@@ -36,6 +36,7 @@ import java.util.Collection;
 public interface InternalMergingState<K, N, IN, SV, OUT> extends InternalAppendingState<K, N, IN, SV, OUT>, MergingState<IN, OUT> {
 
 	/**
+	 * 合并命名空间
 	 * Merges the state of the current key for the given source namespaces into the state of
 	 * the target namespace.
 	 * 

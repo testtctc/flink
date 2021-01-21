@@ -22,6 +22,7 @@ import org.apache.flink.annotation.Public;
 import org.apache.flink.core.io.InputSplit;
 
 /**
+ * 获取分片
  * An input split provider can be successively queried to provide a series of {@link InputSplit} objects a
  * task is supposed to consume in the course of its execution.
  */

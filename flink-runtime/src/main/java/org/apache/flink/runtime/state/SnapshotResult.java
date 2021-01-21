@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
+ * 快照--结果
  * This class contains the combined results from the snapshot of a state backend:
  * <ul>
  *   <li>A state object representing the state that will be reported to the Job Manager to acknowledge the checkpoint.</li>
@@ -40,10 +41,14 @@ public class SnapshotResult<T extends StateObject> implements StateObject {
 	/** An singleton instance to represent an empty snapshot result. */
 	private static final SnapshotResult<?> EMPTY = new SnapshotResult<>(null, null);
 
-	/** This is the state snapshot that will be reported to the Job Manager to acknowledge a checkpoint. */
+	/**
+	 * jobmanager保存的快照
+	 * This is the state snapshot that will be reported to the Job Manager to acknowledge a checkpoint. */
 	private final T jobManagerOwnedSnapshot;
 
-	/** This is the state snapshot that will be reported to the Job Manager to acknowledge a checkpoint. */
+	/**
+	 * 任务自身保存的快照
+	 * This is the state snapshot that will be reported to the Job Manager to acknowledge a checkpoint. */
 	private final T taskLocalSnapshot;
 
 	/**
@@ -72,6 +77,7 @@ public class SnapshotResult<T extends StateObject> implements StateObject {
 		return taskLocalSnapshot;
 	}
 
+	//清空内存
 	@Override
 	public void discardState() throws Exception {
 
@@ -108,6 +114,7 @@ public class SnapshotResult<T extends StateObject> implements StateObject {
 		return (SnapshotResult<T>) EMPTY;
 	}
 
+	//仅仅只有
 	public static <T extends StateObject> SnapshotResult<T> of(@Nullable T jobManagerState) {
 		return jobManagerState != null ? new SnapshotResult<>(jobManagerState, null) : empty();
 	}

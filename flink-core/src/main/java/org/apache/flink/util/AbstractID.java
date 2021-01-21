@@ -23,6 +23,8 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.util.Random;
 
 /**
+ * 静态唯一标识
+ * 分为上下两部分
  * A statistically unique identification number.
  */
 @PublicEvolving

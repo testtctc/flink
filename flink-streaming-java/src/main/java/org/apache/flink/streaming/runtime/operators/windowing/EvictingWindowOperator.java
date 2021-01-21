@@ -47,6 +47,7 @@ import java.util.Collection;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 带有驱逐器的窗口算子
  * A {@link WindowOperator} that also allows an {@link Evictor} to be used.
  *
  * <p>The {@code Evictor} is used to remove elements from a pane before/after the evaluation of
@@ -98,6 +99,7 @@ public class EvictingWindowOperator<K, IN, OUT, W extends Window>
 		this.evictingWindowStateDescriptor = checkNotNull(windowStateDescriptor);
 	}
 
+	//重写
 	@Override
 	public void processElement(StreamRecord<IN> element) throws Exception {
 		final Collection<W> elementWindows = windowAssigner.assignWindows(

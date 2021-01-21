@@ -80,16 +80,18 @@ public abstract class TypeInformation<T> implements Serializable {
 	private static final long serialVersionUID = -7742311969684489493L;
 
 	/**
+	 * 是否是基本类型
 	 * Checks if this type information represents a basic type.
 	 * Basic types are defined in {@link BasicTypeInfo} and are primitives, their boxing types,
 	 * Strings, Date, Void, ...
 	 *
-	 * @return True, if this type information describes a basic type, false otherwise.
+	 * @return True, if this ype information describes a basic type, false otherwise.
 	 */
 	@PublicEvolving
 	public abstract boolean isBasicType();
 
 	/**
+	 * 是否是元祖
 	 * Checks if this type information represents a Tuple type.
 	 * Tuple types are subclasses of the Java API tuples.
 	 *
@@ -99,6 +101,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract boolean isTupleType();
 
 	/**
+	 * 字段数量
 	 * Gets the arity of this type - the number of fields without nesting.
 	 *
 	 * @return Gets the number of fields in this type without nesting.
@@ -107,6 +110,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract int getArity();
 
 	/**
+	 * 所有字段数量
 	 * Gets the number of logical fields in this type. This includes its nested and transitively nested
 	 * fields, in the case of composite types. In the example above, the OuterType type has three
 	 * fields in total.
@@ -119,6 +123,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract int getTotalFields();
 
 	/**
+	 * 获取class
 	 * Gets the class of the type represented by this type information.
 	 *
 	 * @return The class of the type represented by this type information.
@@ -127,6 +132,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract Class<T> getTypeClass();
 
 	/**
+	 * 获取泛型参数
 	 * Optional method for giving Flink's type extraction system information about the mapping
 	 * of a generic type parameter to the type information of a subtype. This information is necessary
 	 * in cases where type information should be deduced from an input type.
@@ -149,6 +155,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	}
 
 	/**
+	 * 是否可以当成key
 	 * Checks whether this type can be used as a key. As a bare minimum, types have
 	 * to be hashable and comparable to be keys.
 	 *
@@ -158,6 +165,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract boolean isKeyType();
 
 	/**
+	 * 是否可以用于排序
 	 * Checks whether this type can be used as a key for sorting.
 	 * The order produced by sorting this type must be meaningful.
 	 */
@@ -167,6 +175,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	}
 
 	/**
+	 * 创建序列化器
 	 * Creates a serializer for the type. The serializer may use the ExecutionConfig
 	 * for parameterization.
 	 *
@@ -186,6 +195,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	public abstract int hashCode();
 
 	/**
+	 * 是否可以相等
 	 * Returns true if the given object can be equaled with this object. If not, it returns false.
 	 *
 	 * @param obj Object which wants to take part in the equality relation
@@ -196,6 +206,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 通过类创建类型信息
 	 * Creates a TypeInformation for the type described by the given class.
 	 *
 	 * <p>This method only works for non-generic types. For generic types, use the
@@ -220,6 +231,7 @@ public abstract class TypeInformation<T> implements Serializable {
 	}
 
 	/**
+	 * 通过提示创建类型信息
 	 * Creates a TypeInformation for a generic type via a utility "type hint".
 	 * This method can be used as follows:
 	 * <pre>

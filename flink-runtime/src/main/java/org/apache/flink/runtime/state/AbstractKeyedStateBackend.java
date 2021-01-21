@@ -42,6 +42,8 @@ import java.util.stream.Stream;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 某个任务的后端
+ * 某个任务下面会有多个key，因此可以共用
  * Base implementation of KeyedStateBackend. The state can be checkpointed
  * to streams using {@link #snapshot(long, long, CheckpointStreamFactory, CheckpointOptions)}.
  *
@@ -59,10 +61,15 @@ public abstract class AbstractKeyedStateBackend<K> implements
 	/** Listeners to changes of ({@link #keyContext}). */
 	private final ArrayList<KeySelectionListener<K>> keySelectionListeners;
 
-	/** So that we can give out state when the user uses the same key. */
+	/**
+	 * 基于描述符的state
+	 * String->描述符名字
+	 * So that we can give out state when the user uses the same key. */
 	private final HashMap<String, InternalKvState<K, ?, ?>> keyValueStatesByName;
 
-	/** For caching the last accessed partitioned state. */
+	/**
+	 * 最后一次获取的命名空间
+	 * For caching the last accessed partitioned state. */
 	private String lastName;
 
 	@SuppressWarnings("rawtypes")
@@ -138,6 +145,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 		this.keySelectionListeners = new ArrayList<>(1);
 	}
 
+	//获取压缩包装器
 	private static StreamCompressionDecorator determineStreamCompression(ExecutionConfig executionConfig) {
 		if (executionConfig != null && executionConfig.isUseSnapshotCompression()) {
 			return SnappyStreamCompressionDecorator.INSTANCE;
@@ -175,6 +183,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 		this.keyContext.setCurrentKeyGroupIndex(KeyGroupRangeAssignment.assignToKeyGroup(newKey, numberOfKeyGroups));
 	}
 
+	//通知
 	private void notifyKeySelected(K newKey) {
 		// we prefer a for-loop over other iteration schemes for performance reasons here.
 		for (int i = 0; i < keySelectionListeners.size(); ++i) {
@@ -230,6 +239,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 	}
 
 	/**
+	 * 用于所有的key
 	 * @see KeyedStateBackend
 	 */
 	@Override
@@ -238,9 +248,10 @@ public abstract class AbstractKeyedStateBackend<K> implements
 			final TypeSerializer<N> namespaceSerializer,
 			final StateDescriptor<S, T> stateDescriptor,
 			final KeyedStateFunction<K, S> function) throws Exception {
-
+		//状态名+命名空间
 		try (Stream<K> keyStream = getKeys(stateDescriptor.getName(), namespace)) {
 
+			//获取状态
 			final S state = getPartitionedState(
 				namespace,
 				namespaceSerializer,
@@ -249,6 +260,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 			keyStream.forEach((K key) -> {
 				setCurrentKey(key);
 				try {
+					//处理元素
 					function.process(key, state);
 				} catch (Throwable e) {
 					// we wrap the checked exception in an unchecked
@@ -261,6 +273,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 
 	/**
 	 * @see KeyedStateBackend
+	 * 有则返回，无则新建
 	 */
 	@Override
 	@SuppressWarnings("unchecked")
@@ -270,12 +283,13 @@ public abstract class AbstractKeyedStateBackend<K> implements
 		checkNotNull(namespaceSerializer, "Namespace serializer");
 		checkNotNull(keySerializer, "State key serializer has not been configured in the config. " +
 				"This operation cannot use partitioned state.");
-
+		//内部使用字典保存
 		InternalKvState<K, ?, ?> kvState = keyValueStatesByName.get(stateDescriptor.getName());
 		if (kvState == null) {
 			if (!stateDescriptor.isSerializerInitialized()) {
 				stateDescriptor.initializeSerializerUnlessSet(executionConfig);
 			}
+			//创建
 			kvState = TtlStateFactory.createStateAndWrapWithTtlIfEnabled(
 				namespaceSerializer, stateDescriptor, this, ttlTimeProvider);
 			keyValueStatesByName.put(stateDescriptor.getName(), kvState);
@@ -291,6 +305,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 			if (kvStateRegistry == null) {
 				throw new IllegalStateException("State backend has not been initialized for job.");
 			}
+			//可查询状态名
 			String name = stateDescriptor.getQueryableStateName();
 			kvStateRegistry.registerKvState(keyGroupRange, name, kvState);
 		}
@@ -325,6 +340,7 @@ public abstract class AbstractKeyedStateBackend<K> implements
 			return (S) previous;
 		}
 
+		//新建
 		final S state = getOrCreateKeyedState(namespaceSerializer, stateDescriptor);
 		final InternalKvState<K, N, ?> kvState = (InternalKvState<K, N, ?>) state;
 

@@ -29,6 +29,8 @@ import org.apache.flink.configuration.IllegalConfigurationException;
 public interface ConfigurableStateBackend {
 
 	/**
+	 *
+	 * 可配置的backend
 	 * Creates a variant of the state backend that applies additional configuration parameters.
 	 *
 	 * <p>Settings that were directly done on the original state backend object in the application

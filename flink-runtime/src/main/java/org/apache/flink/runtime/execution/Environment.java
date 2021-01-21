@@ -46,6 +46,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
+ * 任务运行时环境
  * The Environment gives the code executed in a task access to the task's properties
  * (such as name, parallelism), the configurations, the data stream readers and writers,
  * as well as the various components that are provided by the TaskManager, such as
@@ -75,6 +76,7 @@ public interface Environment {
 	JobVertexID getJobVertexId();
 
 	/**
+	 * 重试id
 	 * Gets the ID of the task execution attempt.
 	 *
 	 * @return The ID of the task execution attempt.

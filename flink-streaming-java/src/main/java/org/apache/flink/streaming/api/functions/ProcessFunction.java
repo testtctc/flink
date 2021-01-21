@@ -26,6 +26,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 底层处理函数
  * A function that processes elements of a stream.
  *
  * <p>For every element in the input stream {@link #processElement(Object, Context, Collector)}
@@ -70,6 +71,7 @@ public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 	public abstract void processElement(I value, Context ctx, Collector<O> out) throws Exception;
 
 	/**
+	 * 注册定时器
 	 * Called when a timer set using {@link TimerService} fires.
 	 *
 	 * @param timestamp The timestamp of the firing timer.
@@ -99,6 +101,7 @@ public abstract class ProcessFunction<I, O> extends AbstractRichFunction {
 		public abstract Long timestamp();
 
 		/**
+		 * 时间服务
 		 * A {@link TimerService} for querying time and registering timers.
 		 */
 		public abstract TimerService timerService();

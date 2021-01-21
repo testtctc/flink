@@ -21,6 +21,7 @@ package org.apache.flink.api.common.state;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 对外接口状态
  * Interface that different types of partitioned state must implement.
  *
  * <p>The state is only accessible by functions applied on a {@code KeyedStream}. The key is

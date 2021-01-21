@@ -22,6 +22,7 @@ import org.apache.flink.annotation.Public;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 /**
+ * 结果可查询对象
  * This interface can be implemented by functions and input formats to tell the framework
  * about their produced data type. This method acts as an alternative to the reflection analysis
  * that is otherwise performed and is useful in situations where the produced data type may vary

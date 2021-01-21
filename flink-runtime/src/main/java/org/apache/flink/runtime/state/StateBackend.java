@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.util.Collection;
 
 /**
+ *
+ * 接口
  * A <b>State Backend</b> defines how the state of a streaming application is stored and
  * checkpointed. Different State Backends store their state in different fashions, and use
  * different data structures to hold the state of a running application.
@@ -92,6 +94,7 @@ public interface StateBackend extends java.io.Serializable {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 寻找地址
 	 * Resolves the given pointer to a checkpoint/savepoint into a checkpoint location. The location
 	 * supports reading the checkpoint metadata, or disposing the checkpoint storage location.
 	 *
@@ -107,6 +110,7 @@ public interface StateBackend extends java.io.Serializable {
 	CompletedCheckpointStorageLocation resolveCheckpoint(String externalPointer) throws IOException;
 
 	/**
+	 * 创建存储
 	 * Creates a storage for checkpoints for the given job. The checkpoint storage is
 	 * used to write checkpoint data and metadata.
 	 *
@@ -121,6 +125,7 @@ public interface StateBackend extends java.io.Serializable {
 	//  Structure Backends 
 	// ------------------------------------------------------------------------
 	/**
+	 * 分组内存
 	 * Creates a new {@link AbstractKeyedStateBackend} that is responsible for holding <b>keyed state</b>
 	 * and checkpointing it.
 	 *
@@ -157,6 +162,7 @@ public interface StateBackend extends java.io.Serializable {
 		CloseableRegistry cancelStreamRegistry) throws Exception;
 	
 	/**
+	 * 算子内存
 	 * Creates a new {@link OperatorStateBackend} that can be used for storing operator state.
 	 *
 	 * <p>Operator state is state that is associated with parallel operator (or function) instances,
@@ -164,10 +170,10 @@ public interface StateBackend extends java.io.Serializable {
 	 *
 	 * @param env The runtime environment of the executing task.
 	 * @param operatorIdentifier The identifier of the operator whose state should be stored.
-	 * @param stateHandles The state handles for restore.
-	 * @param cancelStreamRegistry The registry to register streams to close if task canceled.
+	 * @param stateHandles The state handles for restore. 重建的流
+	 * @param cancelStreamRegistry The registry to register streams to close if task canceled;当任务取消时用于关闭流
 	 *
-	 * @return The OperatorStateBackend for operator identified by the job and operator identifier.
+	 * @return The OperatorStateBackend for operator identified by the job and operator identifier.   jobid+operatorid
 	 *
 	 * @throws Exception This method may forward all exceptions that occur while instantiating the backend.
 	 */

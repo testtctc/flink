@@ -79,6 +79,7 @@ public abstract class AscendingTimestampExtractor<T> implements AssignerWithPeri
 		}
 	}
 
+	//获取水印
 	@Override
 	public final Watermark getCurrentWatermark() {
 		return new Watermark(currentTimestamp == Long.MIN_VALUE ? Long.MIN_VALUE : currentTimestamp - 1);
@@ -89,6 +90,7 @@ public abstract class AscendingTimestampExtractor<T> implements AssignerWithPeri
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 当触犯规则时的处理
 	 * Interface for handlers that handle violations of the monotonous ascending timestamps
 	 * property.
 	 */
@@ -105,6 +107,7 @@ public abstract class AscendingTimestampExtractor<T> implements AssignerWithPeri
 	}
 
 	/**
+	 * 忽略
 	 * Handler that does nothing when timestamp monotony is violated.
 	 */
 	public static final class IgnoringHandler implements MonotonyViolationHandler {
@@ -115,6 +118,7 @@ public abstract class AscendingTimestampExtractor<T> implements AssignerWithPeri
 	}
 
 	/**
+	 * 直接报错
 	 * Handler that fails the program when timestamp monotony is violated.
 	 */
 	public static final class FailingHandler implements MonotonyViolationHandler {
@@ -128,6 +132,7 @@ public abstract class AscendingTimestampExtractor<T> implements AssignerWithPeri
 	}
 
 	/**
+	 * 打印
 	 * Handler that only logs violations of timestamp monotony, on WARN log level.
 	 */
 	public static final class LoggingHandler implements MonotonyViolationHandler {

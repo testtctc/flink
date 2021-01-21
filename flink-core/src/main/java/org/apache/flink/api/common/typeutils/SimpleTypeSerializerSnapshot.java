@@ -30,6 +30,7 @@ import java.util.function.Supplier;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 跨
  * A simple base class for TypeSerializerSnapshots, for serializers that have no
  * parameters. The serializer is defined solely by its class name.
  *

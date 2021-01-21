@@ -21,6 +21,7 @@ package org.apache.flink.streaming.api.functions;
 import org.apache.flink.api.common.functions.Function;
 
 /**
+ * 抽取时间给元素
  * A {@code TimestampAssigner} assigns event time timestamps to elements.
  * These timestamps are used by all functions that operate on event time,
  * for example event time windows.
@@ -33,6 +34,7 @@ import org.apache.flink.api.common.functions.Function;
 public interface TimestampAssigner<T> extends Function {
 
 	/**
+	 * 抽取时间点
 	 * Assigns a timestamp to an element, in milliseconds since the Epoch.
 	 *
 	 * <p>The method is passed the previously assigned timestamp of the element.

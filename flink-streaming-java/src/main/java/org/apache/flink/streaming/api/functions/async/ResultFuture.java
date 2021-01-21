@@ -30,6 +30,7 @@ import java.util.Collection;
 @PublicEvolving
 public interface ResultFuture<OUT> {
 	/**
+	 * 完成时调用
 	 * Completes the result future with a collection of result objects.
 	 *
 	 * <p>Note that it should be called for exactly one time in the user code.

@@ -22,6 +22,9 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.util.function.BiConsumerWithException;
 
 /**
+ *
+ * 时间管理器
+ * TimerService
  * Interface for working with time and timers.
  *
  * <p>This is the internal version of {@link org.apache.flink.streaming.api.TimerService}
@@ -39,6 +42,7 @@ public interface InternalTimerService<N> {
 	long currentWatermark();
 
 	/**
+	 * 在命名空间下注册定时器
 	 * Registers a timer to be fired when processing time passes the given time. The namespace
 	 * you pass here will be provided when the timer fires.
 	 */
@@ -61,12 +65,14 @@ public interface InternalTimerService<N> {
 	void deleteEventTimeTimer(N namespace, long time);
 
 	/**
+	 * 迭代事件时间
 	 * Performs an action for each registered timer. The timer service will
 	 * set the key context for the timers key before invoking the action.
 	 */
 	void forEachEventTimeTimer(BiConsumerWithException<N, Long, Exception> consumer) throws Exception;
 
 	/**
+	 * 迭代处理时间
 	 * Performs an action for each registered timer. The timer service will
 	 * set the key context for the timers key before invoking the action.
 	 */

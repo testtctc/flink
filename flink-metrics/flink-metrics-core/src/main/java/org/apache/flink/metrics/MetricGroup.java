@@ -21,6 +21,7 @@ package org.apache.flink.metrics;
 import java.util.Map;
 
 /**
+ * Metric容器
  * A MetricGroup is a named container for {@link Metric Metrics} and further metric subgroups.
  *
  * <p>Instances of this class can be used to register new metrics with Flink and to create a nested
@@ -71,6 +72,7 @@ public interface MetricGroup {
 	<C extends Counter> C counter(String name, C counter);
 
 	/**
+	 * 注册 gauge
 	 * Registers a new {@link org.apache.flink.metrics.Gauge} with Flink.
 	 *
 	 * @param name  name of the gauge

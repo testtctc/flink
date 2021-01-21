@@ -19,6 +19,7 @@
 package org.apache.flink.streaming.api.operators;
 
 /**
+ * 键上下文
  * Inteface for setting and querying the current key of keyed operations.
  *
  * <p>This is mainly used by the timer system to query the key when creating timers

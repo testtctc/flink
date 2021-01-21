@@ -23,6 +23,7 @@ import org.apache.flink.api.common.functions.Function;
 import java.io.Serializable;
 
 /**
+ * 输出函数
  * Interface for implementing user defined sink functionality.
  *
  * @param <IN> Input type parameter.
@@ -72,6 +73,7 @@ public interface SinkFunction<IN> extends Function, Serializable {
 		long currentWatermark();
 
 		/**
+		 * 附带的时间锉
 		 * Returns the timestamp of the current input record or {@code null} if the element does not
 		 * have an assigned timestamp.
 		 */

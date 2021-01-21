@@ -25,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 时间
  * The definition of a time interval for windowing. The time characteristic referred
  * to is the default time characteristic set on the execution environment.
  */

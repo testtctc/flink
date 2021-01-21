@@ -21,6 +21,7 @@ package org.apache.flink.runtime.io.network.buffer;
 import java.io.IOException;
 
 /**
+ * buffer池
  * A dynamically sized buffer pool.
  */
 public interface BufferPool extends BufferProvider, BufferRecycler {
@@ -58,6 +59,7 @@ public interface BufferPool extends BufferProvider, BufferRecycler {
 	int getNumBuffers();
 
 	/**
+	 * buffer数量
 	 * Sets the current size of this buffer pool.
 	 *
 	 * <p>The size needs to be greater or equal to the guaranteed number of memory segments.

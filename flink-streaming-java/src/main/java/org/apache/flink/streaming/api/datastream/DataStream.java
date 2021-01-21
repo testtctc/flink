@@ -115,8 +115,10 @@ import java.util.List;
 @Public
 public class DataStream<T> {
 
+	//
 	protected final StreamExecutionEnvironment environment;
 
+	//设计的转化
 	protected final Transformation<T> transformation;
 
 	/**
@@ -1228,6 +1230,7 @@ public class DataStream<T> {
 	}
 
 	/**
+	 * 转化
 	 * Method for passing user defined operators along with the type
 	 * information that will transform the DataStream.
 	 *
@@ -1289,7 +1292,7 @@ public class DataStream<T> {
 
 		@SuppressWarnings({"unchecked", "rawtypes"})
 		SingleOutputStreamOperator<R> returnStream = new SingleOutputStreamOperator(environment, resultTransform);
-
+		// 添加算子
 		getExecutionEnvironment().addOperator(resultTransform);
 
 		return returnStream;

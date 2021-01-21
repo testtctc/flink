@@ -27,6 +27,8 @@ import org.apache.flink.api.java.typeutils.MapTypeInfo;
 import java.util.Map;
 
 /**
+ *
+ * 字典描述器
  * A {@link StateDescriptor} for {@link MapState}. This can be used to create state where the type
  * is a map that can be updated and iterated over.
  *
@@ -62,6 +64,7 @@ public class MapStateDescriptor<UK, UV> extends StateDescriptor<MapState<UK, UV>
 	}
 
 	/**
+	 * 默认值为空置
 	 * Create a new {@code MapStateDescriptor} with the given name and the given type information.
 	 *
 	 * @param name The name of the {@code MapStateDescriptor}.

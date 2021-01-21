@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
+ * 存档执行信息
  * Serializable class which is created when archiving the job.
  * It can be used to display job information on the web interface
  * without having to keep the classloader around after job completion.

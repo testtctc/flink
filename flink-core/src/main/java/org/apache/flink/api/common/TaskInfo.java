@@ -24,6 +24,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 任务信息
  * Encapsulates task-specific information: name, index of subtask, parallelism and attempt number.
  */
 @Internal

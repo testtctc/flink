@@ -24,6 +24,7 @@ import org.apache.flink.runtime.checkpoint.TaskStateSnapshot;
 import org.apache.flink.runtime.executiongraph.ExecutionAttemptID;
 
 /**
+ * 想引器
  * Responder for checkpoint acknowledge and decline messages in the {@link Task}.
  */
 public interface CheckpointResponder {
@@ -40,7 +41,7 @@ public interface CheckpointResponder {
 	 * @param checkpointMetrics
 	 *             Metrics of this checkpoint
 	 * @param subtaskState
-	 *             State handles for the checkpoint
+	 *             State handles for the checkpoint 状态管理器
 	 */
 	void acknowledgeCheckpoint(
 		JobID jobID,

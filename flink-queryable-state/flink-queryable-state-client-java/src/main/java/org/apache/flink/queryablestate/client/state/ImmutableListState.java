@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
+ * 只读列表状态
  * A read-only {@link ListState} that does not allow for modifications.
  *
  * <p>This is the result returned when querying Flink's keyed state using the

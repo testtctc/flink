@@ -27,6 +27,7 @@ import org.apache.flink.annotation.Internal;
 public interface StreamStatusMaintainer extends StreamStatusProvider {
 
 	/**
+	 * 更改状态
 	 * Toggles the current stream status. This method should only have effect
 	 * if the supplied stream status is different from the current status.
 	 *

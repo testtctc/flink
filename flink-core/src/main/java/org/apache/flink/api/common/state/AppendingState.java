@@ -21,6 +21,7 @@ package org.apache.flink.api.common.state;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 增量状态
  * Base interface for partitioned state that supports adding elements and inspecting the current
  * state. Elements can either be kept in a buffer (list-like) or aggregated into one value.
  *
@@ -39,6 +40,7 @@ import org.apache.flink.annotation.PublicEvolving;
 public interface AppendingState<IN, OUT> extends State {
 
 	/**
+	 * 获取值
 	 * Returns the current value for the state. When the state is not
 	 * partitioned the returned value is the same for all inputs in a given
 	 * operator instance. If state partitioning is applied, the value returned

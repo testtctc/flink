@@ -25,6 +25,7 @@ import java.io.IOException;
 
 
 /**
+ * 数据输入视图
  * This interface defines a view over some memory that can be used to sequentially read the contents of the memory.
  * The view is typically backed by one or more {@link org.apache.flink.core.memory.MemorySegment}.
  */

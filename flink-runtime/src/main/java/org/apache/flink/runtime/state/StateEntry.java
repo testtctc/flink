@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * 状态的元素
  * Interface of entries in a state backend. Entries are triple of key, namespace, and state.
  *
  * @param <K> type of key.

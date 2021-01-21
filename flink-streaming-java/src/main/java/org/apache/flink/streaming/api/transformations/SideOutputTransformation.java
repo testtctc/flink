@@ -30,6 +30,7 @@ import static java.util.Objects.requireNonNull;
 
 
 /**
+ * 旁路输出
  * This transformation represents a selection of a side output of an upstream operation with a
  * given {@link OutputTag}.
  *
@@ -60,6 +61,7 @@ public class SideOutputTransformation<T> extends Transformation<T> {
 		return tag;
 	}
 
+	//中间状态状态转化
 	@Override
 	public Collection<Transformation<?>> getTransitivePredecessors() {
 		List<Transformation<?>> result = Lists.newArrayList();

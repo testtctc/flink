@@ -29,6 +29,7 @@ import org.apache.flink.runtime.taskmanager.Task;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * kv注册中心
  * A registry for {@link InternalKvState} instances per task manager.
  *
  * <p>This is currently only used for KvState queries: KvState instances, which
@@ -71,6 +72,8 @@ public class KvStateRegistry {
 	}
 
 	/**
+	 *
+	 * 注册
 	 * Registers the KvState instance and returns the assigned ID.
 	 *
 	 * @param jobId            JobId the KvState instance belongs to

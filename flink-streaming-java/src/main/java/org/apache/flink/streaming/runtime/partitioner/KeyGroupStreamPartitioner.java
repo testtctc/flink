@@ -47,6 +47,8 @@ public class KeyGroupStreamPartitioner<T, K> extends StreamPartitioner<T> implem
 		return maxParallelism;
 	}
 
+	//引入算子组的目的：扩容方便
+	//channel:某个算子的并行任务索引
 	@Override
 	public int selectChannel(SerializationDelegate<StreamRecord<T>> record) {
 		K key;

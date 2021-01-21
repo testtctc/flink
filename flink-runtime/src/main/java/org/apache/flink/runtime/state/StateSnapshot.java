@@ -60,6 +60,7 @@ public interface StateSnapshot {
 	void release();
 
 	/**
+	 * 状态写入 keygroup
 	 * Interface for writing a snapshot that is partitioned into key-groups.
 	 */
 	interface StateKeyGroupWriter {

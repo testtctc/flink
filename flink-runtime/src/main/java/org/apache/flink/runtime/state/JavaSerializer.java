@@ -32,6 +32,7 @@ import org.apache.flink.util.InstantiationUtil;
 import java.io.IOException;
 import java.io.Serializable;
 
+//序列化器 java默认的系列化器
 @Internal
 final class JavaSerializer<T extends Serializable> extends TypeSerializerSingleton<T> {
 

@@ -30,6 +30,7 @@ import org.apache.flink.util.Preconditions;
 import java.util.concurrent.ScheduledFuture;
 
 /**
+ * 数据源上下文
  * Source contexts for various stream time characteristics.
  */
 public class StreamSourceContexts {
@@ -52,6 +53,7 @@ public class StreamSourceContexts {
 			long watermarkInterval,
 			long idleTimeout) {
 
+		//根据时间特点决定数据源上下文的实现
 		final SourceFunction.SourceContext<OUT> ctx;
 		switch (timeCharacteristic) {
 			case EventTime:
@@ -275,6 +277,7 @@ public class StreamSourceContexts {
 	}
 
 	/**
+	 * 手工上下文
 	 * A SourceContext for event time. Sources may directly attach timestamps and generate
 	 * watermarks, but if records are emitted without timestamps, no timestamps are automatically
 	 * generated and attached. The records will simply have no timestamp in that case.
@@ -285,6 +288,7 @@ public class StreamSourceContexts {
 	private static class ManualWatermarkContext<T> extends WatermarkContext<T> {
 
 		private final Output<StreamRecord<T>> output;
+		//重用对象
 		private final StreamRecord<T> reuse;
 
 		private ManualWatermarkContext(
@@ -322,6 +326,7 @@ public class StreamSourceContexts {
 	}
 
 	/**
+	 * 当有水印时的处理
 	 * An abstract {@link SourceFunction.SourceContext} that should be used as the base for
 	 * stream source contexts that are relevant with {@link Watermark}s.
 	 *
@@ -329,7 +334,7 @@ public class StreamSourceContexts {
 	 * the current {@link StreamStatus}, so that stream status can be correctly propagated
 	 * downstream. Please refer to the class-level documentation of {@link StreamStatus} for
 	 * information on how stream status affects watermark advancement at downstream tasks.
-	 *
+	 * 这里涉及到了空闲的检测逻辑
 	 * <p>This class implements the logic of idleness detection. It fires idleness detection
 	 * tasks at a given interval; if no records or watermarks were collected by the source context
 	 * between 2 consecutive checks, it determines the source to be IDLE and correspondingly
@@ -342,10 +347,11 @@ public class StreamSourceContexts {
 		protected final Object checkpointLock;
 		protected final StreamStatusMaintainer streamStatusMaintainer;
 		protected final long idleTimeout;
-
+		//异步
 		private ScheduledFuture<?> nextCheck;
 
 		/**
+		 * 是否让下册检测时失败
 		 * This flag will be reset to {@code true} every time the next check is scheduled.
 		 * Whenever a record or watermark is collected, the flag will be set to {@code false}.
 		 *
@@ -376,7 +382,7 @@ public class StreamSourceContexts {
 				Preconditions.checkArgument(idleTimeout >= 1, "The idle timeout cannot be smaller than 1 ms.");
 			}
 			this.idleTimeout = idleTimeout;
-
+			//开始下次空闲检测
 			scheduleNextIdleDetectionTask();
 		}
 
@@ -390,7 +396,6 @@ public class StreamSourceContexts {
 				} else {
 					scheduleNextIdleDetectionTask();
 				}
-
 				processAndCollect(element);
 			}
 		}
@@ -462,6 +467,8 @@ public class StreamSourceContexts {
 			}
 		}
 
+		//开始下次任务
+		// 每次默认是失败的，当处理元素是会改变状态
 		private void scheduleNextIdleDetectionTask() {
 			if (idleTimeout != -1) {
 				// reset flag; if it remains true when task fires, we have detected idleness
@@ -485,16 +492,23 @@ public class StreamSourceContexts {
 		//  so implementations don't need to do so.
 		// ------------------------------------------------------------------------
 
-		/** Process and collect record. */
+		/**
+		 * 处理元素
+		 * Process and collect record. */
 		protected abstract void processAndCollect(T element);
 
-		/** Process and collect record with timestamp. */
+		/**
+		 * 处理水印和数据
+		 * Process and collect record with timestamp. */
 		protected abstract void processAndCollectWithTimestamp(T element, long timestamp);
 
-		/** Whether or not a watermark should be allowed. */
+		/**
+		 * 是否允许水印
+		 * Whether or not a watermark should be allowed. */
 		protected abstract boolean allowWatermark(Watermark mark);
 
 		/**
+		 * 处理水印
 		 * Process and emit watermark. Only called if
 		 * {@link WatermarkContext#allowWatermark(Watermark)} returns {@code true}.
 		 */

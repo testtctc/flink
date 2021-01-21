@@ -29,18 +29,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 带有分区的列表状态-->属于某个算子
  * Implementation of operator list state.
  *
- * @param <S> the type of an operator state partition.
+ * @param <S> the type of an operator state partition 列表中元素的类型.
  */
 public final class PartitionableListState<S> implements ListState<S> {
 
 	/**
+	 * 元信息
 	 * Meta information of the state, including state name, assignment mode, and typeSerializer
 	 */
 	private RegisteredOperatorStateBackendMetaInfo<S> stateMetaInfo;
 
 	/**
+	 * 使用列表存储
 	 * The internal list the holds the elements of the state
 	 */
 	private final ArrayList<S> internalList;
@@ -63,6 +66,7 @@ public final class PartitionableListState<S> implements ListState<S> {
 		this.internalListCopySerializer = new ArrayListSerializer<>(stateMetaInfo.getPartitionStateSerializer());
 	}
 
+	//拷贝一份
 	private PartitionableListState(PartitionableListState<S> toCopy) {
 
 		this(toCopy.stateMetaInfo.deepCopy(), toCopy.internalListCopySerializer.copy(toCopy.internalList));
@@ -104,6 +108,7 @@ public final class PartitionableListState<S> implements ListState<S> {
 				'}';
 	}
 
+	//获取在数据中的偏移量
 	public long[] write(FSDataOutputStream out) throws IOException {
 
 		long[] partitionOffsets = new long[internalList.size()];
@@ -118,6 +123,8 @@ public final class PartitionableListState<S> implements ListState<S> {
 
 		return partitionOffsets;
 	}
+
+	//更新
 
 	@Override
 	public void update(List<S> values) {

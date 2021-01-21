@@ -27,6 +27,7 @@ import org.apache.flink.core.memory.DataOutputView;
 import java.io.IOException;
 
 /**
+ *  序列化器
  * Serializer for {@link VoidNamespace}.
  */
 public final class VoidNamespaceSerializer extends TypeSerializerSingleton<VoidNamespace> {

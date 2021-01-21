@@ -37,6 +37,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 存内存
  * An implementation of a checkpoint storage for the {@link MemoryStateBackend}.
  * Depending on whether this is created with a checkpoint location, the setup supports
  * durable checkpoints (durable metadata) or not.

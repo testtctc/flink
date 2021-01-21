@@ -23,6 +23,7 @@ import org.apache.flink.annotation.PublicEvolving;
 import javax.annotation.Nullable;
 
 /**
+ * 三向boolean
  * A ternary boolean, which can have the values 'true', 'false', or 'undefined'.
  *
  * <p>A ternary boolean can for example be used to configuration switches that

@@ -24,6 +24,7 @@ import org.apache.flink.client.deployment.StandaloneClusterId;
 import org.apache.flink.core.execution.PipelineExecutor;
 
 /**
+ * 远程执行器
  * The {@link PipelineExecutor} to be used when executing a job on an already running cluster.
  */
 @Internal

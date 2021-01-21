@@ -60,6 +60,7 @@ public final class MemorySegmentFactory {
 	}
 
 	/**
+	 * 底层实现--生成数组
 	 * Allocates some unpooled memory and creates a new memory segment that represents
 	 * that memory.
 	 *
@@ -94,6 +95,7 @@ public final class MemorySegmentFactory {
 	 * @return A new memory segment, backed by unpooled off-heap memory.
 	 */
 	public static MemorySegment allocateUnpooledOffHeapMemory(int size, Object owner) {
+		//分配对内存
 		ByteBuffer memory = ByteBuffer.allocateDirect(size);
 		return new HybridMemorySegment(memory, owner, null);
 	}

@@ -31,6 +31,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
+ * 共享状态管理
  * This registry manages state that is shared across (incremental) checkpoints, and is responsible
  * for deleting shared state that is no longer used in any valid checkpoint.
  *
@@ -46,13 +47,17 @@ public class SharedStateRegistry implements AutoCloseable {
 	/** A singleton object for the default implementation of a {@link SharedStateRegistryFactory} */
 	public static final SharedStateRegistryFactory DEFAULT_FACTORY = SharedStateRegistry::new;
 
-	/** All registered state objects by an artificial key */
+	/** All registered state objects by an artificial key
+	 *  内部字典
+	 * */
 	private final Map<SharedStateRegistryKey, SharedStateRegistry.SharedStateEntry> registeredStates;
 
 	/** This flag indicates whether or not the registry is open or if close() was called */
 	private boolean open;
 
-	/** Executor for async state deletion */
+	/**
+	 * 异步处理器
+	 * Executor for async state deletion */
 	private final Executor asyncDisposalExecutor;
 
 	/** Default uses direct executor to delete unreferenced state */
@@ -60,6 +65,7 @@ public class SharedStateRegistry implements AutoCloseable {
 		this(Executors.directExecutor());
 	}
 
+	//构造函数
 	public SharedStateRegistry(Executor asyncDisposalExecutor) {
 		this.registeredStates = new HashMap<>();
 		this.asyncDisposalExecutor = Preconditions.checkNotNull(asyncDisposalExecutor);
@@ -67,6 +73,7 @@ public class SharedStateRegistry implements AutoCloseable {
 	}
 
 	/**
+	 * 注册引用
 	 * Register a reference to the given shared state in the registry.
 	 * This does the following: We check if the state handle is actually new by the
 	 * registrationKey. If it is new, we register it with a reference count of 1. If there is
@@ -90,7 +97,7 @@ public class SharedStateRegistry implements AutoCloseable {
 		SharedStateRegistry.SharedStateEntry entry;
 
 		synchronized (registeredStates) {
-
+			//确保注册器打开
 			Preconditions.checkState(open, "Attempt to register state to closed SharedStateRegistry.");
 
 			entry = registeredStates.get(registrationKey);
@@ -113,6 +120,7 @@ public class SharedStateRegistry implements AutoCloseable {
 						state,
 						entry.stateHandle);
 				}
+				//添加计数
 				entry.increaseReferenceCount();
 			}
 		}
@@ -151,6 +159,7 @@ public class SharedStateRegistry implements AutoCloseable {
 			// Remove the state from the registry when it's not referenced any more.
 			if (entry.getReferenceCount() <= 0) {
 				registeredStates.remove(registrationKey);
+				//将要删除的状态
 				scheduledStateDeletion = entry.getStateHandle();
 				result = new Result(null, 0);
 			} else {
@@ -165,6 +174,7 @@ public class SharedStateRegistry implements AutoCloseable {
 	}
 
 	/**
+	 * 注册
 	 * Register given shared states in the registry.
 	 *
 	 * @param stateHandles The shared states to register.
@@ -191,6 +201,7 @@ public class SharedStateRegistry implements AutoCloseable {
 		}
 	}
 
+	//异步删除
 	private void scheduleAsyncDelete(StreamStateHandle streamStateHandle) {
 		// We do the small optimization to not issue discards for placeholders, which are NOPs.
 		if (streamStateHandle != null && !isPlaceholder(streamStateHandle)) {
@@ -221,6 +232,7 @@ public class SharedStateRegistry implements AutoCloseable {
 	}
 
 	/**
+	 * 通过引用计数进行回收
 	 * An entry in the registry, tracking the handle and the corresponding reference count.
 	 */
 	private static class SharedStateEntry {
@@ -228,7 +240,9 @@ public class SharedStateRegistry implements AutoCloseable {
 		/** The shared state handle */
 		private final StreamStateHandle stateHandle;
 
-		/** The current reference count of the state handle */
+		/**
+		 * 计数
+		 * The current reference count of the state handle */
 		private int referenceCount;
 
 		SharedStateEntry(StreamStateHandle value) {
@@ -262,6 +276,7 @@ public class SharedStateRegistry implements AutoCloseable {
 	}
 
 	/**
+	 * 结果
 	 * The result of an attempt to (un)/reference state
 	 */
 	public static class Result {
@@ -302,6 +317,7 @@ public class SharedStateRegistry implements AutoCloseable {
 	}
 
 	/**
+	 * 异步释放资源
 	 * Encapsulates the operation the delete state handles asynchronously.
 	 */
 	private static final class AsyncDisposalRunnable implements Runnable {
@@ -311,7 +327,7 @@ public class SharedStateRegistry implements AutoCloseable {
 		public AsyncDisposalRunnable(StateObject toDispose) {
 			this.toDispose = Preconditions.checkNotNull(toDispose);
 		}
-
+		//删除
 		@Override
 		public void run() {
 			try {

@@ -22,6 +22,7 @@ import org.apache.flink.core.fs.FSDataInputStream;
 import org.apache.flink.runtime.state.memory.ByteStreamStateHandle;
 
 /**
+ * 占位符
  * A placeholder state handle for shared state that will replaced by an original that was
  * created in a previous checkpoint. So we don't have to send a state handle twice, e.g. in
  * case of {@link ByteStreamStateHandle}. This class is used in the referenced states of

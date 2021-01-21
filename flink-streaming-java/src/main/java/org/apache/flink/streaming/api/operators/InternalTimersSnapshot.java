@@ -28,6 +28,9 @@ import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
+ * 定时器备份
+ *
+ * java bean
  * A snapshot of internal timers, containing event and processing timers and
  * the serializers to use to write / read them.
  */

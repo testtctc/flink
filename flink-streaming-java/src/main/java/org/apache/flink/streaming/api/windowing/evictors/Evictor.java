@@ -86,6 +86,7 @@ public interface Evictor<T, W extends Window> extends Serializable {
 		MetricGroup getMetricGroup();
 
 		/**
+		 * 获取水印
 		 * Returns the current watermark time.
 		 */
 		long getCurrentWatermark();

@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 轻量级的配置
  * Lightweight configuration object which stores key/value pairs.
  */
 @Public

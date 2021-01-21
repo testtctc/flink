@@ -39,6 +39,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 文件存储
  * An implementation of durable checkpoint storage to file systems.
  */
 public abstract class AbstractFsCheckpointStorage implements CheckpointStorage {
@@ -233,7 +234,7 @@ public abstract class AbstractFsCheckpointStorage implements CheckpointStorage {
 			throw new IOException("Cannot access file system for checkpoint/savepoint path '" +
 					checkpointPointer + "'.", e);
 		}
-
+		//文件状态
 		final FileStatus status;
 		try {
 			status = fs.getFileStatus(path);
@@ -250,6 +251,7 @@ public abstract class AbstractFsCheckpointStorage implements CheckpointStorage {
 		// If this is a directory, we need to find the meta data file
 		if (status.isDir()) {
 			checkpointDir = status.getPath();
+			//元数据文件
 			final Path metadataFilePath = new Path(path, METADATA_FILE_NAME);
 			try {
 				metadataFileStatus = fs.getFileStatus(metadataFilePath);
@@ -266,7 +268,7 @@ public abstract class AbstractFsCheckpointStorage implements CheckpointStorage {
 			metadataFileStatus = status;
 			checkpointDir = status.getPath().getParent();
 		}
-
+		//创建流
 		final FileStateHandle metaDataFileHandle = new FileStateHandle(
 				metadataFileStatus.getPath(), metadataFileStatus.getLen());
 

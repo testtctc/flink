@@ -29,6 +29,7 @@ import org.apache.flink.annotation.PublicEvolving;
 public interface CheckpointListener {
 
 	/**
+	 * 通知检查点完成
 	 * This method is called as a notification once a distributed checkpoint has been completed.
 	 * 
 	 * Note that any exception during this method will not cause the checkpoint to

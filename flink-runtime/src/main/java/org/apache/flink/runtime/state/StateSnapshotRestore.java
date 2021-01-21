@@ -23,6 +23,7 @@ import org.apache.flink.annotation.Internal;
 import javax.annotation.Nonnull;
 
 /**
+ * 快照恢复
  * Interface to deal with state snapshot and restore of state.
  * TODO find better name?
  */
@@ -30,12 +31,14 @@ import javax.annotation.Nonnull;
 public interface StateSnapshotRestore {
 
 	/**
+	 * 快照
 	 * Returns a snapshot of the state.
 	 */
 	@Nonnull
 	StateSnapshot stateSnapshot();
 
 	/**
+	 *
 	 * This method returns a {@link StateSnapshotKeyGroupReader} that can be used to restore the state on a
 	 * per-key-group basis. This method tries to return a reader for the given version hint.
 	 *

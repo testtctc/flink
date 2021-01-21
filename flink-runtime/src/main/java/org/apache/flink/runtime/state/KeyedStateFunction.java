@@ -21,6 +21,7 @@ package org.apache.flink.runtime.state;
 import org.apache.flink.api.common.state.State;
 
 /**
+ * 处理函数
  * A function to be applied to all keyed states.
  *
  * @param <K> The type of key.

@@ -30,6 +30,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 
 
 /**
+ * 状态备份
  * {@link StreamStateHandle} for state that was written to a file stream. The written data is
  * identified by the file path. The state can be read again by calling {@link #openInputStream()}.
  */
@@ -63,12 +64,14 @@ public class FileStateHandle implements StreamStateHandle {
 		return filePath;
 	}
 
+	//打开输入流
 	@Override
 	public FSDataInputStream openInputStream() throws IOException {
 		return getFileSystem().open(filePath);
 	}
 
 	/**
+	 * 删除状态
 	 * Discard the state by deleting the file that stores the state. If the parent directory
 	 * of the state is empty after deleting the state file, it is also deleted.
 	 *

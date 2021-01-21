@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 直接传播的流--包装
  * Output stream, that wraps another input stream and forwards all method calls to the wrapped stream.
  */
 @Internal

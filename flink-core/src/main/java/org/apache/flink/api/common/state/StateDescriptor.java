@@ -47,13 +47,14 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 描述符
  * Base class for state descriptors. A {@code StateDescriptor} is used for creating partitioned
  * {@link State} in stateful operations.
  *
  * <p>Subclasses must correctly implement {@link #equals(Object)} and {@link #hashCode()}.
  *
- * @param <S> The type of the State objects created from this {@code StateDescriptor}.
- * @param <T> The type of the value of the state object described by this state descriptor.
+ * @param <S> The type of the State objects created from this {@code StateDescriptor} 状态的类型.
+ * @param <T> The type of the value of the state object described by this state descriptor 状态包含元素的类型 .
  */
 @PublicEvolving
 public abstract class StateDescriptor<S extends State, T> implements Serializable {
@@ -85,7 +86,9 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 	/** Name that uniquely identifies state created from this StateDescriptor. */
 	protected final String name;
 
-	/** The serializer for the type. May be eagerly initialized in the constructor,
+	/**
+	 * 序列化器
+	 * The serializer for the type. May be eagerly initialized in the constructor,
 	 * or lazily once the {@link #initializeSerializerUnlessSet(ExecutionConfig)} method
 	 * is called. */
 	private final AtomicReference<TypeSerializer<T>> serializerAtomicReference = new AtomicReference<>();
@@ -95,11 +98,15 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 	@Nullable
 	private TypeInformation<T> typeInfo;
 
-	/** Name for queries against state created from this StateDescriptor. */
+	/**
+	 * 可查询对象的名字
+	 * ame for queries against state created from this StateDescriptor. */
 	@Nullable
 	private String queryableStateName;
 
-	/** Name for queries against state created from this StateDescriptor. */
+	/**
+	 * 过期设置
+	 * Name for queries against state created from this StateDescriptor. */
 	@Nonnull
 	private StateTtlConfig ttlConfig = StateTtlConfig.DISABLED;
 
@@ -176,6 +183,7 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 	}
 
 	/**
+	 * 获取值--只读
 	 * Returns the default value.
 	 */
 	public T getDefaultValue() {
@@ -293,6 +301,8 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 	}
 
 	/**
+	 *
+	 * 要么直接有序列化器， 或者类型信息
 	 * Initializes the serializer, unless it has been initialized before.
 	 *
 	 * @param executionConfig The execution config to use when creating the serializer.
@@ -345,9 +355,10 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 	public abstract Type getType();
 
 	// ------------------------------------------------------------------------
-	//  Serialization
+	//  Serialization  -- 序列化
 	// ------------------------------------------------------------------------
 
+	//序列化
 	private void writeObject(final ObjectOutputStream out) throws IOException {
 		// write all the non-transient fields
 		out.defaultWriteObject();
@@ -383,6 +394,7 @@ public abstract class StateDescriptor<S extends State, T> implements Serializabl
 		}
 	}
 
+	//反序列化
 	private void readObject(final ObjectInputStream in) throws IOException, ClassNotFoundException {
 		// read the non-transient fields
 		in.defaultReadObject();

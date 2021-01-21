@@ -580,6 +580,7 @@ public final class InstantiationUtil {
 		}
 	}
 
+	//java默认的对象系列化方式
 	public static byte[] serializeObject(Object o) throws IOException {
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				ObjectOutputStream oos = new ObjectOutputStream(baos)) {

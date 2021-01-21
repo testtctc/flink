@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 
 /**
+ * 日志功能
  * Abstract base class for implementing {@link SnapshotStrategy}, that gives a consistent logging across state backends.
  *
  * @param <T> type of the snapshot result.
@@ -51,12 +52,14 @@ public abstract class AbstractSnapshotStrategy<T extends StateObject> implements
 	}
 
 	/**
+	 * 打印异步同步完成消息
 	 * Logs the duration of the asynchronous snapshot part from the given start time.
 	 */
 	public void logAsyncCompleted(@Nonnull Object checkpointOutDescription, long startTime) {
 		logCompletedInternal(LOG_ASYNC_COMPLETED_TEMPLATE, checkpointOutDescription, startTime);
 	}
 
+	//打印时间
 	private void logCompletedInternal(
 		@Nonnull String template,
 		@Nonnull Object checkpointOutDescription,

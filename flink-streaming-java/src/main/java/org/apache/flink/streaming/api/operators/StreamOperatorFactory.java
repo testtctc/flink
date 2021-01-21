@@ -36,6 +36,7 @@ import java.io.Serializable;
 public interface StreamOperatorFactory<OUT> extends Serializable {
 
 	/**
+	 * 创建算子
 	 * Create the operator. Sets access to the context and the output.
 	 */
 	<T extends StreamOperator<OUT>> T createStreamOperator(
@@ -52,6 +53,7 @@ public interface StreamOperatorFactory<OUT> extends Serializable {
 	ChainingStrategy getChainingStrategy();
 
 	/**
+	 * 是否是数据源
 	 * Is this factory for {@link StreamSource}.
 	 */
 	default boolean isStreamSource() {
@@ -94,6 +96,7 @@ public interface StreamOperatorFactory<OUT> extends Serializable {
 	default void setInputType(TypeInformation<?> type, ExecutionConfig executionConfig) {}
 
 	/**
+	 * 获取类
 	 * Returns the runtime class of the stream operator.
 	 */
 	Class<? extends StreamOperator> getStreamOperatorClass(ClassLoader classLoader);

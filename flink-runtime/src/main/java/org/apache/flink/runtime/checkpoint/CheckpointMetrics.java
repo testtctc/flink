@@ -23,6 +23,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import java.io.Serializable;
 
 /**
+ * checkpoint操作的统计信息
  * A collection of simple metrics, around the triggering of a checkpoint.
  */
 public class CheckpointMetrics implements Serializable {

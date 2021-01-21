@@ -24,6 +24,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 
 /**
+ * 实现
  * Basic heap-based priority queue for {@link HeapPriorityQueueElement} objects. This heap supports fast deletes
  * because it manages position indexes of the contained {@link HeapPriorityQueueElement}s. The heap implementation is
  * a simple binary tree stored inside an array. Element indexes in the heap array start at 1 instead of 0 to make array
@@ -47,6 +48,7 @@ public class HeapPriorityQueue<T extends HeapPriorityQueueElement>
 	private static final int QUEUE_HEAD_INDEX = 1;
 
 	/**
+	 * 对比优先级
 	 * Comparator for the priority of contained elements.
 	 */
 	@Nonnull
@@ -78,6 +80,7 @@ public class HeapPriorityQueue<T extends HeapPriorityQueueElement>
 		return QUEUE_HEAD_INDEX;
 	}
 
+	//堆排序
 	@Override
 	protected void addInternal(@Nonnull T element) {
 		final int newSize = increaseSizeByOne();
@@ -113,6 +116,8 @@ public class HeapPriorityQueue<T extends HeapPriorityQueueElement>
 		}
 	}
 
+	//堆排序
+	//大元素放上面
 	private void siftUp(int idx) {
 		final T[] heap = this.queue;
 		final T currentElement = heap[idx];
@@ -127,6 +132,7 @@ public class HeapPriorityQueue<T extends HeapPriorityQueueElement>
 		moveElementToIdx(currentElement, idx);
 	}
 
+	//大的元素放下面
 	private void siftDown(int idx) {
 		final T[] heap = this.queue;
 		final int heapSize = this.size;
@@ -164,6 +170,7 @@ public class HeapPriorityQueue<T extends HeapPriorityQueueElement>
 		return elementPriorityComparator.comparePriority(a, b) < 0;
 	}
 
+	//扩展数组
 	private int increaseSizeByOne() {
 		final int oldArraySize = queue.length;
 		final int minRequiredNewSize = ++size;

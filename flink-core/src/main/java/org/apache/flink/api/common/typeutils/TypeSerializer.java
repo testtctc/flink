@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.Serializable;
 
 /**
+ * 类型序列化器
  * This interface describes the methods that are required for a data type to be handled by the Flink
  * runtime. Specifically, this interface contains the serialization and copying methods.
  *
@@ -63,6 +64,7 @@ public abstract class TypeSerializer<T> implements Serializable {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 是否是可变类型
 	 * Gets whether the type is an immutable type.
 	 * 
 	 * @return True, if the type is immutable.
@@ -111,6 +113,7 @@ public abstract class TypeSerializer<T> implements Serializable {
 	// --------------------------------------------------------------------------------------------
 	
 	/**
+	 * 数据长度
 	 * Gets the length of the data type, if it is a fix length data type.
 	 * 
 	 * @return The length of the data type, or <code>-1</code> for variable length data types.
@@ -120,6 +123,7 @@ public abstract class TypeSerializer<T> implements Serializable {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 序列化
 	 * Serializes the given record to the given target output view.
 	 * 
 	 * @param record The record to serialize.

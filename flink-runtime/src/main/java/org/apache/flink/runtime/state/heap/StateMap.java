@@ -28,6 +28,7 @@ import javax.annotation.Nonnull;
 import java.util.stream.Stream;
 
 /**
+ * 字典
  * Base class for state maps.
  *
  * @param <K> type of key

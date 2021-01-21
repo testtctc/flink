@@ -44,10 +44,12 @@ import java.util.List;
 @Internal
 public class OneInputTransformation<IN, OUT> extends PhysicalTransformation<OUT> {
 
+	//输入
 	private final Transformation<IN> input;
 
+	//算子工厂函数
 	private final StreamOperatorFactory<OUT> operatorFactory;
-
+	//装填
 	private KeySelector<IN, ?> stateKeySelector;
 
 	private TypeInformation<?> stateKeyType;

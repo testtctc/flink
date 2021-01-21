@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.RunnableFuture;
 
 /**
+ * 快照策略
  * Interface for different snapshot approaches in state backends. Implementing classes should ideally be stateless or at
  * least threadsafe, i.e. this is a functional interface and is can be called in parallel by multiple checkpoints.
  *
@@ -35,6 +36,7 @@ import java.util.concurrent.RunnableFuture;
 public interface SnapshotStrategy<S extends StateObject> {
 
 	/**
+	 * 异步执行
 	 * Operation that writes a snapshot into a stream that is provided by the given {@link CheckpointStreamFactory} and
 	 * returns a @{@link RunnableFuture} that gives a state handle to the snapshot. It is up to the implementation if
 	 * the operation is performed synchronous or asynchronous. In the later case, the returned Runnable must be executed

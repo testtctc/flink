@@ -29,6 +29,7 @@ import org.apache.flink.streaming.api.operators.YieldingOperatorFactory;
 import org.apache.flink.streaming.runtime.tasks.StreamTask;
 
 /**
+ * 同步算子工厂
  * The factory of {@link AsyncWaitOperator}.
  *
  * @param <OUT> The output type of the operator

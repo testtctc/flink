@@ -34,6 +34,8 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
+ *
+ * 异步回调可调用对象
  * Base class that outlines the strategy for asynchronous snapshots. Implementations of this class are typically
  * instantiated with resources that have been created in the synchronous part of a snapshot. Then, the implementation
  * of {@link #callInternal()} is invoked in the asynchronous part. All resources created by this methods should
@@ -66,6 +68,7 @@ public abstract class AsyncSnapshotCallable<T> implements Callable<T> {
 		this.resourceCleanupOwnershipTaken = new AtomicBoolean(false);
 	}
 
+	//入口
 	@Override
 	public T call() throws Exception {
 		final long startTime = System.currentTimeMillis();
@@ -119,6 +122,7 @@ public abstract class AsyncSnapshotCallable<T> implements Callable<T> {
 			super(AsyncSnapshotCallable.this);
 			this.cancelOnClose = () -> cancel(true);
 			this.taskRegistry = taskRegistry;
+			//注册关闭对象
 			taskRegistry.registerCloseable(cancelOnClose);
 		}
 
@@ -139,6 +143,7 @@ public abstract class AsyncSnapshotCallable<T> implements Callable<T> {
 	}
 
 	/**
+	 * 内部入口
 	 * This method implements the (async) snapshot logic. Resources aquired within this method should be released at
 	 * the end of the method.
 	 */

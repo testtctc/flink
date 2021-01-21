@@ -25,6 +25,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 /**
+ * 类型工厂函数
  * Base class for implementing a type information factory. A type information factory allows for
  * plugging-in user-defined {@link TypeInformation} into the Flink type system. The factory is
  * called during the type extraction phase if the corresponding type has been annotated with
@@ -38,6 +39,7 @@ import java.util.Map;
 public abstract class TypeInfoFactory<T> {
 
 	/**
+	 * 通过类型与字典查找typeinfo
 	 * Creates type information for the type the factory is targeted for. The parameters provide
 	 * additional information about the type itself as well as the type's generic type parameters.
 	 *

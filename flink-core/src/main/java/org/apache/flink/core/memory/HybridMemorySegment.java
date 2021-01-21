@@ -50,6 +50,7 @@ import java.nio.ReadOnlyBufferException;
 @Internal
 public final class HybridMemorySegment extends MemorySegment {
 	/**
+	 * buffer
 	 * The direct byte buffer that wraps the off-heap memory. This memory segment holds a
 	 * reference to that buffer, so as long as this memory segment lives, the memory will not be
 	 * released.
@@ -57,7 +58,10 @@ public final class HybridMemorySegment extends MemorySegment {
 	@Nullable
 	private final ByteBuffer offHeapBuffer;
 
-	/** The cleaner is called to free the underlying native memory. */
+	/**
+	 *
+	 * 清空回调
+	 * The cleaner is called to free the underlying native memory. */
 	@Nullable
 	private final Runnable cleaner;
 
@@ -389,6 +393,8 @@ public final class HybridMemorySegment extends MemorySegment {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 *
+	 * 地址位置
 	 * The reflection fields with which we access the off-heap pointer from direct ByteBuffers.
 	 */
 	private static final Field ADDRESS_FIELD;
@@ -409,13 +415,14 @@ public final class HybridMemorySegment extends MemorySegment {
 			throw new NullPointerException("buffer is null");
 		}
 		try {
+			//通过地址栏获取
 			return (Long) ADDRESS_FIELD.get(buffer);
 		}
 		catch (Throwable t) {
 			throw new RuntimeException("Could not access direct byte buffer address.", t);
 		}
 	}
-
+	//获取地址
 	private static long checkBufferAndGetAddress(ByteBuffer buffer) {
 		if (buffer == null) {
 			throw new NullPointerException("buffer is null");

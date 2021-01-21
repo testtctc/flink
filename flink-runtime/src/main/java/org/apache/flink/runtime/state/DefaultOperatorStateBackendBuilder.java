@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 先测试是否能备份，在创建后端
  * Builder class for {@link DefaultOperatorStateBackend} which handles all necessary initializations and clean ups.
  */
 public class DefaultOperatorStateBackendBuilder implements
@@ -37,7 +38,7 @@ public class DefaultOperatorStateBackendBuilder implements
 	/** The execution configuration. */
 	@VisibleForTesting
 	protected final ExecutionConfig executionConfig;
-	/** Flag to de/activate asynchronous snapshots. */
+	/** Flag to de/activate asynchronous snapshots 异步备份 */
 	@VisibleForTesting
 	protected final boolean asynchronousSnapshots;
 	/** State handles for restore. */
@@ -65,6 +66,10 @@ public class DefaultOperatorStateBackendBuilder implements
 		Map<String, PartitionableListState<?>> registeredOperatorStates = new HashMap<>();
 		Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStates = new HashMap<>();
 		CloseableRegistry cancelStreamRegistryForBackend = new CloseableRegistry();
+
+		//备份策略和后端公用一份状态
+
+		//备份策略
 		AbstractSnapshotStrategy<OperatorStateHandle> snapshotStrategy =
 			new DefaultOperatorStateBackendSnapshotStrategy(
 				userClassloader,
@@ -72,6 +77,7 @@ public class DefaultOperatorStateBackendBuilder implements
 				registeredOperatorStates,
 				registeredBroadcastStates,
 				cancelStreamRegistryForBackend);
+		//恢复操作
 		OperatorStateRestoreOperation restoreOperation = new OperatorStateRestoreOperation(
 			cancelStreamRegistry,
 			userClassloader,
@@ -79,12 +85,14 @@ public class DefaultOperatorStateBackendBuilder implements
 			registeredBroadcastStates,
 			restoreStateHandles
 		);
+
 		try {
 			restoreOperation.restore();
 		} catch (Exception e) {
 			IOUtils.closeQuietly(cancelStreamRegistryForBackend);
 			throw new BackendBuildingException("Failed when trying to restore operator state backend", e);
 		}
+
 		return new DefaultOperatorStateBackend(
 			executionConfig,
 			cancelStreamRegistryForBackend,

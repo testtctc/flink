@@ -104,7 +104,13 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
-/**
+/**、
+ *
+ *
+ * 任务实例：代表具体的子任务
+ *
+ * 可执行对象
+ *
  * The Task represents one execution of a parallel subtask on a TaskManager.
  * A Task wraps a Flink operator (which may be a user function) and
  * runs it, providing all services necessary for example to consume input data,
@@ -224,7 +230,9 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	/** The registry of this task which enables live reporting of accumulators. */
 	private final AccumulatorRegistry accumulatorRegistry;
 
-	/** The thread that executes the task. */
+	/**
+	 * 执行任务的线程
+	 * The thread that executes the task. */
 	private final Thread executingThread;
 
 	/** Parent group for all metrics of this task. */
@@ -233,7 +241,9 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	/** Partition producer state checker to request partition states from. */
 	private final PartitionProducerStateChecker partitionProducerStateChecker;
 
-	/** Executor to run future callbacks. */
+	/**
+	 * 执行器执行回调
+	 * Executor to run future callbacks. */
 	private final Executor executor;
 
 	/** Future that is completed once {@link #run()} exits. */
@@ -326,6 +336,8 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 		this.taskConfiguration = taskInformation.getTaskConfiguration();
 		this.requiredJarFiles = jobInformation.getRequiredJarFileBlobKeys();
 		this.requiredClasspaths = jobInformation.getRequiredClasspathURLs();
+
+		//通过任务信息获取类名
 		this.nameOfInvokableClass = taskInformation.getInvokableClassName();
 		this.serializedExecutionConfig = jobInformation.getSerializedExecutionConfig();
 
@@ -535,9 +547,15 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 		}
 	}
 
+
+
+	//任务入口
 	private void doRun() {
+
+
+
 		// ----------------------------
-		//  Initial State transition
+		//  Initial State transition   处理状态
 		// ----------------------------
 		while (true) {
 			ExecutionState current = this.executionState;
@@ -647,7 +665,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			// ----------------------------------------------------------------
 			//  call the user code initialization methods
 			// ----------------------------------------------------------------
-
+			//状态注册
 			TaskKvStateRegistry kvStateRegistry = kvStateService.createKvStateTaskRegistry(jobId, getJobVertexId());
 
 			Environment env = new RuntimeEnvironment(
@@ -698,12 +716,14 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			}
 
 			// notify everyone that we switched to running
+			// 更新状态
 			taskManagerActions.updateTaskExecutionState(new TaskExecutionState(jobId, executionId, ExecutionState.RUNNING));
 
 			// make sure the user code classloader is accessible thread-locally
 			executingThread.setContextClassLoader(userCodeClassLoader);
 
 			// run the invokable
+			// 远程调用
 			invokable.invoke();
 
 			// make sure, we enter the catch block if the task leaves the invoke() method due

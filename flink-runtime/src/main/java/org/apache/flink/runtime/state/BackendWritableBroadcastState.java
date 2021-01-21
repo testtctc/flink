@@ -24,6 +24,7 @@ import org.apache.flink.core.fs.FSDataOutputStream;
 import java.io.IOException;
 
 /**
+ * 可写入的后端状态
  * An interface with methods related to the interplay between the {@link BroadcastState Broadcast State} and
  * the {@link OperatorStateBackend}.
  *
@@ -32,6 +33,7 @@ import java.io.IOException;
  */
 public interface BackendWritableBroadcastState<K, V> extends BroadcastState<K, V> {
 
+	//拷贝
 	BackendWritableBroadcastState<K, V> deepCopy();
 
 	long write(FSDataOutputStream out) throws IOException;

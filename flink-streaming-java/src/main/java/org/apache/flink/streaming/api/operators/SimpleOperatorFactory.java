@@ -30,6 +30,7 @@ import org.apache.flink.streaming.runtime.tasks.StreamTask;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 封装 StreamOperator
  * Simple factory which just wrap existed {@link StreamOperator}.
  *
  * @param <OUT> The output type of the operator
@@ -40,6 +41,7 @@ public class SimpleOperatorFactory<OUT> implements StreamOperatorFactory<OUT> {
 	private final StreamOperator<OUT> operator;
 
 	/**
+	 * 创建工厂
 	 * Create a SimpleOperatorFactory from existed StreamOperator.
 	 */
 	@SuppressWarnings("unchecked")

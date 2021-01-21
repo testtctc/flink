@@ -21,7 +21,7 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
-/**
+/** 算子
  * A {@link StreamOperator} for executing {@link MapFunction MapFunctions}.
  */
 @Internal
@@ -30,7 +30,7 @@ public class StreamMap<IN, OUT>
 		implements OneInputStreamOperator<IN, OUT> {
 
 	private static final long serialVersionUID = 1L;
-
+	//策略已经定下
 	public StreamMap(MapFunction<IN, OUT> mapper) {
 		super(mapper);
 		chainingStrategy = ChainingStrategy.ALWAYS;

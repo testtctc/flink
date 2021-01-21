@@ -23,6 +23,7 @@ import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
+ * 根据keygroup做分组
  * This interface exists as (temporary) adapter between the new {@link InternalPriorityQueue} and the old way in which
  * timers are written in a snapshot. This interface can probably go away once timer state becomes part of the
  * keyed state backend snapshot.

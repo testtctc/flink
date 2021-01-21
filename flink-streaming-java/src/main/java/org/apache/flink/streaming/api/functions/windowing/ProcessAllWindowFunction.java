@@ -26,6 +26,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 非分组的处理函数
  * Base abstract class for functions that are evaluated over non-keyed windows using a context
  * for retrieving extra information.
  *
@@ -58,6 +59,7 @@ public abstract class ProcessAllWindowFunction<IN, OUT, W extends Window> extend
 	public void clear(Context context) throws Exception {}
 
 	/**
+	 * 上下文
 	 * The context holding window metadata.
 	 */
 	public abstract class Context {

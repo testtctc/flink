@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.concurrent.Future;
 
 /**
+ * 批处理上下文
  * A standalone implementation of the {@link RuntimeContext}, created by runtime UDF operators.
  */
 @Internal
@@ -69,6 +70,7 @@ public class RuntimeUDFContext extends AbstractRuntimeUDFContext {
 			}
 		}
 		else {
+			//直接从还没初始化的变量中获取
 			List<?> uninitialized = this.uninitializedBroadcastVars.remove(name);
 			if (uninitialized != null) {
 				this.initializedBroadcastVars.put(name, uninitialized);
@@ -103,7 +105,7 @@ public class RuntimeUDFContext extends AbstractRuntimeUDFContext {
 	}
 
 	// --------------------------------------------------------------------------------------------
-
+	//设置广播变量
 	public void setBroadcastVariable(String name, List<?> value) {
 		this.uninitializedBroadcastVars.put(name, value);
 		this.initializedBroadcastVars.remove(name);

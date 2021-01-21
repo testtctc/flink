@@ -25,6 +25,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 内部实现的窗口函数
  * Internal interface for functions that are evaluated over keyed (grouped) windows.
  *
  * @param <IN> The type of the input value.
@@ -33,6 +34,7 @@ import org.apache.flink.util.OutputTag;
  */
 public interface InternalWindowFunction<IN, OUT, KEY, W extends Window> extends Function {
 	/**
+	 * 处理元素
 	 * Evaluates the window and outputs none or several elements.
 	 *
 	 * @param context The context in which the window is being evaluated.
@@ -44,6 +46,7 @@ public interface InternalWindowFunction<IN, OUT, KEY, W extends Window> extends 
 	void process(KEY key, W window, InternalWindowContext context, IN input, Collector<OUT> out) throws Exception;
 
 	/**
+	 * 清空状态
 	 * Deletes any state in the {@code Context} when the Window is purged.
 	 *
 	 * @param context The context to which the window is being evaluated
@@ -57,14 +60,15 @@ public interface InternalWindowFunction<IN, OUT, KEY, W extends Window> extends 
 	 * for internal use.
 	 */
 	interface InternalWindowContext extends java.io.Serializable {
+		//当前处理时间
 		long currentProcessingTime();
 
 		long currentWatermark();
-
+		//窗口状态
 		KeyedStateStore windowState();
-
+		//广义状态
 		KeyedStateStore globalState();
-
+		//写出数值
 		<X> void output(OutputTag<X> outputTag, X value);
 	}
 }

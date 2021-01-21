@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * 写入文件的流
  * Interface for a data input stream to a file on a {@link FileSystem}.
  *
  * <p>This extends the {@link java.io.InputStream} with methods for accessing
@@ -44,6 +45,7 @@ public abstract class FSDataInputStream extends InputStream {
 	public abstract void seek(long desired) throws IOException;
 
 	/**
+	 * 返回当前位置
 	 * Gets the current position in the input stream.
 	 *
 	 * @return current position in the input stream

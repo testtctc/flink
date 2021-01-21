@@ -22,6 +22,7 @@ import org.apache.flink.annotation.VisibleForTesting;
 import org.apache.flink.util.StringBasedID;
 
 /**
+ * 共享状态key
  * This class represents a key that uniquely identifies (on a logical level) state handles for
  * registration in the {@link SharedStateRegistry}. Two files which should logically
  * be the same should have the same {@link SharedStateRegistryKey}. The meaning of logical

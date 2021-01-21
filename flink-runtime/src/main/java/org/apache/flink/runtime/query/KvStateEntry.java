@@ -30,8 +30,8 @@ import java.util.concurrent.ConcurrentMap;
  * An entry holding the {@link InternalKvState} along with its {@link KvStateInfo}.
  *
  * @param <K> The type of key the state is associated to
- * @param <N> The type of the namespace the state is associated to
- * @param <V> The type of values kept internally in state
+ * @param <N> The type of the namespace the state is associated to 命名空间
+ * @param <V> The type of values kept internally in state 值
  */
 @Internal
 public class KvStateEntry<K, N, V> {

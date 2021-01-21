@@ -25,6 +25,7 @@ import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import java.io.Serializable;
 
 /**
+ * 数据分区器
  * A special {@link ChannelSelector} for use in streaming programs.
  */
 @Internal
@@ -39,10 +40,11 @@ public abstract class StreamPartitioner<T> implements
 		this.numberOfChannels = numberOfChannels;
 	}
 
+	//是否广播
 	@Override
 	public boolean isBroadcast() {
 		return false;
 	}
-
+	//复制
 	public abstract StreamPartitioner<T> copy();
 }

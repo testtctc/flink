@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
+ * 协调者
  * This interface creates a {@link CheckpointStorageLocation} to which
  * an individual checkpoint or savepoint is stored.
  *

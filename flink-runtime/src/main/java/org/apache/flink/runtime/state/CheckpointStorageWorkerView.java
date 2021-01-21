@@ -21,6 +21,7 @@ package org.apache.flink.runtime.state;
 import java.io.IOException;
 
 /**
+ * worker视图
  * This interface implements the durable storage of checkpoint data and metadata streams.
  * An individual checkpoint or savepoint is stored to a {@link CheckpointStorageLocation}
  * which created by {@link CheckpointStorageCoordinatorView}.

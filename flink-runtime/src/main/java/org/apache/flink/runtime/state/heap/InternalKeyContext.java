@@ -24,6 +24,7 @@ import org.apache.flink.runtime.state.KeyGroupRange;
 import javax.annotation.Nonnull;
 
 /**
+ * key上下文
  * This interface is the current context of a keyed state. It provides information about the currently selected key in
  * the context, the corresponding key-group, and other key and key-grouping related information.
  * <p>

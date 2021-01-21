@@ -60,6 +60,7 @@ import java.util.function.Supplier;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * flink自行实现的系统
  * Abstract base class of all file systems used by Flink. This class may be extended to implement
  * distributed file systems, or local file systems. The abstraction by this file system is very simple,
  * and the set of available operations quite limited, to support the common denominator of a wide

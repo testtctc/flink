@@ -21,6 +21,7 @@ package org.apache.flink.api.common.functions;
 import org.apache.flink.annotation.Public;
 
 /**
+ * 抽象类
  * Rich variant of the {@link MapFunction}. As a {@link RichFunction}, it gives access to the
  * {@link org.apache.flink.api.common.functions.RuntimeContext} and provides setup and teardown methods:
  * {@link RichFunction#open(org.apache.flink.configuration.Configuration)} and

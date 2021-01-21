@@ -28,6 +28,7 @@ import org.apache.flink.annotation.Public;
 public interface Collector<T> {
 
 	/**
+	 * 弹出一条记录
 	 * Emits a record.
 	 *
 	 * @param record The record to collect.

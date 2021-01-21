@@ -34,6 +34,7 @@ public interface Histogram extends Metric {
 	void update(long value);
 
 	/**
+	 * 计数
 	 * Get the count of seen elements.
 	 *
 	 * @return Count of seen elements
@@ -41,6 +42,7 @@ public interface Histogram extends Metric {
 	long getCount();
 
 	/**
+	 * 统计直方图
 	 * Create statistics for the currently recorded elements.
 	 *
 	 * @return Statistics about the currently recorded elements

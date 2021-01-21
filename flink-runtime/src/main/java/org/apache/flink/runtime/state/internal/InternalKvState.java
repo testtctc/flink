@@ -59,7 +59,7 @@ import java.util.Collection;
  *
  * @param <K> The type of key the state is associated to
  * @param <N> The type of the namespace
- * @param <V> The type of values kept internally in state
+ * @param <V> The type of values kept internally in state 内部保存的元素
  */
 public interface InternalKvState<K, N, V> extends State {
 
@@ -132,6 +132,7 @@ public interface InternalKvState<K, N, V> extends State {
 		boolean hasNext();
 
 		/**
+		 * 删除
 		 * Return some next entries which are available at the moment.
 		 *
 		 * <p>If empty collection is returned, it does not mean that the visitor is exhausted but
@@ -147,6 +148,7 @@ public interface InternalKvState<K, N, V> extends State {
 		void remove(StateEntry<K, N, V> stateEntry);
 
 		/**
+		 * 更新
 		 * Update the value of the last returned entry from the {@code next()} method.
 		 *
 		 * @throws IllegalStateException if next() has never been called yet or iteration is over.

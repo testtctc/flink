@@ -25,6 +25,10 @@ import java.io.Serializable;
 import java.util.concurrent.TimeoutException;
 
 /**
+ *
+ *
+ * 异步函数
+ *
  * A function to trigger Async I/O operation.
  *
  * <p>For each #asyncInvoke, an async io operation can be triggered, and once it has been done,
@@ -87,6 +91,7 @@ public interface AsyncFunction<IN, OUT> extends Function, Serializable {
 	void asyncInvoke(IN input, ResultFuture<OUT> resultFuture) throws Exception;
 
 	/**
+	 * 当超时时的处理
 	 * {@link AsyncFunction#asyncInvoke} timeout occurred.
 	 * By default, the result future is exceptionally completed with a timeout exception.
 	 *

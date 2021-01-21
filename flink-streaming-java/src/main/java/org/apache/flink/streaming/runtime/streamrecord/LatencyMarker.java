@@ -22,6 +22,10 @@ import org.apache.flink.annotation.PublicEvolving;
 import org.apache.flink.runtime.jobgraph.OperatorID;
 
 /**
+ * 延迟标志
+ *
+ * 最终被sink使用，统计延迟时间
+ *
  * Special record type carrying a timestamp of its creation time at a source operator
  * and the vertexId and subtask index of the operator.
  *
@@ -33,7 +37,9 @@ public final class LatencyMarker extends StreamElement {
 
 	// ------------------------------------------------------------------------
 
-	/** The time the latency mark is denoting. */
+	/**
+	 * 时点
+	 * The time the latency mark is denoting. */
 	private final long markedTime;
 
 	private final OperatorID operatorId;

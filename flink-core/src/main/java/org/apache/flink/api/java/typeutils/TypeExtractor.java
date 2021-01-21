@@ -82,6 +82,7 @@ import static org.apache.flink.api.java.typeutils.TypeExtractionUtils.sameTypeVa
 import static org.apache.flink.api.java.typeutils.TypeExtractionUtils.typeToClass;
 
 /**
+ * 类型抽取器--并不总是成功
  * A utility for reflection analysis on classes, to determine the return type of implementations of transformation
  * functions.
  *
@@ -125,6 +126,7 @@ public class TypeExtractor {
 
 	private static final Logger LOG = LoggerFactory.getLogger(TypeExtractor.class);
 
+	//非索引
 	public static final int[] NO_INDEX = new int[] {};
 
 	protected TypeExtractor() {
@@ -133,11 +135,13 @@ public class TypeExtractor {
 
 	// --------------------------------------------------------------------------------------------
 	//  TypeInfoFactory registry
+	//  类型工厂函数
 	// --------------------------------------------------------------------------------------------
 
 	private static Map<Type, Class<? extends TypeInfoFactory>> registeredTypeInfoFactories = new HashMap<>();
 
 	/**
+	 * 注册工厂
 	 * Registers a type information factory globally for a certain type. Every following type extraction
 	 * operation will use the provided factory for this type. The factory will have highest precedence
 	 * for this type. In a hierarchy of types the registered factory has higher precedence than annotations
@@ -163,6 +167,7 @@ public class TypeExtractor {
 	//  Function specific methods
 	// --------------------------------------------------------------------------------------------
 
+	//map函数入口
 	@PublicEvolving
 	public static <IN, OUT> TypeInformation<OUT> getMapReturnTypes(MapFunction<IN, OUT> mapInterface, TypeInformation<IN> inType) {
 		return getMapReturnTypes(mapInterface, inType, null, false);
@@ -481,6 +486,7 @@ public class TypeExtractor {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 仅仅只有输入算子返回类型
 	 * Returns the unary operator's return type.
 	 *
 	 * <p>This method can extract a type in 4 different ways:

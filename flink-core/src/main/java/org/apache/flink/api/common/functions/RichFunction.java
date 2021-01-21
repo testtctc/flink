@@ -83,6 +83,7 @@ public interface RichFunction extends Function {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 获取运行时环境
 	 * Gets the context that contains information about the UDF's runtime, such as the
 	 * parallelism of the function, the subtask index of the function, or the name of
 	 * the of the task that executes the function.

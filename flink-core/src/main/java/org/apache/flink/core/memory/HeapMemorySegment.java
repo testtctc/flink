@@ -79,6 +79,7 @@ public final class HeapMemorySegment extends MemorySegment {
 		this.memory = null;
 	}
 
+	//包装
 	@Override
 	public ByteBuffer wrap(int offset, int length) {
 		try {
@@ -111,7 +112,7 @@ public final class HeapMemorySegment extends MemorySegment {
 	public final void put(int index, byte b) {
 		this.memory[index] = b;
 	}
-
+	//拷贝到数组
 	@Override
 	public final void get(int index, byte[] dst) {
 		get(index, dst, 0, dst.length);
@@ -175,6 +176,7 @@ public final class HeapMemorySegment extends MemorySegment {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * 工厂含山
 	 * A memory segment factory that produces heap memory segments. Note that this factory does not
 	 * support to allocate off-heap memory.
 	 */

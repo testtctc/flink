@@ -27,6 +27,7 @@ import org.apache.flink.streaming.api.windowing.windows.Window;
 import org.apache.flink.util.Collector;
 
 /**
+ * 处理非分区窗口函数
  * Internal window function for wrapping a {@link ProcessAllWindowFunction} that takes an {@code Iterable}
  * when the window state also is an {@code Iterable}.
  */

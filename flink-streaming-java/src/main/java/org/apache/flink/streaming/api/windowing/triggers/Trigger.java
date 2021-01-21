@@ -31,6 +31,7 @@ import org.apache.flink.streaming.api.windowing.windows.Window;
 import java.io.Serializable;
 
 /**
+ * 窗口触发器
  * A {@code Trigger} determines when a pane of a window should be evaluated to emit the
  * results for that part of the window.
  *
@@ -57,6 +58,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	private static final long serialVersionUID = -4104633972991191369L;
 
 	/**
+	 *
 	 * Called for every element that gets added to a pane. The result of this will determine
 	 * whether the pane is evaluated to emit results.
 	 *
@@ -68,7 +70,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	public abstract TriggerResult onElement(T element, long timestamp, W window, TriggerContext ctx) throws Exception;
 
 	/**
-	 * Called when a processing-time timer that was set using the trigger context fires.
+	 * Called when a processing-time timer that was set using thet rigger context fires.
 	 *
 	 * @param time The timestamp at which the timer fired.
 	 * @param window The window for which the timer fired.
@@ -86,6 +88,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	public abstract TriggerResult onEventTime(long time, W window, TriggerContext ctx) throws Exception;
 
 	/**
+	 * 是否能合并
 	 * Returns true if this trigger supports merging of trigger state and can therefore
 	 * be used with a
 	 * {@link org.apache.flink.streaming.api.windowing.assigners.MergingWindowAssigner}.
@@ -98,6 +101,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	}
 
 	/**
+	 * 合并时处理
 	 * Called when several windows have been merged into one window by the
 	 * {@link org.apache.flink.streaming.api.windowing.assigners.WindowAssigner}.
 	 *
@@ -109,6 +113,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	}
 
 	/**
+	 * 清空窗口
 	 * Clears any state that the trigger might still hold for the given window. This is called
 	 * when a window is purged. Timers set using {@link TriggerContext#registerEventTimeTimer(long)}
 	 * and {@link TriggerContext#registerProcessingTimeTimer(long)} should be deleted here as
@@ -119,6 +124,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 触发上下文
 	 * A context object that is given to {@link Trigger} methods to allow them to register timer
 	 * callbacks and deal with state.
 	 */
@@ -130,6 +136,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 		long getCurrentProcessingTime();
 
 		/**
+		 *
 		 * Returns the metric group for this {@link Trigger}. This is the same metric
 		 * group that would be returned from {@link RuntimeContext#getMetricGroup()} in a user
 		 * function.
@@ -153,7 +160,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 		 */
 		void registerProcessingTimeTimer(long time);
 
-		/**
+		/** 注册定时器
 		 * Register an event-time callback. When the current watermark passes the specified
 		 * time {@link Trigger#onEventTime(long, Window, TriggerContext)} is called with the time specified here.
 		 *
@@ -162,7 +169,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 		 */
 		void registerEventTimeTimer(long time);
 
-		/**
+		/** 删除定时器
 		 * Delete the processing time trigger for the given time.
 		 */
 		void deleteProcessingTimeTimer(long time);
@@ -173,6 +180,7 @@ public abstract class Trigger<T, W extends Window> implements Serializable {
 		void deleteEventTimeTimer(long time);
 
 		/**
+		 * 获取分区状态
 		 * Retrieves a {@link State} object that can be used to interact with
 		 * fault-tolerant state that is scoped to the window and key of the current
 		 * trigger invocation.

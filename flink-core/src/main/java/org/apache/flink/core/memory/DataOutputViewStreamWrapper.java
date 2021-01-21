@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
+ * 写出流
  * Utility class that turns an {@link OutputStream} into a {@link DataOutputView}.
  */
 @PublicEvolving

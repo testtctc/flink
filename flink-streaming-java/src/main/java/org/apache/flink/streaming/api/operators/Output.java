@@ -26,6 +26,7 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 /**
+ * 收集器
  * A {@link org.apache.flink.streaming.api.operators.StreamOperator} is supplied with an object
  * of this interface that can be used to emit elements and other messages, such as barriers
  * and watermarks, from an operator.

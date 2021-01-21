@@ -21,6 +21,7 @@ package org.apache.flink.streaming.api.operators;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 连接策略
  * Defines the chaining scheme for the operator. When an operator is chained to the
  * predecessor, it means that they run in the same thread. They become one operator
  * consisting of multiple steps.
@@ -33,6 +34,7 @@ import org.apache.flink.annotation.PublicEvolving;
 public enum ChainingStrategy {
 
 	/**
+	 * 始终与上下游保持连接
 	 * Operators will be eagerly chained whenever possible.
 	 *
 	 * <p>To optimize performance, it is generally a good practice to allow maximal
@@ -46,6 +48,7 @@ public enum ChainingStrategy {
 	NEVER,
 
 	/**
+	 * 重新开始
 	 * The operator will not be chained to the predecessor, but successors may chain to this
 	 * operator.
 	 */

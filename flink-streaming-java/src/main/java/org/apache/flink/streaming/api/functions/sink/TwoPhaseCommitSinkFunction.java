@@ -63,15 +63,16 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 两阶段提交框架
  * This is a recommended base class for all of the {@link SinkFunction} that intend to implement exactly-once semantic.
  * It does that by implementing two phase commit algorithm on top of the {@link CheckpointedFunction} and
  * {@link CheckpointListener}. User should provide custom {@code TXN} (transaction handle) and implement abstract
  * methods handling this transaction handle.
  *
- * @param <IN> Input type for {@link SinkFunction}.
- * @param <TXN> Transaction to store all of the information required to handle a transaction.
+ * @param <IN> Input type for {@link SinkFunction}.输入内容
+ * @param <TXN> Transaction to store all of the information required to handle a transaction. 事务
  * @param <CONTEXT> Context that will be shared across all invocations for the given {@link TwoPhaseCommitSinkFunction}
- *                 instance. Context is created once
+ *                 instance. Context is created once  上下文
  */
 @PublicEvolving
 public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
@@ -80,16 +81,21 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 
 	private static final Logger LOG = LoggerFactory.getLogger(TwoPhaseCommitSinkFunction.class);
 
+	//代提交的事务
+	// key 为checkpointid,value 为事务
+	// 每次快照仅仅产生一次事务
 	protected final LinkedHashMap<Long, TransactionHolder<TXN>> pendingCommitTransactions = new LinkedHashMap<>();
 
+	//上下文
 	protected transient Optional<CONTEXT> userContext;
 
+	//状态
 	protected transient ListState<State<TXN, CONTEXT>> state;
 
 	private final Clock clock;
-
+	//状态描述器
 	private final ListStateDescriptor<State<TXN, CONTEXT>> stateDescriptor;
-
+	//事务处理器
 	private TransactionHolder<TXN> currentTransactionHolder;
 
 	/**
@@ -153,6 +159,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 		return currentTransactionHolder == null ? null : currentTransactionHolder.handle;
 	}
 
+	//等待处理的事务
 	@Nonnull
 	protected Stream<Map.Entry<Long, TXN>> pendingTransactions() {
 		return pendingCommitTransactions.entrySet().stream()
@@ -162,18 +169,20 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	// ------ methods that should be implemented in child class to support two phase commit algorithm ------
 
 	/**
+	 * 事务之内处理元素
 	 * Write value within a transaction.
 	 */
 	protected abstract void invoke(TXN transaction, IN value, Context context) throws Exception;
 
 	/**
+	 * 开始事务
 	 * Method that starts a new transaction.
 	 *
 	 * @return newly created transaction.
 	 */
 	protected abstract TXN beginTransaction() throws Exception;
 
-	/**
+	/** 预提交
 	 * Pre commit previously created transaction. Pre commit must make all of the necessary steps to prepare the
 	 * transaction for a commit that might happen in the future. After this point the transaction might still be
 	 * aborted, but underlying implementation must ensure that commit calls on already pre committed transactions
@@ -184,6 +193,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	protected abstract void preCommit(TXN transaction) throws Exception;
 
 	/**
+	 * 提交
 	 * Commit a pre-committed transaction. If this method fail, Flink application will be
 	 * restarted and {@link TwoPhaseCommitSinkFunction#recoverAndCommit(Object)} will be called again for the
 	 * same transaction.
@@ -200,6 +210,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	}
 
 	/**
+	 * 放弃事务
 	 * Abort a transaction.
 	 */
 	protected abstract void abort(TXN transaction);
@@ -212,6 +223,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	}
 
 	/**
+	 * 结束恢复上下文
 	 * Callback for subclasses which is called after restoring (each) user context.
 	 *
 	 * @param handledTransactions
@@ -229,12 +241,14 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	@Override
 	public final void invoke(IN value) throws Exception {}
 
+	//处理元素
 	@Override
 	public final void invoke(
 		IN value, Context context) throws Exception {
 		invoke(currentTransactionHolder.handle, value, context);
 	}
 
+	//当通知快照结束
 	@Override
 	public final void notifyCheckpointComplete(long checkpointId) throws Exception {
 		// the following scenarios are possible here
@@ -277,6 +291,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 			Map.Entry<Long, TransactionHolder<TXN>> entry = pendingTransactionIterator.next();
 			Long pendingTransactionCheckpointId = entry.getKey();
 			TransactionHolder<TXN> pendingTransaction = entry.getValue();
+			//忽略后面的的提交，避免错乱
 			if (pendingTransactionCheckpointId > checkpointId) {
 				continue;
 			}
@@ -352,6 +367,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 			for (State<TXN, CONTEXT> operatorState : state.get()) {
 				userContext = operatorState.getContext();
 				List<TransactionHolder<TXN>> recoveredTransactions = operatorState.getPendingCommitTransactions();
+				//已经处理的事务
 				List<TXN> handledTransactions = new ArrayList<>(recoveredTransactions.size() + 1);
 				for (TransactionHolder<TXN> recoveredTransaction : recoveredTransactions) {
 					// If this fails to succeed eventually, there is actually data loss
@@ -380,8 +396,9 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 
 			userContext = initializeUserContext();
 		}
+		//清楚当前事务
 		this.pendingCommitTransactions.clear();
-
+		//开始事务
 		currentTransactionHolder = beginTransactionInternal();
 		LOG.debug("{} - started new transaction '{}'", name(), currentTransactionHolder);
 	}
@@ -416,6 +433,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 		}
 	}
 
+	//当事务快要超时时告警
 	private void logWarningIfTimeoutAlmostReached(TransactionHolder<TXN> transactionHolder) {
 		final long elapsedTime = transactionHolder.elapsedTime(clock);
 		if (transactionTimeoutWarningRatio >= 0 &&
@@ -489,12 +507,15 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	}
 
 	/**
+	 * 需要保存的状态，本质上就是个java pojo,包含事务以及上下文
 	 * State POJO class coupling pendingTransaction, context and pendingCommitTransactions.
 	 */
 	@VisibleForTesting
 	@Internal
 	public static final class State<TXN, CONTEXT> {
+		//正在处理的事务
 		protected TransactionHolder<TXN> pendingTransaction;
+		//等待提交的事务
 		protected List<TransactionHolder<TXN>> pendingCommitTransactions = new ArrayList<>();
 		protected Optional<CONTEXT> context;
 
@@ -561,6 +582,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	}
 
 	/**
+	 * 事务容器:包含事务开始时间等
 	 * Adds metadata (currently only the start time of the transaction) to the transaction object.
 	 */
 	@VisibleForTesting
@@ -570,6 +592,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 		private final TXN handle;
 
 		/**
+		 * 事务开始时间
 		 * The system time when {@link #handle} was created.
 		 * Used to determine if the current transaction has exceeded its timeout specified by
 		 * {@link #transactionTimeout}.
@@ -654,6 +677,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 			return null;
 		}
 
+		//复制
 		@Override
 		public State<TXN, CONTEXT> copy(State<TXN, CONTEXT> from) {
 			final TransactionHolder<TXN> pendingTransaction = from.getPendingTransaction();
@@ -791,7 +815,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 			result = 31 * result + contextSerializer.hashCode();
 			return result;
 		}
-
+		//序列化配置
 		@Override
 		public StateSerializerSnapshot<TXN, CONTEXT> snapshotConfiguration() {
 			return new StateSerializerSnapshot<>(this);
@@ -846,6 +870,7 @@ public abstract class TwoPhaseCommitSinkFunction<IN, TXN, CONTEXT>
 	}
 
 	/**
+	 * 快照
 	 * Snapshot for the {@link StateSerializer}.
 	 */
 	@Internal

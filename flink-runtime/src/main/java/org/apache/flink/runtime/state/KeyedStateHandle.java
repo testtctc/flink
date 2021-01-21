@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * 分组策略
  * Base for the handles of the checkpointed states in keyed streams. When
  * recovering from failures, the handle will be passed to all tasks whose key
  * group ranges overlap with it.

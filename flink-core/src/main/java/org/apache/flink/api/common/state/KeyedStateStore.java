@@ -21,6 +21,7 @@ package org.apache.flink.api.common.state;
 import org.apache.flink.annotation.PublicEvolving;
 
 /**
+ * 托管的state
  * This interface contains methods for registering keyed state with a managed store.
  */
 @PublicEvolving

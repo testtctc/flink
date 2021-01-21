@@ -27,11 +27,13 @@ import java.util.Arrays;
 import java.util.Map;
 
 /**
+ * 算子状态处理器--获取文件信息
  * Interface of a state handle for operator state.
  */
 public interface OperatorStateHandle extends StreamStateHandle {
 
 	/**
+	 * 状态元信息
 	 * Returns a map of meta data for all contained states by their name.
 	 */
 	Map<String, StateMetaInfo> getStateNameToPartitionOffsets();
@@ -43,11 +45,13 @@ public interface OperatorStateHandle extends StreamStateHandle {
 	FSDataInputStream openInputStream() throws IOException;
 
 	/**
+	 * 获取代理状态处理
 	 * Returns the underlying stream state handle that points to the state data.
 	 */
 	StreamStateHandle getDelegateStateHandle();
 
 	/**
+	 * 快照分布模式
 	 * The modes that determine how an {@link OperatorStreamStateHandle} is assigned to tasks during restore.
 	 */
 	enum Mode {
@@ -57,6 +61,7 @@ public interface OperatorStateHandle extends StreamStateHandle {
 	}
 
 	/**
+	 * 状态元信息
 	 * Meta information about the operator state handle.
 	 */
 	class StateMetaInfo implements Serializable {

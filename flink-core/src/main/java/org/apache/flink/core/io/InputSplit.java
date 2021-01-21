@@ -32,6 +32,7 @@ import java.io.Serializable;
 public interface InputSplit extends Serializable {
 	
 	/**
+	 * 获取分片数量
 	 * Returns the number of this input split.
 	 * 
 	 * @return the number of this input split

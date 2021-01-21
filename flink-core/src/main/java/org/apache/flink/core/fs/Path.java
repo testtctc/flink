@@ -36,6 +36,7 @@ import java.net.URISyntaxException;
 import java.util.regex.Pattern;
 
 /**
+ * 自定义路径
  * Names a file or directory in a {@link FileSystem}. Path strings use slash as
  * the directory separator. A path string is absolute if it begins with a slash.
  *
@@ -171,6 +172,7 @@ public class Path implements IOReadableWritable, Serializable {
 	}
 
 	/**
+	 * 路径
 	 * Construct a path from a String. Path strings are URIs, but with unescaped
 	 * elements and some additional normalization.
 	 *
@@ -233,6 +235,7 @@ public class Path implements IOReadableWritable, Serializable {
 	}
 
 	/**
+	 * 路径初始化
 	 * Initializes a path object given the scheme, authority and path string.
 	 *
 	 * @param scheme

@@ -53,6 +53,7 @@ import javax.annotation.Nullable;
 public interface AssignerWithPeriodicWatermarks<T> extends TimestampAssigner<T> {
 
 	/**
+	 * 获取当前水印
 	 * Returns the current watermark. This method is periodically called by the
 	 * system to retrieve the current watermark. The method may return {@code null} to
 	 * indicate that no new Watermark is available.

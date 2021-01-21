@@ -22,6 +22,7 @@ import org.apache.flink.table.expressions._
 import org.apache.flink.table.planner.expressions.PlannerWindowReference
 
 /**
+ *
   * Logical super class for group windows.
   *
   * @param aliasAttribute window alias

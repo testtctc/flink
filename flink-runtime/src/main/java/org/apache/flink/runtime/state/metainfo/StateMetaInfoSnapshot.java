@@ -31,12 +31,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 状态元信息系快照
  * Generalized snapshot for meta information about one state in a state backend
  * (e.g. {@link RegisteredKeyValueStateBackendMetaInfo}).
  */
 public class StateMetaInfoSnapshot {
 
 	/**
+	 * 状态类型
 	 * Enum that defines the different types of state that live in Flink backends.
 	 */
 	public enum BackendStateType {
@@ -47,6 +49,7 @@ public class StateMetaInfoSnapshot {
 	}
 
 	/**
+	 * 常用选项
 	 * Predefined keys for the most common options in the meta info.
 	 */
 	public enum CommonOptionsKeys {
@@ -60,6 +63,7 @@ public class StateMetaInfoSnapshot {
 	}
 
 	/**
+	 * 序列化类型
 	 * Predefined keys for the most common serializer types in the meta info.
 	 */
 	public enum CommonSerializerKeys {
@@ -68,18 +72,24 @@ public class StateMetaInfoSnapshot {
 		VALUE_SERIALIZER
 	}
 
-	/** The name of the state. */
+	/**
+	 * 状态的名字
+	 * The name of the state. */
 	@Nonnull
 	private final String name;
 
 	@Nonnull
 	private final BackendStateType backendStateType;
 
-	/** Map of options (encoded as strings) for the state. */
+	/**
+	 * 选项
+	 * Map of options (encoded as strings) for the state. */
 	@Nonnull
 	private final Map<String, String> options;
 
-	/** The configurations of all the type serializers used with the state. */
+	/**
+	 * 序列化器快照
+	 * The configurations of all the type serializers used with the state. */
 	@Nonnull
 	private final Map<String, TypeSerializerSnapshot<?>> serializerSnapshots;
 

@@ -153,6 +153,7 @@ public interface SourceFunction<T> extends Function, Serializable {
 	void run(SourceContext<T> ctx) throws Exception;
 
 	/**
+	 * 取消
 	 * Cancels the source. Most sources will have a while loop inside the
 	 * {@link #run(SourceContext)} method. The implementation needs to ensure that the
 	 * source will break out of that loop after this method is called.
@@ -239,6 +240,7 @@ public interface SourceFunction<T> extends Function, Serializable {
 		void emitWatermark(Watermark mark);
 
 		/**
+		 * 标志空闲
 		 * Marks the source to be temporarily idle. This tells the system that this source will
 		 * temporarily stop emitting records and watermarks for an indefinite amount of time. This
 		 * is only relevant when running on {@link TimeCharacteristic#IngestionTime} and
@@ -254,6 +256,7 @@ public interface SourceFunction<T> extends Function, Serializable {
 		void markAsTemporarilyIdle();
 
 		/**
+		 * 上锁
 		 * Returns the checkpoint lock. Please refer to the class-level comment in
 		 * {@link SourceFunction} for details about how to write a consistent checkpointed
 		 * source.

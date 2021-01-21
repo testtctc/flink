@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * 时间管理器 管理所有的算子
  * An entity keeping all the time-related services available to all operators extending the
  * {@link AbstractStreamOperator}. Right now, this is only a
  * {@link InternalTimerServiceImpl timer services}.
@@ -46,6 +47,7 @@ import java.util.Map;
 @Internal
 public class InternalTimeServiceManager<K> {
 
+	//前缀
 	@VisibleForTesting
 	static final String TIMER_STATE_PREFIX = "_timer_state";
 	@VisibleForTesting
@@ -85,7 +87,7 @@ public class InternalTimeServiceManager<K> {
 		Triggerable<K, N> triggerable) {
 
 		InternalTimerServiceImpl<K, N> timerService = registerOrGetTimerService(name, timerSerializer);
-
+		//开始时间服务
 		timerService.startTimerService(
 			timerSerializer.getKeySerializer(),
 			timerSerializer.getNamespaceSerializer(),
@@ -94,6 +96,7 @@ public class InternalTimeServiceManager<K> {
 		return timerService;
 	}
 
+	//创建实现-->针对命名空间分别实现处理时间以及时间时间定时任务管理器
 	@SuppressWarnings("unchecked")
 	<N> InternalTimerServiceImpl<K, N> registerOrGetTimerService(String name, TimerSerializer<K, N> timerSerializer) {
 		InternalTimerServiceImpl<K, N> timerService = (InternalTimerServiceImpl<K, N>) timerServices.get(name);
@@ -115,6 +118,7 @@ public class InternalTimeServiceManager<K> {
 		return Collections.unmodifiableMap(timerServices);
 	}
 
+	//创建优先队列
 	private <N> KeyGroupedInternalPriorityQueue<TimerHeapInternalTimer<K, N>> createTimerPriorityQueue(
 		String name,
 		TimerSerializer<K, N> timerSerializer) {
@@ -123,6 +127,7 @@ public class InternalTimeServiceManager<K> {
 			timerSerializer);
 	}
 
+	//启动水印
 	public void advanceWatermark(Watermark watermark) throws Exception {
 		for (InternalTimerServiceImpl<?, ?> service : timerServices.values()) {
 			service.advanceWatermark(watermark.getTimestamp());

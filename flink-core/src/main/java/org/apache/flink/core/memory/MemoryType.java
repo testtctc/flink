@@ -21,6 +21,7 @@ package org.apache.flink.core.memory;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 内存类型
  * The class of memory, such as heap or off-heap.
  */
 @Internal

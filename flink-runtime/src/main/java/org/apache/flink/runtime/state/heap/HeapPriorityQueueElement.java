@@ -35,11 +35,13 @@ public interface HeapPriorityQueueElement {
 	int NOT_CONTAINED = Integer.MIN_VALUE;
 
 	/**
+	 * 获取索引
 	 * Returns the current index of this object in the internal array of {@link HeapPriorityQueue}.
 	 */
 	int getInternalIndex();
 
 	/**
+	 * 设置索引
 	 * Sets the current index of this object in the {@link HeapPriorityQueue} and should only be called by the owning
 	 * {@link HeapPriorityQueue}.
 	 *

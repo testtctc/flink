@@ -152,11 +152,13 @@ class PartitionITCase(mode: TestExecutionMode) extends MultipleProgramsTestBase(
     val skewed = ds.filter(_ > 780)
     val rebalanced = skewed.rebalance()
 
-    val countsInPartition = rebalanced.map( new RichMapFunction[Long, (Int, Long)] {
-      def map(in: Long) = {
-        (getRuntimeContext.getIndexOfThisSubtask, 1)
+    val countsInPartition = rebalanced.map(
+      new RichMapFunction[Long, (Int, Long)] {
+        def map(in: Long) = {
+          (getRuntimeContext.getIndexOfThisSubtask, 1)
+        }
       }
-    })
+    )
       .groupBy(0)
       .reduce { (v1, v2) => (v1._1, v1._2 + v2._2) }
       // round counts to mitigate runtime scheduling effects (lazy split assignment)

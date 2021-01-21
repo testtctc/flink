@@ -28,6 +28,7 @@ import java.util.List;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 边
  * An edge in the streaming topology. One edge like this does not necessarily
  * gets converted to a connection between two job vertices (due to
  * chaining/optimization).
@@ -38,7 +39,7 @@ public class StreamEdge implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private final String edgeId;
-
+	//连接点
 	private final int sourceId;
 	private final int targetId;
 
@@ -69,6 +70,7 @@ public class StreamEdge implements Serializable {
 	private final String sourceOperatorName;
 
 	/**
+	 *
 	 * The name of the operator in the target vertex.
 	 */
 	private final String targetOperatorName;

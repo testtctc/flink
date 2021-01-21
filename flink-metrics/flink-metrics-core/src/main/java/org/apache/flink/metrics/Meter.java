@@ -36,6 +36,7 @@ public interface Meter extends Metric {
 	void markEvent(long n);
 
 	/**
+	 * 速度
 	 * Returns the current rate of events per second.
 	 *
 	 * @return current rate of events per second

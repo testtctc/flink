@@ -90,7 +90,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
  * <p>The information about partitioning, union, split/select end up being encoded in the edges
  * that connect the sources to the map operation.
  *
- * @param <T> The type of the elements that result from this {@code Transformation}
+ * @param <T>   转化之后的结果类型 The type of the elements that result from this {@code Transformation}
  */
 @Internal
 public abstract class Transformation<T> {
@@ -103,6 +103,7 @@ public abstract class Transformation<T> {
 	// This is used to assign a unique ID to every Transformation
 	protected static Integer idCounter = 0;
 
+	//获取节点id
 	public static int getNewNodeId() {
 		idCounter++;
 		return idCounter;
@@ -111,7 +112,7 @@ public abstract class Transformation<T> {
 	protected final int id;
 
 	protected String name;
-
+	//输出类型
 	protected TypeInformation<T> outputType;
 	// This is used to handle MissingTypeInfo. As long as the outputType has not been queried
 	// it can still be changed using setOutputType(). Afterwards an exception is thrown when
@@ -127,6 +128,7 @@ public abstract class Transformation<T> {
 	private int maxParallelism = -1;
 
 	/**
+	 * 最小资源
 	 *  The minimum resources for this stream transformation. It defines the lower limit for
 	 *  dynamic resources resize in future plan.
 	 */
@@ -147,6 +149,7 @@ public abstract class Transformation<T> {
 	private int managedMemoryWeight = DEFAULT_MANAGED_MEMORY_WEIGHT;
 
 	/**
+	 * 用户定义的标志符
 	 * User-specified ID for this transformation. This is used to assign the
 	 * same operator ID across job restarts. There is also the automatically
 	 * generated {@link #id}, which is assigned from a static counter. That
@@ -157,7 +160,7 @@ public abstract class Transformation<T> {
 	private String userProvidedNodeHash;
 
 	protected long bufferTimeout = -1;
-
+	//资源共享组
 	private String slotSharingGroup;
 
 	@Nullable

@@ -56,6 +56,7 @@ import static org.apache.flink.core.memory.MemorySegmentFactory.allocateOffHeapU
 import static org.apache.flink.core.memory.MemorySegmentFactory.allocateUnpooledSegment;
 
 /**
+ * 托管内存
  * The memory manager governs the memory that Flink uses for sorting, hashing, and caching. Memory is represented
  * either in {@link MemorySegment}s of equal size and arbitrary type or in reserved chunks of certain size and {@link MemoryType}.
  * Operators allocate the memory either by requesting a number of memory segments or by reserving chunks.
@@ -84,7 +85,7 @@ public class MemoryManager {
 
 	/** Reserved memory per memory owner. */
 	private final Map<Object, Map<MemoryType, Long>> reservedMemory;
-
+	//分组内存管理器
 	private final KeyedBudgetManager<MemoryType> budgetByType;
 
 	private final SharedResources sharedResources;
@@ -95,7 +96,7 @@ public class MemoryManager {
 	/**
 	 * Creates a memory manager with the given memory types, capacity and given page size.
 	 *
-	 * @param memorySizeByType The total size of the memory to be managed by this memory manager for each type (heap / off-heap).
+	 * @param memorySizeByType 最大管理的内存 The total size of the memory to be managed by this memory manager for each type (heap / off-heap).
 	 * @param pageSize The size of the pages handed out by the memory manager.
 	 */
 	public MemoryManager(Map<MemoryType, Long> memorySizeByType, int pageSize) {
@@ -725,7 +726,7 @@ public class MemoryManager {
 
 		return (long) (budgetByType.maxTotalBudget() * fraction);
 	}
-
+	//分配内存
 	private MemorySegment allocateManagedSegment(MemoryType memoryType, Object owner) {
 		switch (memoryType) {
 			case HEAP:

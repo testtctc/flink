@@ -57,6 +57,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 /**
+ * 基于堆的快照策略
  * Base class for the snapshots of the heap backend that outlines the algorithm and offers some hooks to realize
  * the concrete strategies. Subclasses must be threadsafe.
  */
