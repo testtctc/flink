@@ -36,6 +36,7 @@ import java.util.Optional;
 import static org.apache.flink.streaming.runtime.tasks.mailbox.TaskMailbox.MIN_PRIORITY;
 
 /**
+ *  邮箱处理器
  * This class encapsulates the logic of the mailbox-based execution model. At the core of this model {@link
  * #runMailboxLoop()} that continuously executes the provided {@link MailboxDefaultAction} in a loop. On each iteration,
  * the method also checks if there are pending actions in the mailbox and executes such actions. This model ensures
@@ -70,10 +71,13 @@ public class MailboxProcessor implements Closeable {
 	/** A pre-created instance of mailbox executor that executes all mails. */
 	private final MailboxExecutor mainMailboxExecutor;
 
-	/** Control flag to terminate the mailbox loop. Must only be accessed from mailbox thread. */
+	/**
+	 * 主线程在执行
+	 * Control flag to terminate the mailbox loop. Must only be accessed from mailbox thread. */
 	private boolean mailboxLoopRunning;
 
 	/**
+	 * 暂停行为
 	 * Remembers a currently active suspension of the default action. Serves as flag to indicate a suspended
 	 * default action (suspended if not-null) and to reuse the object as return value in consecutive suspend attempts.
 	 * Must only be accessed from mailbox thread.
@@ -81,7 +85,7 @@ public class MailboxProcessor implements Closeable {
 	private MailboxDefaultAction.Suspension suspendedDefaultAction;
 
 	private final StreamTaskActionExecutor actionExecutor;
-
+	//里面
 	public MailboxProcessor(MailboxDefaultAction mailboxDefaultAction) {
 		this(mailboxDefaultAction, StreamTaskActionExecutor.IMMEDIATE);
 	}
@@ -98,7 +102,7 @@ public class MailboxProcessor implements Closeable {
 			StreamTaskActionExecutor actionExecutor) {
 		this(mailboxDefaultAction, actionExecutor, mailbox, new MailboxExecutorImpl(mailbox, MIN_PRIORITY, actionExecutor));
 	}
-
+	//有外部传入
 	public MailboxProcessor(
 			MailboxDefaultAction mailboxDefaultAction,
 			StreamTaskActionExecutor actionExecutor,
@@ -120,6 +124,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 根据优先级获取邮箱执行器
 	 * Returns an executor service facade to submit actions to the mailbox.
 	 *
 	 * @param priority the priority of the {@link MailboxExecutor}.
@@ -129,6 +134,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 预关闭
 	 * Lifecycle method to close the mailbox for action submission.
 	 */
 	public void prepareClose() {
@@ -169,6 +175,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 主循环
 	 * Runs the mailbox processing loop. This is where the main work is done.
 	 */
 	public void runMailboxLoop() throws Exception {
@@ -180,7 +187,7 @@ public class MailboxProcessor implements Closeable {
 			"Method must be executed by declared mailbox thread!");
 
 		assert localMailbox.getState() == TaskMailbox.State.OPEN : "Mailbox must be opened!";
-
+		//默认控制器
 		final MailboxController defaultActionContext = new MailboxController(this);
 
 		while (processMail(localMailbox)) {
@@ -209,6 +216,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 通知所有都完成
 	 * This method must be called to end the stream task when all actions for the tasks have been performed.
 	 */
 	public void allActionsCompleted() {
@@ -216,12 +224,14 @@ public class MailboxProcessor implements Closeable {
 			// keep state check and poison mail enqueuing atomic, such that no intermediate #close may cause a
 			// MailboxStateException in #sendPriorityMail.
 			if (mailbox.getState() == TaskMailbox.State.OPEN) {
+				//通知关闭
 				sendControlMail(() -> mailboxLoopRunning = false, "poison mail");
 			}
 		});
 	}
 
 	/**
+	 * 发送控制邮件
 	 * Sends the given <code>mail</code> using {@link TaskMailbox#putFirst(Mail)} .
 	 * Intended use is to control this <code>MailboxProcessor</code>; no interaction with tasks should be performed;
 	 */
@@ -234,6 +244,8 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 *
+	 * 先穿件批，然后就再执行
 	 * This helper method handles all special actions from the mailbox. It returns true if the mailbox loop should
 	 * continue running, false if it should stop. In the current design, this method also evaluates all control flag
 	 * changes. This keeps the hot path in {@link #runMailboxLoop()} free from any other flag checking, at the cost
@@ -258,6 +270,7 @@ public class MailboxProcessor implements Closeable {
 		// If the default action is currently not available, we can run a blocking mailbox execution until the default
 		// action becomes available again.
 		while (isDefaultActionUnavailable() && isMailboxLoopRunning()) {
+			//阻塞
 			mailbox.take(MIN_PRIORITY).run();
 		}
 
@@ -265,6 +278,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 暂停
 	 * Calling this method signals that the mailbox-thread should (temporarily) stop invoking the default action,
 	 * e.g. because there is currently no input available.
 	 */
@@ -280,6 +294,7 @@ public class MailboxProcessor implements Closeable {
 		return suspendedDefaultAction;
 	}
 
+	//暂停
 	@VisibleForTesting
 	public boolean isDefaultActionUnavailable() {
 		return suspendedDefaultAction != null;
@@ -290,6 +305,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 检查
 	 * Helper method to make sure that the mailbox loop will check the control flow flags in the next iteration.
 	 */
 	private void ensureControlFlowSignalCheck() {
@@ -323,6 +339,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 实现暂停
 	 * Represents the suspended state of the default action and offers an idempotent method to resume execution.
 	 */
 	private final class DefaultActionSuspension implements MailboxDefaultAction.Suspension {

@@ -501,7 +501,7 @@ public final class InstantiationUtil {
 			return null;
 		}
 	}
-
+	//直接反序列化
 	public static <T> T readObjectFromConfig(Configuration config, String key, ClassLoader cl) throws IOException, ClassNotFoundException {
 		byte[] bytes = config.getBytes(key, null);
 		if (bytes == null) {

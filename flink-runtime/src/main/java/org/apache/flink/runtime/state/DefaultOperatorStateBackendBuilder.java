@@ -27,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 先测试是否能备份，在创建后端
+ * 重建状态后端
  * Builder class for {@link DefaultOperatorStateBackend} which handles all necessary initializations and clean ups.
  */
 public class DefaultOperatorStateBackendBuilder implements
@@ -44,9 +44,9 @@ public class DefaultOperatorStateBackendBuilder implements
 	/** State handles for restore. */
 	@VisibleForTesting
 	protected final Collection<OperatorStateHandle> restoreStateHandles;
+	//需要外部传入
 	@VisibleForTesting
 	protected final CloseableRegistry cancelStreamRegistry;
-
 
 	public DefaultOperatorStateBackendBuilder(
 		ClassLoader userClassloader,
@@ -63,6 +63,7 @@ public class DefaultOperatorStateBackendBuilder implements
 
 	@Override
 	public DefaultOperatorStateBackend build() throws BackendBuildingException {
+		//空置
 		Map<String, PartitionableListState<?>> registeredOperatorStates = new HashMap<>();
 		Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStates = new HashMap<>();
 		CloseableRegistry cancelStreamRegistryForBackend = new CloseableRegistry();

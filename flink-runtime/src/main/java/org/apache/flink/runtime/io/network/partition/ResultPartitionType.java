@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.io.network.partition;
 
 /**
+ * 结果分区类型
  * Type of a result partition.
  */
 public enum ResultPartitionType {
@@ -76,7 +77,9 @@ public enum ResultPartitionType {
 	/** Can the partition be consumed while being produced? */
 	private final boolean isPipelined;
 
-	/** Does the partition produce back pressure when not consumed? */
+	/**
+	 * 是否产生背压
+	 * Does the partition produce back pressure when not consumed? */
 	private final boolean hasBackPressure;
 
 	/** Does this partition use a limited number of (network) buffers? */

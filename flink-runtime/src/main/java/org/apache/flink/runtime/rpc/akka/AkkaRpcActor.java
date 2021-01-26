@@ -64,6 +64,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ *
  * Akka rpc actor which receives {@link LocalRpcInvocation}, {@link RunAsync} and {@link CallAsync}
  * {@link ControlMessages} messages.
  *
@@ -163,6 +164,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 		}
 	}
 
+	//处理信息
 	private void handleControlMessage(ControlMessages controlMessage) {
 		switch (controlMessage) {
 			case START:
@@ -185,6 +187,9 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 		sendErrorIfSender(new AkkaUnknownMessageException(message));
 	}
 
+
+	//核心入口
+	//明显，这都都单线程
 	protected void handleRpcMessage(Object message) {
 		if (message instanceof RunAsync) {
 			handleRunAsync((RunAsync) message);
@@ -373,6 +378,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 	 */
 	private void handleCallAsync(CallAsync callAsync) {
 		try {
+			//直接调用
 			Object result = callAsync.getCallable().call();
 
 			getSender().tell(new Status.Success(result), getSelf());
@@ -393,6 +399,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 
 		if (timeToRun == 0 || (delayNanos = timeToRun - System.nanoTime()) <= 0) {
 			// run immediately
+			// 立马执行
 			try {
 				runAsync.getRunnable().run();
 			} catch (Throwable t) {
@@ -407,6 +414,7 @@ class AkkaRpcActor<T extends RpcEndpoint & RpcGateway> extends AbstractActor {
 
 			final Object envelopedSelfMessage = envelopeSelfMessage(message);
 
+			//放入调度器执行 这里可能不是在主线程执行
 			getContext().system().scheduler().scheduleOnce(delay, getSelf(), envelopedSelfMessage,
 					getContext().dispatcher(), ActorRef.noSender());
 		}

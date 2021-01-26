@@ -19,11 +19,13 @@
 package org.apache.flink.runtime.rpc;
 
 /**
+ * 网关
  * Rpc gateway interface which has to be implemented by Rpc gateways.
  */
 public interface RpcGateway {
 
 	/**
+	 * 地址
 	 * Returns the fully qualified address under which the associated rpc endpoint is reachable.
 	 *
 	 * @return Fully qualified (RPC) address under which the associated rpc endpoint is reachable
@@ -31,6 +33,7 @@ public interface RpcGateway {
 	String getAddress();
 
 	/**
+	 * 域名
 	 * Returns the fully qualified hostname under which the associated rpc endpoint is reachable.
 	 *
 	 * @return Fully qualified hostname under which the associated rpc endpoint is reachable

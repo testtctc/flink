@@ -25,6 +25,7 @@ import org.apache.flink.shaded.guava18.com.google.common.collect.HashMultimap;
 import org.apache.flink.shaded.guava18.com.google.common.collect.Multimap;
 
 /**
+ * 事件处理器
  * The event handler manages {@link EventListener} instances and allows to
  * to publish events to them.
  */

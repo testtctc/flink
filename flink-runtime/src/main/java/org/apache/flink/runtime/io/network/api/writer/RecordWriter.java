@@ -46,6 +46,8 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 针对某个分区(并非子分区)的writer
+ *
  * An abstract record-oriented runtime result writer.
  *
  * <p>The RecordWriter wraps the runtime's {@link ResultPartitionWriter} and takes care of
@@ -65,13 +67,13 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 	public static final String DEFAULT_OUTPUT_FLUSH_THREAD_NAME = "OutputFlusher";
 
 	private static final Logger LOG = LoggerFactory.getLogger(RecordWriter.class);
-
+	//writer
 	protected final ResultPartitionWriter targetPartition;
-
+	//写出的渠道数量
 	protected final int numberOfChannels;
-
+	//序列化器
 	protected final RecordSerializer<T> serializer;
-
+	//随机
 	protected final Random rng = new XORShiftRandom();
 
 	private Counter numBytesOut = new SimpleCounter();
@@ -90,10 +92,11 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 	RecordWriter(ResultPartitionWriter writer, long timeout, String taskName) {
 		this.targetPartition = writer;
 		this.numberOfChannels = writer.getNumberOfSubpartitions();
-
+		//dataoutputview
 		this.serializer = new SpanningRecordSerializer<T>();
 
 		checkArgument(timeout >= -1);
+		//不做缓冲
 		this.flushAlways = (timeout == 0);
 		if (timeout == -1 || timeout == 0) {
 			outputFlusher = null;
@@ -101,15 +104,16 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 			String threadName = taskName == null ?
 				DEFAULT_OUTPUT_FLUSH_THREAD_NAME :
 				DEFAULT_OUTPUT_FLUSH_THREAD_NAME + " for " + taskName;
-
+			//开启刷出线程
 			outputFlusher = new OutputFlusher(threadName, timeout);
 			outputFlusher.start();
 		}
 	}
 
+	//每次都序列化，因此对象可以重用
 	protected void emit(T record, int targetChannel) throws IOException, InterruptedException {
 		checkErroneous();
-
+		//写入buffer
 		serializer.serializeRecord(record);
 
 		// Make sure we don't hold onto the large intermediate serialization buffer for too long
@@ -119,6 +123,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 	}
 
 	/**
+	 * 是否里面刷出到分区,避免缓存过大
 	 * @param targetChannel
 	 * @return <tt>true</tt> if the intermediate serialization buffer should be pruned
 	 */
@@ -153,6 +158,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 		return pruneTriggered;
 	}
 
+	//广播事件,添加消费者
 	public void broadcastEvent(AbstractEvent event) throws IOException {
 		try (BufferConsumer eventBufferConsumer = EventSerializer.toBufferConsumer(event)) {
 			for (int targetChannel = 0; targetChannel < numberOfChannels; targetChannel++) {
@@ -168,6 +174,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 		}
 	}
 
+	//输出目标分区
 	public void flushAll() {
 		targetPartition.flushAll();
 	}
@@ -279,6 +286,8 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 	// ------------------------------------------------------------------------
 
 	/**
+	 *
+	 * 专门用于刷出的线程
 	 * A dedicated thread that periodically flushes the output buffers, to set upper latency bounds.
 	 *
 	 * <p>The thread is daemonic, because it is only a utility thread.
@@ -300,6 +309,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 			interrupt();
 		}
 
+		//每隔一段时间刷出
 		@Override
 		public void run() {
 			try {
@@ -316,6 +326,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 
 					// any errors here should let the thread come to a halt and be
 					// recognized by the writer
+					//全部输出
 					flushAll();
 				}
 			} catch (Throwable t) {

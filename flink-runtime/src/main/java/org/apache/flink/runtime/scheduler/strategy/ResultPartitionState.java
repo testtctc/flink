@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.scheduler.strategy;
 
 /**
+ * 分区状态
  * State of a {@link SchedulingResultPartition}.
  */
 public enum ResultPartitionState {

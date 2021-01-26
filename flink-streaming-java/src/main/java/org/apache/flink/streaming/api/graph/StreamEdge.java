@@ -28,7 +28,7 @@ import java.util.List;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
- * 边
+ * STREAM graph层面
  * An edge in the streaming topology. One edge like this does not necessarily
  * gets converted to a connection between two job vertices (due to
  * chaining/optimization).
@@ -60,17 +60,19 @@ public class StreamEdge implements Serializable {
 	private final OutputTag outputTag;
 
 	/**
+	 * 数据分区器
 	 * The {@link StreamPartitioner} on this {@link StreamEdge}.
 	 */
 	private StreamPartitioner<?> outputPartitioner;
 
 	/**
+	 * 数据源原子名
 	 * The name of the operator in the source vertex.
 	 */
 	private final String sourceOperatorName;
 
 	/**
-	 *
+	 * 输出算子名字
 	 * The name of the operator in the target vertex.
 	 */
 	private final String targetOperatorName;

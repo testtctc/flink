@@ -30,6 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * 追求负载均衡
  * {@link SlotMatchingStrategy} which picks a matching slot from a TaskExecutor
  * with the least utilization.
  */
@@ -41,6 +42,7 @@ public enum LeastUtilizationSlotMatchingStrategy implements SlotMatchingStrategy
 			ResourceProfile requestedProfile,
 			Collection<T> freeSlots,
 			Function<InstanceID, Integer> numberRegisteredSlotsLookup) {
+		//资源汇总
 		final Map<InstanceID, Integer> numSlotsPerTaskExecutor = freeSlots.stream()
 			.collect(Collectors.groupingBy(
 				TaskManagerSlotInformation::getInstanceId,
@@ -52,10 +54,11 @@ public enum LeastUtilizationSlotMatchingStrategy implements SlotMatchingStrategy
 	}
 
 	private static double calculateUtilization(InstanceID instanceId, Function<? super InstanceID, Integer> numberRegisteredSlotsLookup, Map<InstanceID, Integer> numSlotsPerTaskExecutor) {
+		//注册的资源
 		final int numberRegisteredSlots = numberRegisteredSlotsLookup.apply(instanceId);
 
 		Preconditions.checkArgument(numberRegisteredSlots > 0, "The TaskExecutor %s has no slots registered.", instanceId);
-
+		//空余资源
 		final int numberFreeSlots = numSlotsPerTaskExecutor.getOrDefault(instanceId, 0);
 
 		Preconditions.checkArgument(numberRegisteredSlots >= numberFreeSlots, "The TaskExecutor %s has fewer registered slots than free slots.", instanceId);

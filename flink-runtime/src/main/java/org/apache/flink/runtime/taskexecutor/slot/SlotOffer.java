@@ -25,6 +25,7 @@ import org.apache.flink.util.Preconditions;
 import java.io.Serializable;
 
 /**
+ * 描述分配
  * Describe the slot offering to job manager provided by task manager.
  */
 public class SlotOffer implements Serializable {

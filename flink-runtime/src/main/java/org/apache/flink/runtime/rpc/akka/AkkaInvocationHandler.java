@@ -58,6 +58,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 调用处理
  * Invocation handler to be used with an {@link AkkaRpcActor}. The invocation handler wraps the
  * rpc in a {@link LocalRpcInvocation} message and then sends it to the {@link AkkaRpcActor} where it is
  * executed.
@@ -75,7 +76,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	 * Hostname of the host, {@link #rpcEndpoint} is running on.
 	 */
 	private final String hostname;
-
+	//actor
 	private final ActorRef rpcEndpoint;
 
 	// whether the actor ref is local and thus no message serialization is needed
@@ -90,6 +91,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	@Nullable
 	private final CompletableFuture<Void> terminationFuture;
 
+	//调用
 	AkkaInvocationHandler(
 			String address,
 			String hostname,
@@ -107,8 +109,11 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 		this.terminationFuture = terminationFuture;
 	}
 
+	//远程调用入口
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+		//调用类
 		Class<?> declaringClass = method.getDeclaringClass();
 
 		Object result;
@@ -142,6 +147,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 		scheduleRunAsync(runnable, 0L);
 	}
 
+	//异步调用
 	@Override
 	public void scheduleRunAsync(Runnable runnable, long delayMillis) {
 		checkNotNull(runnable, "runnable");
@@ -184,6 +190,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 具体实现
 	 * Invokes a RPC method by sending the RPC invocation details to the rpc endpoint.
 	 *
 	 * @param method to call
@@ -196,13 +203,13 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		Annotation[][] parameterAnnotations = method.getParameterAnnotations();
 		Time futureTimeout = extractRpcTimeout(parameterAnnotations, args, timeout);
-
+		//代用的信息
 		final RpcInvocation rpcInvocation = createRpcInvocationMessage(methodName, parameterTypes, args);
 
 		Class<?> returnType = method.getReturnType();
 
 		final Object result;
-
+		//仅仅执行一个过程
 		if (Objects.equals(returnType, Void.TYPE)) {
 			tell(rpcInvocation);
 
@@ -319,6 +326,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	}
 
 	/**
+	 * 注释是否有超时
 	 * Checks whether any of the annotations is of type {@link RpcTimeout}.
 	 *
 	 * @param annotations Array of annotations
@@ -335,6 +343,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	}
 
 	/**
+	 * 发送信息
 	 * Sends the message to the RPC endpoint.
 	 *
 	 * @param message to send to the RPC endpoint.
@@ -344,6 +353,7 @@ class AkkaInvocationHandler implements InvocationHandler, AkkaBasedEndpoint, Rpc
 	}
 
 	/**
+	 * 要求返回信息
 	 * Sends the message to the RPC endpoint and returns a future containing
 	 * its response.
 	 *

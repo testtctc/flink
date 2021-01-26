@@ -29,6 +29,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 消费者
  * Not thread safe class for producing {@link Buffer}.
  *
  * <p>It reads data written by {@link BufferBuilder}.

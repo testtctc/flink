@@ -43,31 +43,55 @@ under the License.
 				<enabled>true</enabled>
 			</releases>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>maven</id>
-			<url>https://repo.spring.io/plugins-release</url>
+			<id>confluent</id>
+			<url>http://packages.confluent.io/maven/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
 		<repository>
-			<id>spring-libs</id>
-			<url>http://repo.spring.io/libs-milestone/</url>
+			<id>junit</id>
+			<name>junit Address/</name>
+			<url>http://jcenter.bintray.com/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
 			<snapshots>
-				<enabled>true</enabled>
+				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-
+		<!--		<repository>-->
+		<!--			<id>maven</id>-->
+		<!--			<url>https://repo.spring.io/plugins-release</url>-->
+		<!--			<releases>-->
+		<!--				<enabled>true</enabled>-->
+		<!--			</releases>-->
+		<!--			<snapshots>-->
+		<!--				<enabled>true</enabled>-->
+		<!--			</snapshots>-->
+		<!--		</repository>-->
+		<!--		<repository>-->
+		<!--			<id>spring-libs</id>-->
+		<!--			<url>http://repo.spring.io/libs-milestone/</url>-->
+		<!--			<releases>-->
+		<!--				<enabled>true</enabled>-->
+		<!--			</releases>-->
+		<!--			<snapshots>-->
+		<!--				<enabled>true</enabled>-->
+		<!--			</snapshots>-->
+		<!--		</repository>-->
 	</repositories>
+
+
+
+
 
 	<pluginRepositories>
 		<pluginRepository>
@@ -128,8 +152,8 @@ under the License.
 		<module>flink-mesos</module>
 		<module>flink-metrics</module>
 		<module>flink-yarn</module>
-		<module>flink-yarn-tests</module>
-		<module>flink-fs-tests</module>
+<!--		<module>flink-yarn-tests</module>-->
+<!--		<module>flink-fs-tests</module>-->
 		<module>flink-docs</module>
 		<module>flink-python</module>
 		<module>flink-ml-parent</module>
@@ -877,7 +901,7 @@ under the License.
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>build-helper-maven-plugin</artifactId>
-							<version>1.7</version>
+							<version>3.2.0</version>
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
@@ -954,20 +978,20 @@ under the License.
 								<skip>true</skip>
 							</configuration>
 						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-							<configuration>
-								<skip>true</skip>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.scalastyle</groupId>
-							<artifactId>scalastyle-maven-plugin</artifactId>
-							<configuration>
-								<skip>true</skip>
-							</configuration>
-						</plugin>
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--							<configuration>-->
+<!--								<skip>true</skip>-->
+<!--							</configuration>-->
+<!--						</plugin>-->
+<!--						<plugin>-->
+<!--							<groupId>org.scalastyle</groupId>-->
+<!--							<artifactId>scalastyle-maven-plugin</artifactId>-->
+<!--							<configuration>-->
+<!--								<skip>true</skip>-->
+<!--							</configuration>-->
+<!--						</plugin>-->
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-enforcer-plugin</artifactId>
@@ -975,13 +999,13 @@ under the License.
 								<skip>true</skip>
 							</configuration>
 						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-javadoc-plugin</artifactId>
-							<configuration>
-								<skip>true</skip>
-							</configuration>
-						</plugin>
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--							<configuration>-->
+<!--								<skip>true</skip>-->
+<!--							</configuration>-->
+<!--						</plugin>-->
 						<plugin>
 							<groupId>com.github.siom79.japicmp</groupId>
 							<artifactId>japicmp-maven-plugin</artifactId>
@@ -1017,80 +1041,80 @@ under the License.
 			</build>
 		</profile>
 
-		<profile>
-			<id>spotbugs</id>
-			<activation>
-				<property>
-					<name>spotbugs</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>com.github.hazendaz.spotbugs</groupId>
-						<artifactId>spotbugs-maven-plugin</artifactId>
-						<version>3.0.6</version>
+<!--		<profile>-->
+<!--			<id>spotbugs</id>-->
+<!--			<activation>-->
+<!--				<property>-->
+<!--					<name>spotbugs</name>-->
+<!--				</property>-->
+<!--			</activation>-->
+<!--			<build>-->
+<!--				<plugins>-->
+<!--					<plugin>-->
+<!--						<groupId>com.github.hazendaz.spotbugs</groupId>-->
+<!--						<artifactId>spotbugs-maven-plugin</artifactId>-->
+<!--						<version>3.0.6</version>-->
 
-						<executions>
-							<execution>
-								<id>findbugs-run</id>
-								<phase>compile</phase>
-								<goals>
-									<goal>check</goal>
-								</goals>
-							</execution>
-						</executions>
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>findbugs-run</id>-->
+<!--								<phase>compile</phase>-->
+<!--								<goals>-->
+<!--									<goal>check</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
 
-						<configuration>
-							<xmlOutput>true</xmlOutput>
-							<threshold>Low</threshold>
-							<effort>default</effort>
-							<findbugsXmlOutputDirectory>${project.build.directory}/spotbugs</findbugsXmlOutputDirectory>
-							<excludeFilterFile>${rootDir}/tools/maven/spotbugs-exclude.xml</excludeFilterFile>
-							<failOnError>true</failOnError>
-						</configuration>
-					</plugin>
+<!--						<configuration>-->
+<!--							<xmlOutput>true</xmlOutput>-->
+<!--							<threshold>Low</threshold>-->
+<!--							<effort>default</effort>-->
+<!--							<findbugsXmlOutputDirectory>${project.build.directory}/spotbugs</findbugsXmlOutputDirectory>-->
+<!--							<excludeFilterFile>${rootDir}/tools/maven/spotbugs-exclude.xml</excludeFilterFile>-->
+<!--							<failOnError>true</failOnError>-->
+<!--						</configuration>-->
+<!--					</plugin>-->
 
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>xml-maven-plugin</artifactId>
-						<version>1.0.1</version>
-						<executions>
-							<execution>
-								<phase>verify</phase>
-								<goals>
-									<goal>transform</goal>
-								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<transformationSets>
-								<transformationSet>
-									<dir>${project.build.directory}/spotbugs</dir>
-									<outputDir>${project.build.directory}/spotbugs</outputDir>
-									<!-- A list of available stylesheets can be found here: https://github.com/findbugsproject/findbugs/tree/master/findbugs/src/xsl -->
-									<stylesheet>plain.xsl</stylesheet>
+<!--					<plugin>-->
+<!--						<groupId>org.codehaus.mojo</groupId>-->
+<!--						<artifactId>xml-maven-plugin</artifactId>-->
+<!--						<version>1.0.1</version>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<phase>verify</phase>-->
+<!--								<goals>-->
+<!--									<goal>transform</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--						<configuration>-->
+<!--							<transformationSets>-->
+<!--								<transformationSet>-->
+<!--									<dir>${project.build.directory}/spotbugs</dir>-->
+<!--									<outputDir>${project.build.directory}/spotbugs</outputDir>-->
+<!--									&lt;!&ndash; A list of available stylesheets can be found here: https://github.com/findbugsproject/findbugs/tree/master/findbugs/src/xsl &ndash;&gt;-->
+<!--									<stylesheet>plain.xsl</stylesheet>-->
 
-									<fileMappers>
-										<fileMapper
-											implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">
-											<targetExtension>.html</targetExtension>
-										</fileMapper>
-									</fileMappers>
-								</transformationSet>
-							</transformationSets>
-						</configuration>
-						<dependencies>
-							<dependency>
-								<groupId>com.github.hazendaz.spotbugs</groupId>
-								<artifactId>spotbugs-maven-plugin</artifactId>
-								<version>3.0.6</version>
-							</dependency>
-						</dependencies>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
+<!--									<fileMappers>-->
+<!--										<fileMapper-->
+<!--											implementation="org.codehaus.plexus.components.io.filemappers.FileExtensionMapper">-->
+<!--											<targetExtension>.html</targetExtension>-->
+<!--										</fileMapper>-->
+<!--									</fileMappers>-->
+<!--								</transformationSet>-->
+<!--							</transformationSets>-->
+<!--						</configuration>-->
+<!--						<dependencies>-->
+<!--							<dependency>-->
+<!--								<groupId>com.github.hazendaz.spotbugs</groupId>-->
+<!--								<artifactId>spotbugs-maven-plugin</artifactId>-->
+<!--								<version>3.0.6</version>-->
+<!--							</dependency>-->
+<!--						</dependencies>-->
+<!--					</plugin>-->
+<!--				</plugins>-->
+<!--			</build>-->
+<!--		</profile>-->
 
 		<profile>
 			<id>vendor-repos</id>
@@ -1185,143 +1209,143 @@ under the License.
 		</profile>
 
 
-		<profile>
-			<!-- used for SNAPSHOT and regular releases -->
-			<id>docs-and-source</id>
-			<activation>
-				<property>
-					<name>docs-and-source</name>
-				</property>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>2.2.1</version><!--$NO-MVN-MAN-VER$-->
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version><!--$NO-MVN-MAN-VER$-->
-						<configuration>
-							<quiet>true</quiet>
-						</configuration>
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-			<dependencies>
-				<dependency>
-					<!--
-					This is necessary for building the java docs using Java 8. Otherwise the javadoc
-					plugin will fail with "javadoc: error -
-						com.sun.tools.doclets.internal.toolkit.util.DocletAbortException:
-							com.sun.tools.javac.code.Symbol$CompletionFailure:
-								class file for akka.testkit.TestKit not found"
-					-->
-					<groupId>com.typesafe.akka</groupId>
-					<artifactId>akka-testkit_${scala.binary.version}</artifactId>
-					<version>${akka.version}</version>
-					<scope>provided</scope>
-				</dependency>
-			</dependencies>
-		</profile>
+<!--		<profile>-->
+<!--			&lt;!&ndash; used for SNAPSHOT and regular releases &ndash;&gt;-->
+<!--			<id>docs-and-source</id>-->
+<!--			<activation>-->
+<!--				<property>-->
+<!--					<name>docs-and-source</name>-->
+<!--				</property>-->
+<!--			</activation>-->
+<!--			<build>-->
+<!--				<plugins>-->
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-source-plugin</artifactId>-->
+<!--						<version>2.2.1</version>&lt;!&ndash;$NO-MVN-MAN-VER$&ndash;&gt;-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>attach-sources</id>-->
+<!--								<goals>-->
+<!--									<goal>jar</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--					</plugin>-->
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--						<version>2.9.1</version>&lt;!&ndash;$NO-MVN-MAN-VER$&ndash;&gt;-->
+<!--						<configuration>-->
+<!--							<quiet>true</quiet>-->
+<!--						</configuration>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>attach-javadocs</id>-->
+<!--								<goals>-->
+<!--									<goal>jar</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--					</plugin>-->
+<!--				</plugins>-->
+<!--			</build>-->
+<!--			<dependencies>-->
+<!--				<dependency>-->
+<!--					&lt;!&ndash;-->
+<!--					This is necessary for building the java docs using Java 8. Otherwise the javadoc-->
+<!--					plugin will fail with "javadoc: error - -->
+<!--						com.sun.tools.doclets.internal.toolkit.util.DocletAbortException:-->
+<!--							com.sun.tools.javac.code.Symbol$CompletionFailure:-->
+<!--								class file for akka.testkit.TestKit not found"-->
+<!--					&ndash;&gt;-->
+<!--					<groupId>com.typesafe.akka</groupId>-->
+<!--					<artifactId>akka-testkit_${scala.binary.version}</artifactId>-->
+<!--					<version>${akka.version}</version>-->
+<!--					<scope>provided</scope>-->
+<!--				</dependency>-->
+<!--			</dependencies>-->
+<!--		</profile>-->
 
-		<profile>
-			<id>release</id>
-			<activation>
-				<property>
-					<name>release</name>
-				</property>
-			</activation>
-			<properties>
-				<java.version>1.8</java.version>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.4</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-enforcer-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>enforce-maven</id>
-								<goals>
-									<goal>enforce</goal>
-								</goals>
-								<configuration>
-									<rules>
-										<requireMavenVersion>
-											<!-- maven version must be lower than 3.3. See FLINK-3158 -->
-											<version>(,3.3)</version>
-										</requireMavenVersion>
-										<requireJavaVersion>
-											<version>1.8.0</version>
-										</requireJavaVersion>
-									</rules>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9.1</version><!--$NO-MVN-MAN-VER$-->
-						<executions>
-							<execution>
-								<id>attach-javadocs</id>
-								<goals>
-									<goal>jar</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-				<pluginManagement>
-					<plugins>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-release-plugin</artifactId>
-							<version>2.1</version>
-							<configuration>
-								<mavenExecutorId>forked-path</mavenExecutorId>
-								<useReleaseProfile>false</useReleaseProfile>
-								<arguments>${arguments} -Psonatype-oss-release</arguments>
-							</configuration>
-						</plugin>
-					</plugins>
-				</pluginManagement>
-			</build>
-		</profile>
+<!--		<profile>-->
+<!--			<id>release</id>-->
+<!--			<activation>-->
+<!--				<property>-->
+<!--					<name>release</name>-->
+<!--				</property>-->
+<!--			</activation>-->
+<!--			<properties>-->
+<!--				<java.version>1.8</java.version>-->
+<!--			</properties>-->
+<!--			<build>-->
+<!--				<plugins>-->
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-gpg-plugin</artifactId>-->
+<!--						<version>1.4</version>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>sign-artifacts</id>-->
+<!--								<phase>verify</phase>-->
+<!--								<goals>-->
+<!--									<goal>sign</goal>-->
+<!--								</goals>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--					</plugin>-->
+<!--					<plugin>-->
+<!--						<groupId>org.apache.maven.plugins</groupId>-->
+<!--						<artifactId>maven-enforcer-plugin</artifactId>-->
+<!--						<executions>-->
+<!--							<execution>-->
+<!--								<id>enforce-maven</id>-->
+<!--								<goals>-->
+<!--									<goal>enforce</goal>-->
+<!--								</goals>-->
+<!--								<configuration>-->
+<!--									<rules>-->
+<!--										<requireMavenVersion>-->
+<!--											&lt;!&ndash; maven version must be lower than 3.3. See FLINK-3158 &ndash;&gt;-->
+<!--											<version>(,3.3)</version>-->
+<!--										</requireMavenVersion>-->
+<!--										<requireJavaVersion>-->
+<!--											<version>1.8.0</version>-->
+<!--										</requireJavaVersion>-->
+<!--									</rules>-->
+<!--								</configuration>-->
+<!--							</execution>-->
+<!--						</executions>-->
+<!--					</plugin>-->
+<!--&lt;!&ndash;					<plugin>&ndash;&gt;-->
+<!--&lt;!&ndash;						<groupId>org.apache.maven.plugins</groupId>&ndash;&gt;-->
+<!--&lt;!&ndash;						<artifactId>maven-javadoc-plugin</artifactId>&ndash;&gt;-->
+<!--&lt;!&ndash;						<version>2.9.1</version>&lt;!&ndash;$NO-MVN-MAN-VER$&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;						<executions>&ndash;&gt;-->
+<!--&lt;!&ndash;							<execution>&ndash;&gt;-->
+<!--&lt;!&ndash;								<id>attach-javadocs</id>&ndash;&gt;-->
+<!--&lt;!&ndash;								<goals>&ndash;&gt;-->
+<!--&lt;!&ndash;									<goal>jar</goal>&ndash;&gt;-->
+<!--&lt;!&ndash;								</goals>&ndash;&gt;-->
+<!--&lt;!&ndash;							</execution>&ndash;&gt;-->
+<!--&lt;!&ndash;						</executions>&ndash;&gt;-->
+<!--&lt;!&ndash;					</plugin>&ndash;&gt;-->
+<!--				</plugins>-->
+<!--				<pluginManagement>-->
+<!--					<plugins>-->
+<!--						<plugin>-->
+<!--							<groupId>org.apache.maven.plugins</groupId>-->
+<!--							<artifactId>maven-release-plugin</artifactId>-->
+<!--							<version>2.1</version>-->
+<!--							<configuration>-->
+<!--								<mavenExecutorId>forked-path</mavenExecutorId>-->
+<!--								<useReleaseProfile>false</useReleaseProfile>-->
+<!--								<arguments>${arguments} -Psonatype-oss-release</arguments>-->
+<!--							</configuration>-->
+<!--						</plugin>-->
+<!--					</plugins>-->
+<!--				</pluginManagement>-->
+<!--			</build>-->
+<!--		</profile>-->
 	</profiles>
 
 	<build>
@@ -1524,10 +1548,10 @@ under the License.
 					</excludes>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-checkstyle-plugin</artifactId>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -1734,46 +1758,46 @@ under the License.
 					</configuration>
 				</plugin>
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-checkstyle-plugin</artifactId>
-					<version>2.17</version>
-					<dependencies>
-						<dependency>
-							<groupId>com.puppycrawl.tools</groupId>
-							<artifactId>checkstyle</artifactId>
-							<!-- Note: match version with docs/flinkDev/ide_setup.md -->
-							<version>8.14</version>
-						</dependency>
-					</dependencies>
-					<executions>
-						<execution>
-							<id>validate</id>
-							<phase>validate</phase>
-							<goals>
-								<goal>check</goal>
-							</goals>
-						</execution>
-					</executions>
-					<configuration>
-						<suppressionsLocation>/tools/maven/suppressions.xml</suppressionsLocation>
-						<includeTestSourceDirectory>true</includeTestSourceDirectory>
-						<configLocation>/tools/maven/checkstyle.xml</configLocation>
-						<logViolationsToConsole>true</logViolationsToConsole>
-						<failOnViolation>true</failOnViolation>
-					</configuration>
-				</plugin>
+<!--				<plugin>-->
+<!--					<groupId>org.apache.maven.plugins</groupId>-->
+<!--					<artifactId>maven-checkstyle-plugin</artifactId>-->
+<!--					<version>2.17</version>-->
+<!--					<dependencies>-->
+<!--						<dependency>-->
+<!--							<groupId>com.puppycrawl.tools</groupId>-->
+<!--							<artifactId>checkstyle</artifactId>-->
+<!--							&lt;!&ndash; Note: match version with docs/flinkDev/ide_setup.md &ndash;&gt;-->
+<!--							<version>8.14</version>-->
+<!--						</dependency>-->
+<!--					</dependencies>-->
+<!--					<executions>-->
+<!--						<execution>-->
+<!--							<id>validate</id>-->
+<!--							<phase>validate</phase>-->
+<!--							<goals>-->
+<!--								<goal>check</goal>-->
+<!--							</goals>-->
+<!--						</execution>-->
+<!--					</executions>-->
+<!--					<configuration>-->
+<!--						<suppressionsLocation>/tools/maven/suppressions.xml</suppressionsLocation>-->
+<!--						<includeTestSourceDirectory>true</includeTestSourceDirectory>-->
+<!--						<configLocation>/tools/maven/checkstyle.xml</configLocation>-->
+<!--						<logViolationsToConsole>true</logViolationsToConsole>-->
+<!--						<failOnViolation>true</failOnViolation>-->
+<!--					</configuration>-->
+<!--				</plugin>-->
 
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.9.1</version><!--$NO-MVN-MAN-VER$-->
-					<configuration>
-						<quiet>true</quiet>
-						<additionalparam>-Xdoclint:none</additionalparam>
-						<detectOfflineLinks>false</detectOfflineLinks>
-					</configuration>
-				</plugin>
+<!--				<plugin>-->
+<!--					<groupId>org.apache.maven.plugins</groupId>-->
+<!--					<artifactId>maven-javadoc-plugin</artifactId>-->
+<!--					<version>2.9.1</version>&lt;!&ndash;$NO-MVN-MAN-VER$&ndash;&gt;-->
+<!--					<configuration>-->
+<!--						<quiet>true</quiet>-->
+<!--						<additionalparam>-Xdoclint:none</additionalparam>-->
+<!--						<detectOfflineLinks>false</detectOfflineLinks>-->
+<!--					</configuration>-->
+<!--				</plugin>-->
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>

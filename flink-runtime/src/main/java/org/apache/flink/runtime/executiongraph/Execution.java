@@ -101,6 +101,7 @@ import static org.apache.flink.runtime.scheduler.ExecutionVertexSchedulingRequir
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 任务执行
  * A single execution of a vertex. While an {@link ExecutionVertex} can be executed multiple times
  * (for recovery, re-computation, re-configuration), this class tracks the state of a single execution
  * of that vertex and the resources.
@@ -1029,7 +1030,7 @@ public class Execution implements AccessExecution, Archiveable<ArchivedExecution
 
 		if (slot != null) {
 			final TaskManagerGateway taskManagerGateway = slot.getTaskManagerGateway();
-
+			//taskmanager处理
 			taskManagerGateway.triggerCheckpoint(attemptId, getVertex().getJobId(), checkpointId, timestamp, checkpointOptions, advanceToEndOfEventTime);
 		} else {
 			LOG.debug("The execution has no slot assigned. This indicates that the execution is no longer running.");

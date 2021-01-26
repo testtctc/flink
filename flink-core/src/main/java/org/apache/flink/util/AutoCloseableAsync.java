@@ -28,6 +28,7 @@ import java.util.concurrent.ExecutionException;
 public interface AutoCloseableAsync extends AutoCloseable {
 
 	/**
+	 * 关闭
 	 * Trigger the closing of the resource and return the corresponding
 	 * close future.
 	 *

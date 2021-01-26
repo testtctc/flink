@@ -37,6 +37,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
+ * SLOT表
  * Container for multiple {@link TaskSlot} instances. Additionally, it maintains multiple indices
  * for faster access to tasks and sets of allocated slots.
  *
@@ -251,6 +252,7 @@ public interface TaskSlotTable<T extends TaskSlotPayload> extends TimeoutListene
 	Iterator<T> getTasks(JobID jobId);
 
 	/**
+	 * 根据index获取分配id
 	 * Get the current allocation for the task slot with the given index.
 	 *
 	 * @param index identifying the slot for which the allocation id shall be retrieved
@@ -259,6 +261,7 @@ public interface TaskSlotTable<T extends TaskSlotPayload> extends TimeoutListene
 	AllocationID getCurrentAllocation(int index);
 
 	/**
+	 * 获取管理器
 	 * Get the memory manager of the slot allocated for the task.
 	 *
 	 * @param allocationID allocation id of the slot allocated for the task

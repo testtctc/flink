@@ -20,6 +20,8 @@ package org.apache.flink.streaming.runtime.tasks;
 import org.apache.flink.annotation.Internal;
 
 /**
+ *
+ * 定时器服务
  * A common timer service interface with life cycle methods.
  *
  * <p>The registration of timers follows a life cycle of three phases:

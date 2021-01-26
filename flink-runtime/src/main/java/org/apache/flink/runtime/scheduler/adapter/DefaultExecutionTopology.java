@@ -50,6 +50,7 @@ public class DefaultExecutionTopology implements SchedulingTopology<DefaultExecu
 
 	private final List<DefaultExecutionVertex> executionVerticesList;
 
+	//中间结果
 	private final Map<IntermediateResultPartitionID, DefaultResultPartition> resultPartitionsById;
 
 	public DefaultExecutionTopology(ExecutionGraph graph) {

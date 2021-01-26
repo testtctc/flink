@@ -24,6 +24,7 @@ package org.apache.flink.runtime.taskmanager;
 public interface TaskActions {
 
 	/**
+	 * 外部失败
 	 * Fail the owning task with the given throwable.
 	 *
 	 * @param cause of the failure

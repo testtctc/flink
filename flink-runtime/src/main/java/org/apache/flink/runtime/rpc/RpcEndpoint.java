@@ -41,6 +41,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 端口的实现
+ *
  * Base class for RPC endpoints. Distributed components which offer remote procedure calls have to
  * extend the RPC endpoint base class. An RPC endpoint is backed by an {@link RpcService}.
  *

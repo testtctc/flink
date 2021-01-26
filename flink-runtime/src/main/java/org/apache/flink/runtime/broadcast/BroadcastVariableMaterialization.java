@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * 实体化--用于批计算
  * This class represents a single materialization of a broadcast variable and maintains a reference count for it. If the
  * reference count reaches zero the variable is no longer accessible and will eventually be garbage-collected.
  *
@@ -45,7 +46,7 @@ import java.util.Set;
 public class BroadcastVariableMaterialization<T, C> {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BroadcastVariableMaterialization.class);
-
+	//用于批计算
 	private final Set<BatchTask<?, ?>> references = new HashSet<BatchTask<?, ?>>();
 
 	private final Object materializationMonitor = new Object();

@@ -18,12 +18,13 @@
 
 package org.apache.flink.runtime.executiongraph;
 
+//执行边
 public class ExecutionEdge {
 
 	private final IntermediateResultPartition source;
 
 	private final ExecutionVertex target;
-
+	//第几个数据集
 	private final int inputNum;
 
 	public ExecutionEdge(IntermediateResultPartition source, ExecutionVertex target, int inputNum) {

@@ -25,6 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * 在主线程中使用
  * Interface to execute {@link Runnable} and {@link Callable} in the main thread of the underlying
  * RPC endpoint.
  *

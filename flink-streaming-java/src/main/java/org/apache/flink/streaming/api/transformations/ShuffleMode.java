@@ -34,7 +34,7 @@ public enum ShuffleMode {
 	PIPELINED,
 
 	/**
-	 * 批模式
+	 * 批模式 等所有数据准备完毕，再发送
 	 * The producer first produces its entire result and finishes.
 	 * After that, the consumer is started and may consume the data.
 	 */

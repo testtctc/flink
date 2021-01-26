@@ -20,12 +20,14 @@ package org.apache.flink.streaming.runtime.tasks.mailbox;
 import org.apache.flink.annotation.Internal;
 
 /**
+ * 邮箱行为--暂停或者继续
  * Interface for the default action that is repeatedly invoked in the mailbox-loop.
  */
 @Internal
 public interface MailboxDefaultAction {
 
 	/**
+	 * 默认行为
 	 * This method implements the default action of the mailbox loop (e.g. processing one event from the input).
 	 * Implementations should (in general) be non-blocking.
 	 *
@@ -54,12 +56,14 @@ public interface MailboxDefaultAction {
 	interface Controller {
 
 		/**
+		 * 所有任务完成
 		 * This method must be called to end the stream task when all actions for the tasks have been performed. This
 		 * method can be invoked from any thread.
 		 */
 		void allActionsCompleted();
 
 		/**
+		 * 暂停
 		 * Calling this method signals that the mailbox-thread should (temporarily) stop invoking the default action,
 		 * e.g. because there is currently no input available. This method must be invoked from the mailbox-thread only!
 		 */

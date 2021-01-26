@@ -21,12 +21,14 @@ package org.apache.flink.runtime.taskexecutor.slot;
 import java.util.UUID;
 
 /**
+ * 通知分配超时
  * Listener for timeout events by the {@link TimerService}.
  * @param <K> Type of the timeout key
  */
 public interface TimeoutListener<K> {
 
 	/**
+	 * 通知超时
 	 * Notify the listener about the timeout for an event identified by key. Additionally the method
 	 * is called with the timeout ticket which allows to identify outdated timeout events.
 	 *

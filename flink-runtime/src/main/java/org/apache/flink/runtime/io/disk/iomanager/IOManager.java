@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
+ * IO管理器 用于批处理
  * The facade for the provided I/O manager services.
  */
 public abstract class IOManager implements AutoCloseable {
@@ -104,6 +105,7 @@ public abstract class IOManager implements AutoCloseable {
 	}
 
 	/**
+	 * 移除文件目录
 	 * Gets the directories that the I/O manager spills to.
 	 *
 	 * @return The directories that the I/O manager spills to.

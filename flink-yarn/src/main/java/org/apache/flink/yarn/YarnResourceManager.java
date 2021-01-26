@@ -77,6 +77,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
+ * yarn资源管理器
  * The yarn implementation of the resource manager. Used when the system is started
  * via the resource framework YARN.
  */

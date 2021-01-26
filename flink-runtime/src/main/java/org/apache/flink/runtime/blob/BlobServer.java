@@ -552,6 +552,8 @@ public class BlobServer extends Thread implements BlobService, BlobWriter, Perma
 	}
 
 	/**
+	 *
+	 * 持久化文件
 	 * Uploads the data of the given byte array for the given job to the BLOB server.
 	 *
 	 * @param jobId

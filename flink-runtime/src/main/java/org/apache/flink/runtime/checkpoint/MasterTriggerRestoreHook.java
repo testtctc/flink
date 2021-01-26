@@ -26,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 /**
+ *插件
  * The interface for hooks that can be called by the checkpoint coordinator when triggering or
  * restoring a checkpoint. Such a hook is useful for example when preparing external systems for
  * taking or restoring checkpoints.

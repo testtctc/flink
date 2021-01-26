@@ -21,6 +21,7 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.streaming.runtime.io.PushingAsyncDataInput.DataOutput;
 
 /**
+ * 输入状态
  * An {@link InputStatus} indicates one input state which might be currently
  * available, not available or already finished. It is returned while calling
  * {@link PushingAsyncDataInput#emitNext(DataOutput)}.

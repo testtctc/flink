@@ -28,7 +28,9 @@ public final class RunAsync {
 
 	private final Runnable runnable;
 
-	/** The delay after which the runnable should be called */
+	/** T
+	 * 延迟
+	 * he delay after which the runnable should be called */
 	private final long atTimeNanos;
 
 	/**

@@ -70,6 +70,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
+ * 执行顶点
  * An {@code ExecutionJobVertex} is part of the {@link ExecutionGraph}, and the peer
  * to the {@link JobVertex}.
  *
@@ -106,11 +107,11 @@ public class ExecutionJobVertex implements AccessExecutionJobVertex, Archiveable
 	 * <p>The ID's are in the same order as {@link ExecutionJobVertex#operatorIDs}.
 	 */
 	private final List<OperatorID> userDefinedOperatorIds;
-
+	//具体任务
 	private final ExecutionVertex[] taskVertices;
-
+	// 中间结果集
 	private final IntermediateResult[] producedDataSets;
-
+	//输入
 	private final List<IntermediateResult> inputs;
 
 	private final int parallelism;
@@ -124,7 +125,7 @@ public class ExecutionJobVertex implements AccessExecutionJobVertex, Archiveable
 	private final boolean maxParallelismConfigured;
 
 	private int maxParallelism;
-
+	//资源
 	private final ResourceProfile resourceProfile;
 
 	/**
@@ -408,6 +409,8 @@ public class ExecutionJobVertex implements AccessExecutionJobVertex, Archiveable
 		}
 	}
 
+
+	//执行状态汇总
 	@Override
 	public ExecutionState getAggregateState() {
 		int[] num = new int[ExecutionState.values().length];
@@ -431,6 +434,7 @@ public class ExecutionJobVertex implements AccessExecutionJobVertex, Archiveable
 
 
 	//---------------------------------------------------------------------------------------------
+	// 连接到连接到之前的数据
 
 	public void connectToPredecessors(Map<IntermediateDataSetID, IntermediateResult> intermediateDataSets) throws JobException {
 
@@ -456,13 +460,14 @@ public class ExecutionJobVertex implements AccessExecutionJobVertex, Archiveable
 			// fetch the intermediate result via ID. if it does not exist, then it either has not been created, or the order
 			// in which this method is called for the job vertices is not a topological order
 			IntermediateResult ires = intermediateDataSets.get(edge.getSourceId());
+			//如果有输入边，则肯定有对应的中间结果集
 			if (ires == null) {
 				throw new JobException("Cannot connect this job graph to the previous graph. No previous intermediate result found for ID "
 						+ edge.getSourceId());
 			}
 
 			this.inputs.add(ires);
-
+			//获取消费者编号
 			int consumerIndex = ires.registerConsumer();
 
 			for (int i = 0; i < parallelism; i++) {

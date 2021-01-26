@@ -25,6 +25,7 @@ import org.apache.flink.util.function.RunnableWithException;
 import java.util.concurrent.Future;
 
 /**
+ * 可执行的邮件
  * An executable bound to a specific operator in the chain, such that it can be picked for downstream mailbox.
  */
 @Internal
@@ -44,7 +45,7 @@ public class Mail {
 	private final String descriptionFormat;
 
 	private final Object[] descriptionArgs;
-
+	//执行器
 	private final StreamTaskActionExecutor actionExecutor;
 
 	public Mail(RunnableWithException runnable, int priority, String descriptionFormat, Object... descriptionArgs) {
@@ -74,6 +75,7 @@ public class Mail {
 		return String.format(descriptionFormat, descriptionArgs);
 	}
 
+	//执行
 	public void run() throws Exception {
 		actionExecutor.run(runnable);
 	}

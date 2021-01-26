@@ -23,6 +23,7 @@ import org.apache.flink.runtime.deployment.ResultPartitionDeploymentDescriptor;
 import java.util.Collection;
 
 /**
+ * 分区追踪器
  * Utility for tracking partitions and issuing release calls to task executors and shuffle masters.
  */
 public interface JobMasterPartitionTracker extends PartitionTracker<ResourceID, ResultPartitionDeploymentDescriptor> {

@@ -31,7 +31,8 @@ import java.io.Serializable;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
- * Deployment descriptor for a result partition.
+ * 结果分区器
+ * * Deployment descriptor for a result partition.
  *
  * @see ResultPartition
  */
@@ -57,6 +58,7 @@ public class ResultPartitionDeploymentDescriptor implements Serializable {
 		this.shuffleDescriptor = checkNotNull(shuffleDescriptor);
 		KeyGroupRangeAssignment.checkParallelismPreconditions(maxParallelism);
 		this.maxParallelism = maxParallelism;
+		//更新时是否发送信息
 		this.sendScheduleOrUpdateConsumersMessage = sendScheduleOrUpdateConsumersMessage;
 	}
 

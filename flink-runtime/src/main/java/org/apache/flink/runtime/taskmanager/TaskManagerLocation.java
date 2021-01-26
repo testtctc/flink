@@ -32,6 +32,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * TaskManager位置主要包括ip/端口等信息
  * This class encapsulates the connection information of a TaskManager.
  * It describes the host where the TaskManager operates and its server port
  * for data exchange. This class also contains utilities to work with the
@@ -45,7 +46,9 @@ public class TaskManagerLocation implements Comparable<TaskManagerLocation>, jav
 
 	// ------------------------------------------------------------------------
 
-	/** The ID of the resource in which the TaskManager is started. This can be for example
+	/**
+	 * 资源id
+	 * The ID of the resource in which the TaskManager is started. This can be for example
 	 * the YARN container ID, Mesos container ID, or any other unique identifier. */
 	private final ResourceID resourceID;
 

@@ -32,6 +32,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
+ * checkpoint设定
  * The JobCheckpointingSettings are attached to a JobGraph and describe the settings
  * for the asynchronous checkpoints of the JobGraph, such as interval, and which vertices
  * need to participate.

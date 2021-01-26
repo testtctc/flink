@@ -23,11 +23,13 @@ import org.apache.flink.runtime.clusterframework.types.AllocationID;
 import java.util.UUID;
 
 /**
+ *
  * Interface to trigger slot actions from within the {@link TaskSlotTable}.
  */
 public interface SlotActions {
 
 	/**
+	 * 释放分配
 	 * Free the task slot with the given allocation id.
 	 *
 	 * @param allocationId to identify the slot to be freed
@@ -35,7 +37,8 @@ public interface SlotActions {
 	void freeSlot(AllocationID allocationId);
 
 	/**
-	 * Timeout the task slot for the given allocation id. The timeout is identified by the given
+	 * 分配超时时的处理
+	 * Timeout the task slot for the given allocation id. The timeout is identifeid by the given
 	 * ticket to filter invalid timeouts out.
 	 *
 	 * @param allocationId identifying the task slot to be timed out

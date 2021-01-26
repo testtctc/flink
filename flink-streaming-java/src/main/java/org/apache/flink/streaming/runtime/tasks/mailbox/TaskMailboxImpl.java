@@ -40,23 +40,27 @@ import static org.apache.flink.streaming.runtime.tasks.mailbox.TaskMailbox.State
 import static org.apache.flink.streaming.runtime.tasks.mailbox.TaskMailbox.State.QUIESCED;
 
 /**
+ * //邮箱的事项
  * Implementation of {@link TaskMailbox} in a {@link java.util.concurrent.BlockingQueue} fashion and tailored towards
  * our use case with multiple writers and single reader.
  */
 @ThreadSafe
 public class TaskMailboxImpl implements TaskMailbox {
 	/**
+	 * 可重入锁
 	 * Lock for all concurrent ops.
 	 */
 	private final ReentrantLock lock = new ReentrantLock();
 
 	/**
+	 * 异步执行队列
 	 * Internal queue of mails.
 	 */
 	@GuardedBy("lock")
 	private final Deque<Mail> queue = new ArrayDeque<>();
 
 	/**
+	 * 条件锁
 	 * Condition that is triggered when the mailbox is no longer empty.
 	 */
 	@GuardedBy("lock")
@@ -69,12 +73,14 @@ public class TaskMailboxImpl implements TaskMailbox {
 	private State state = OPEN;
 
 	/**
+	 * 主线程
 	 * Reference to the thread that executes the mailbox mails.
 	 */
 	@Nonnull
 	private final Thread taskMailboxThread;
 
 	/**
+	 * 当前批队列
 	 * The current batch of mails. A new batch can be created with {@link #createBatch()} and consumed with {@link
 	 * #tryTakeFromBatch()}.
 	 */
@@ -94,17 +100,21 @@ public class TaskMailboxImpl implements TaskMailbox {
 		this(Thread.currentThread());
 	}
 
+	//是否是主线程
 	@Override
 	public boolean isMailboxThread() {
 		return Thread.currentThread() == taskMailboxThread;
 	}
 
+	//是否有待处理
 	@Override
 	public boolean hasMail() {
 		checkIsMailboxThread();
 		return !batch.isEmpty() || hasNewMail;
 	}
 
+	//取出--先从批，再从默认队列
+	//非阻塞
 	@Override
 	public Optional<Mail> tryTake(int priority) {
 		checkIsMailboxThread();
@@ -130,8 +140,10 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//阻塞,直到有任务
 	@Override
 	public @Nonnull Mail take(int priority) throws InterruptedException, IllegalStateException {
+		//必须在主线程完成
 		checkIsMailboxThread();
 		checkTakeStateConditions();
 		Mail head = takeOrNull(batch, priority);
@@ -143,6 +155,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		try {
 			Mail headMail;
 			while ((headMail = takeOrNull(queue, priority)) == null) {
+				//等待信息
 				notEmpty.await();
 			}
 			hasNewMail = !queue.isEmpty();
@@ -153,7 +166,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 	}
 
 	//------------------------------------------------------------------------------------------------------------------
-
+	//是否能创建批
 	@Override
 	public boolean createBatch() {
 		checkIsMailboxThread();
@@ -176,6 +189,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//从批获取
 	@Override
 	public Optional<Mail> tryTakeFromBatch() {
 		checkIsMailboxThread();
@@ -185,6 +199,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 
 	//------------------------------------------------------------------------------------------------------------------
 
+	//增加邮件
 	@Override
 	public void put(@Nonnull Mail mail) {
 		final ReentrantLock lock = this.lock;
@@ -193,12 +208,14 @@ public class TaskMailboxImpl implements TaskMailbox {
 			checkPutStateConditions();
 			queue.addLast(mail);
 			hasNewMail = true;
+			//通知
 			notEmpty.signal();
 		} finally {
 			lock.unlock();
 		}
 	}
 
+	//同步执行
 	@Override
 	public void putFirst(@Nonnull Mail mail) {
 		if (isMailboxThread()) {
@@ -211,6 +228,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 				checkPutStateConditions();
 				queue.addFirst(mail);
 				hasNewMail = true;
+				//通知非空
 				notEmpty.signal();
 			} finally {
 				lock.unlock();
@@ -220,6 +238,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 
 	//------------------------------------------------------------------------------------------------------------------
 
+	//获取优先级较高的邮件
 	@Nullable
 	private Mail takeOrNull(Deque<Mail> queue, int priority) {
 		if (queue.isEmpty()) {
@@ -237,6 +256,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		return null;
 	}
 
+	//所有等待队列中的任务移除
 	@Override
 	public List<Mail> drain() {
 		List<Mail> drainedMails = new ArrayList<>(batch);
@@ -253,6 +273,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//检查是否是主线程
 	private void checkIsMailboxThread() {
 		if (!isMailboxThread()) {
 			throw new IllegalStateException(
@@ -260,6 +281,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//检查状态
 	private void checkPutStateConditions() {
 		if (state != OPEN) {
 			throw new IllegalStateException("Mailbox is in state " + state + ", but is required to be in state " +
@@ -267,6 +289,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//检查状态
 	private void checkTakeStateConditions() {
 		if (state == CLOSED) {
 			throw new IllegalStateException("Mailbox is in state " + state + ", but is required to be in state " +
@@ -274,6 +297,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//静默
 	@Override
 	public void quiesce() {
 		checkIsMailboxThread();
@@ -308,6 +332,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//上锁，获取状态
 	@Nonnull
 	@Override
 	public State getState() {
@@ -320,6 +345,7 @@ public class TaskMailboxImpl implements TaskMailbox {
 		}
 	}
 
+	//上锁执行
 	@Override
 	public void runExclusively(Runnable runnable) {
 		lock.lock();

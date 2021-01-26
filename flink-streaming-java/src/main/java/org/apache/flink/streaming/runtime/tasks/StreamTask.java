@@ -97,6 +97,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
+ * 流计算任务
  * Base class for all streaming tasks. A task is the unit of local processing that is deployed
  * and executed by the TaskManagers. Each task runs one or more {@link StreamOperator}s which form
  * the Task's operator chain. Operators that are chained together execute synchronously in the
@@ -150,6 +151,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 所有在主线程之外的执行都必须在在这个线程执行，防止并发带来的问题
 	 * All actions outside of the task {@link #mailboxProcessor mailbox} (i.e. performed by another thread) must be executed through this executor
 	 * to ensure that we don't have concurrent method calls that void consistent checkpoints.
 	 * <p>CheckpointLock is superseded by {@link MailboxExecutor}, with
@@ -161,15 +163,20 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	private final StreamTaskActionExecutor.SynchronizedStreamTaskActionExecutor actionExecutor;
 
 	/**
+	 * 输入处理
 	 * The input processor. Initialized in {@link #init()} method.
 	 */
 	@Nullable
 	protected StreamInputProcessor inputProcessor;
 
-	/** the head operator that consumes the input streams of this task. */
+	/**
+	 * 第一个算子
+	 * the head operator that consumes the input streams of this task. */
 	protected OP headOperator;
 
-	/** The chain of operators executed by this task. */
+	/**
+	 * 执行链条
+	 * The chain of operators executed by this task. */
 	protected OperatorChain<OUT, OP> operatorChain;
 
 	/** The configuration of this streaming task. */
@@ -266,6 +273,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		this(environment, timerService, uncaughtExceptionHandler, actionExecutor, new TaskMailboxImpl(Thread.currentThread()));
 	}
 
+	//actionExecutor 行为执行器
 	protected StreamTask(
 			Environment environment,
 			@Nullable TimerService timerService,
@@ -293,7 +301,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 	protected void cancelTask() throws Exception {
 	}
-
+	//清理
 	protected void cleanup() throws Exception {
 		if (inputProcessor != null) {
 			inputProcessor.close();
@@ -301,6 +309,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	/**
+	 *
 	 * This method implements the default action of the task (e.g. processing one event from the input). Implementations
 	 * should (in general) be non-blocking.
 	 *
@@ -414,14 +423,16 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	private void beforeInvoke() throws Exception {
 		disposedOperators = false;
 		LOG.debug("Initializing {}.", getName());
-
+		//异步线程池
 		asyncOperationsThreadPool = Executors.newCachedThreadPool(new ExecutorThreadFactory("AsyncOperations", uncaughtExceptionHandler));
-
+		//创建后端
 		stateBackend = createStateBackend();
+		//获取存储
 		checkpointStorage = stateBackend.createCheckpointStorage(getEnvironment().getJobID());
 
 		// if the clock is not already set, then assign a default TimeServiceProvider
 		if (timerService == null) {
+
 			ThreadFactory timerThreadFactory =
 				new DispatcherThreadFactory(TRIGGER_THREAD_GROUP, "Time Trigger for " + getName());
 
@@ -429,7 +440,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 				this::handleTimerException,
 				timerThreadFactory);
 		}
-
+		//算子链条
 		operatorChain = new OperatorChain<>(this, recordWriter);
 		headOperator = operatorChain.getHeadOperator();
 
@@ -450,11 +461,12 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			// both the following operations are protected by the lock
 			// so that we avoid race conditions in the case that initializeState()
 			// registers a timer, that fires before the open() is called.
-
+			//打开算子和初始化状态
 			initializeStateAndOpen();
 		});
 	}
 
+	//入口
 	@Override
 	public final void invoke() throws Exception {
 		try {
@@ -767,12 +779,13 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	//  Checkpoint and Restore
 	// ------------------------------------------------------------------------
 
+	//异步执行
 	@Override
 	public Future<Boolean> triggerCheckpointAsync(
 			CheckpointMetaData checkpointMetaData,
 			CheckpointOptions checkpointOptions,
 			boolean advanceToEndOfEventTime) {
-
+		//在主线程提交任务
 		return mailboxProcessor.getMainMailboxExecutor().submit(
 				() -> triggerCheckpoint(checkpointMetaData, checkpointOptions, advanceToEndOfEventTime),
 				"checkpoint %s with %s",
@@ -780,6 +793,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			checkpointOptions);
 	}
 
+	//入口
 	private boolean triggerCheckpoint(
 			CheckpointMetaData checkpointMetaData,
 			CheckpointOptions checkpointOptions,
@@ -789,7 +803,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			CheckpointMetrics checkpointMetrics = new CheckpointMetrics()
 				.setBytesBufferedInAlignment(0L)
 				.setAlignmentDurationNanos(0L);
-
+			//触发成功
 			boolean success = performCheckpoint(checkpointMetaData, checkpointOptions, checkpointMetrics, advanceToEndOfEventTime);
 			if (!success) {
 				declineCheckpoint(checkpointMetaData.getCheckpointId());
@@ -844,7 +858,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		// notify all downstream operators that they should not wait for a barrier from us
 		actionExecutor.runThrowing(() -> operatorChain.broadcastCheckpointCancelMarker(checkpointId));
 	}
-
+	//执行checkpoint
 	private boolean performCheckpoint(
 			CheckpointMetaData checkpointMetaData,
 			CheckpointOptions checkpointOptions,
@@ -857,9 +871,11 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		final long checkpointId = checkpointMetaData.getCheckpointId();
 
 		if (isRunning) {
+			//异步执行
 			actionExecutor.runThrowing(() -> {
 
 				if (checkpointOptions.getCheckpointType().isSynchronous()) {
+					//同步
 					setSynchronousSavepointId(checkpointId);
 
 					if (advanceToEndOfTime) {
@@ -877,6 +893,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 				operatorChain.prepareSnapshotPreBarrier(checkpointId);
 
 				// Step (2): Send the checkpoint barrier downstream
+				//发送到下游
 				operatorChain.broadcastCheckpointBarrier(
 						checkpointId,
 						checkpointMetaData.getTimestamp(),
@@ -884,6 +901,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 				// Step (3): Take the state snapshot. This should be largely asynchronous, to not
 				//           impact progress of the streaming topology
+				// 备份
 				checkpointState(checkpointMetaData, checkpointOptions, checkpointMetrics);
 
 			});
@@ -1012,10 +1030,11 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	// ------------------------------------------------------------------------
 	//  State backend
 	// ------------------------------------------------------------------------
-
+	// create StateBackend for task
 	private StateBackend createStateBackend() throws Exception {
+		//获取类
 		final StateBackend fromApplication = configuration.getStateBackend(getUserCodeClassLoader());
-
+		//开始创建
 		return StateBackendLoader.fromApplicationOrConfigOrDefault(
 				fromApplication,
 				getEnvironment().getTaskManagerInfo().getConfiguration(),

@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
+ * 任意匹配
  * {@link SlotMatchingStrategy} which picks the first matching slot.
  */
 public enum AnyMatchingSlotMatchingStrategy implements SlotMatchingStrategy {

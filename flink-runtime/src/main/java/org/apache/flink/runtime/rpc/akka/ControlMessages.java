@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.rpc.akka;
 
 /**
+ * 控制信息
  * Control messages for the {@link AkkaRpcActor}.
  */
 public enum ControlMessages {

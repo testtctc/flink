@@ -766,6 +766,7 @@ public class StreamExecutionEnvironment {
 		checkpointCfg.configure(configuration);
 	}
 
+	//加载状态后端
 	private StateBackend loadStateBackend(ReadableConfig configuration, ClassLoader classLoader) {
 		try {
 			return StateBackendLoader.loadStateBackendFromConfig(
@@ -822,9 +823,9 @@ public class StreamExecutionEnvironment {
 		if (data.length == 0) {
 			throw new IllegalArgumentException("fromElements needs at least one element as argument");
 		}
-
+		//抽取信息
 		TypeInformation<OUT> typeInfo;
-		try {
+			try {
 			typeInfo = TypeExtractor.getForObject(data[0]);
 		}
 		catch (Exception e) {
@@ -1582,7 +1583,7 @@ public class StreamExecutionEnvironment {
 				typeInfo = (TypeInformation<OUT>) new MissingTypeInfo(sourceName, e);
 			}
 		}
-
+		//看接口
 		boolean isParallel = function instanceof ParallelSourceFunction;
 
 		clean(function);
@@ -1635,6 +1636,7 @@ public class StreamExecutionEnvironment {
 	 */
 	@Internal
 	public JobExecutionResult execute(StreamGraph streamGraph) throws Exception {
+		//客户端
 		final JobClient jobClient = executeAsync(streamGraph);
 
 		try {
@@ -1711,6 +1713,7 @@ public class StreamExecutionEnvironment {
 	}
 
 	/**
+	 * 触发异步执行
 	 * Triggers the program execution asynchronously. The environment will execute all parts of
 	 * the program that have resulted in a "sink" operation. Sink operations are
 	 * for example printing results or forwarding them to a message queue.
@@ -1779,7 +1782,7 @@ public class StreamExecutionEnvironment {
 	 * {@link #execute()} multiple times.
 	 *
 	 * @param jobName Desired name of the job
-	 * @param clearTransformations Whether or not to clear previously registered transformations
+	 * @param clearTransformations Whether or not to clear previously registered transformations 清空转换
 	 * @return The streamgraph representing the transformations
 	 */
 	@Internal

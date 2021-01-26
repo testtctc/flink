@@ -122,6 +122,7 @@ public class BufferBuilder {
 	}
 
 	/**
+	 * 为孩子
 	 * Holds a reference to the current writer position. Negative values indicate that writer ({@link BufferBuilder}
 	 * has finished. Value {@code Integer.MIN_VALUE} represents finished empty buffer.
 	 */
@@ -130,7 +131,7 @@ public class BufferBuilder {
 		int FINISHED_EMPTY = Integer.MIN_VALUE;
 
 		int get();
-
+		//是否结束
 		static boolean isFinished(int position) {
 			return position < 0;
 		}

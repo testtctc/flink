@@ -366,13 +366,22 @@ public class ExecutionVertex implements AccessExecutionVertex, Archiveable<Archi
 
 	// --------------------------------------------------------------------------------------------
 	//  Graph building
+	//
 	// --------------------------------------------------------------------------------------------
 
+
+	/**
+	 * @param inputNumber 结果集编号
+	 * @param source
+	 * @param edge
+	 * @param consumerNumber 消费组
+	 */
 	public void connectSource(int inputNumber, IntermediateResult source, JobEdge edge, int consumerNumber) {
 
 		final DistributionPattern pattern = edge.getDistributionPattern();
 		final IntermediateResultPartition[] sourcePartitions = source.getPartitions();
 
+		//边
 		ExecutionEdge[] edges;
 
 		switch (pattern) {
@@ -410,20 +419,25 @@ public class ExecutionVertex implements AccessExecutionVertex, Archiveable<Archi
 		return edges;
 	}
 
+	//点对点式消费数据
 	private ExecutionEdge[] connectPointwise(IntermediateResultPartition[] sourcePartitions, int inputNumber) {
 		final int numSources = sourcePartitions.length;
+		//任务并行度
 		final int parallelism = getTotalNumberOfParallelSubtasks();
 
 		// simple case same number of sources as targets
+		// 当并行度一致时
 		if (numSources == parallelism) {
 			return new ExecutionEdge[] { new ExecutionEdge(sourcePartitions[subTaskIndex], this, inputNumber) };
 		}
+		//数据源小于本身的并行度
 		else if (numSources < parallelism) {
 
 			int sourcePartition;
 
 			// check if the pattern is regular or irregular
 			// we use int arithmetics for regular, and floating point with rounding for irregular
+			//整数倍
 			if (parallelism % numSources == 0) {
 				// same number of targets per source
 				int factor = parallelism / numSources;

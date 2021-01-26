@@ -59,6 +59,11 @@ public class StateBackendLoader {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 加载状态存储后端
+	 *
+	 * 利用工厂函数创建
+	 *
+	 *
 	 * Loads the state backend from the configuration, from the parameter 'state.backend', as defined
 	 * in {@link CheckpointingOptions#STATE_BACKEND}.
 	 *
@@ -156,6 +161,7 @@ public class StateBackendLoader {
 	}
 
 	/**
+	 * 检查并初始化后端
 	 * Checks if an application-defined state backend is given, and if not, loads the state
 	 * backend from the configuration, from the parameter 'state.backend', as defined
 	 * in {@link CheckpointingOptions#STATE_BACKEND}. If no state backend is configured, this instantiates the

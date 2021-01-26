@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
+ *范围序列化器
  * Record serializer which serializes the complete record to an intermediate
  * data serialization buffer and copies this buffer to target buffers
  * one-by-one using {@link #copyToBufferBuilder(BufferBuilder)}.

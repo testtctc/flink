@@ -33,6 +33,7 @@ import java.util.Objects;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * slot
  * A TaskManagerSlot represents a slot located in a TaskManager. It has a unique identification and
  * resource profile associated.
  */
@@ -71,7 +72,7 @@ public class TaskManagerSlot implements TaskManagerSlotInformation {
 		this.allocationId = null;
 		this.assignedSlotRequest = null;
 	}
-
+	//slot状态
 	public State getState() {
 		return state;
 	}
@@ -108,6 +109,7 @@ public class TaskManagerSlot implements TaskManagerSlotInformation {
 		return taskManagerConnection.getInstanceID();
 	}
 
+	//释放
 	public void freeSlot() {
 		Preconditions.checkState(state == State.ALLOCATED, "Slot must be allocated before freeing it.");
 
@@ -123,6 +125,7 @@ public class TaskManagerSlot implements TaskManagerSlotInformation {
 		assignedSlotRequest = null;
 	}
 
+	//分配请求
 	public void assignPendingSlotRequest(PendingSlotRequest pendingSlotRequest) {
 		Preconditions.checkState(state == State.FREE, "Slot must be free to be assigned a slot request.");
 
@@ -151,6 +154,7 @@ public class TaskManagerSlot implements TaskManagerSlotInformation {
 	}
 
 	/**
+	 * 是否满足资源依赖
 	 * Check whether required resource profile can be matched by this slot.
 	 *
 	 * @param required The required resource profile

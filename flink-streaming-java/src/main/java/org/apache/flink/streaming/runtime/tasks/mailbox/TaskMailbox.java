@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * 邮箱
  * A task mailbox provides read and write access to a mailbox and has a lifecycle of open -> (quiesced) -> closed. Mails
  * have a priority that can be used to retrieve only relevant letters.
  *
@@ -72,6 +73,7 @@ public interface TaskMailbox {
 	int MAX_PRIORITY = Integer.MAX_VALUE;
 
 	/**
+	 * 当前线程是否在主线程
 	 * Check if the current thread is the mailbox thread.
 	 *
 	 * <p>Read operations will fail if they are called from another thread.
@@ -114,6 +116,7 @@ public interface TaskMailbox {
 	// --- Batch
 
 	/**
+	 * 是否有邮件在批中
 	 * Creates a batch of mails that can be taken with {@link #tryTakeFromBatch()}. The batch does not affect
 	 * {@link #tryTake(int)} and {@link #take(int)}; that is, they return the same mails even if no batch would have
 	 * been created.
@@ -148,6 +151,7 @@ public interface TaskMailbox {
 	// --- Write methods
 
 	/**
+	 * 插入
 	 * Enqueues the given mail to the mailbox and blocks until there is capacity for a successful put.
 	 *
 	 * <p>Mails can be added from any thread.
@@ -158,6 +162,7 @@ public interface TaskMailbox {
 	void put(Mail mail);
 
 	/**
+	 * 添加
 	 * Adds the given action to the head of the mailbox.
 	 *
 	 * <p>Mails can be added from any thread.
@@ -170,6 +175,7 @@ public interface TaskMailbox {
 	// --- Lifecycle methods
 
 	/**
+	 * 状态
 	 * This enum represents the states of the mailbox lifecycle.
 	 */
 	enum State {
@@ -177,6 +183,7 @@ public interface TaskMailbox {
 	}
 
 	/**
+	 * 获取队列中的邮件
 	 * Drains the mailbox and returns all mails that were still enqueued.
 	 *
 	 * @return list with all mails that where enqueued in the mailbox.
@@ -190,6 +197,7 @@ public interface TaskMailbox {
 	void quiesce();
 
 	/**
+	 * 关闭
 	 * Close the mailbox. In this state, all pending and future put operations and all pending and future take
 	 * operations will throw {@link IllegalStateException}. Returns all mails that were still enqueued.
 	 *
@@ -207,6 +215,7 @@ public interface TaskMailbox {
 	State getState();
 
 	/**
+	 * 排他执行
 	 * Runs the given code exclusively on this mailbox. No synchronized operations can be run concurrently to the
 	 * given runnable (e.g., {@link #put(Mail)} or modifying lifecycle methods).
 	 *

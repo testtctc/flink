@@ -63,6 +63,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
+ * 实现
  * Implementation of {@link SlotManager}.
  */
 public class SlotManagerImpl implements SlotManager {
@@ -80,7 +81,9 @@ public class SlotManagerImpl implements SlotManager {
 	/** Timeout after which an unused TaskManager is released. */
 	private final Time taskManagerTimeout;
 
-	/** Map for all registered slots. */
+	/**
+	 * 所有注册的资源
+	 * Map for all registered slots. */
 	private final HashMap<SlotID, TaskManagerSlot> slots;
 
 	/** Index of all currently free slots. */
@@ -89,7 +92,9 @@ public class SlotManagerImpl implements SlotManager {
 	/** All currently registered task managers. */
 	private final HashMap<InstanceID, TaskManagerRegistration> taskManagerRegistrations;
 
-	/** Map of fulfilled and active allocations for request deduplication purposes. */
+	/**
+	 * 已经分配的
+	 * Map of fulfilled and active allocations for request deduplication purposes. */
 	private final HashMap<AllocationID, SlotID> fulfilledSlotRequests;
 
 	/** Map of pending/unfulfilled slot allocation requests. */
@@ -224,6 +229,8 @@ public class SlotManagerImpl implements SlotManager {
 
 		started = true;
 
+
+		//固定延迟检测超时
 		taskManagerTimeoutCheck = scheduledExecutor.scheduleWithFixedDelay(
 			() -> mainThreadExecutor.execute(
 				() -> checkTaskManagerTimeouts()),
@@ -231,6 +238,7 @@ public class SlotManagerImpl implements SlotManager {
 			taskManagerTimeout.toMilliseconds(),
 			TimeUnit.MILLISECONDS);
 
+		//检测请求超时
 		slotRequestTimeoutCheck = scheduledExecutor.scheduleWithFixedDelay(
 			() -> mainThreadExecutor.execute(
 				() -> checkSlotRequestTimeouts()),
@@ -291,6 +299,7 @@ public class SlotManagerImpl implements SlotManager {
 	// ---------------------------------------------------------------------------------------------
 
 	/**
+	 * 请求资源
 	 * Requests a slot with the respective resource profile.
 	 *
 	 * @param slotRequest specifying the requested slot specs
@@ -740,6 +749,7 @@ public class SlotManagerImpl implements SlotManager {
 	}
 
 	/**
+	 * 分配
 	 * Tries to allocate a slot for the given slot request. If there is no slot available, the
 	 * resource manager is informed to allocate more resources and a timeout for the request is
 	 * registered.
@@ -755,6 +765,7 @@ public class SlotManagerImpl implements SlotManager {
 			.ifNotPresent(() -> fulfillPendingSlotRequestWithPendingTaskManagerSlot(pendingSlotRequest));
 	}
 
+	//想resource manager请求
 	private void fulfillPendingSlotRequestWithPendingTaskManagerSlot(PendingSlotRequest pendingSlotRequest) throws ResourceManagerException {
 		ResourceProfile resourceProfile = pendingSlotRequest.getResourceProfile();
 		Optional<PendingTaskManagerSlot> pendingTaskManagerSlotOptional = findFreeMatchingPendingTaskManagerSlot(resourceProfile);
@@ -812,6 +823,7 @@ public class SlotManagerImpl implements SlotManager {
 		}
 	}
 
+	//Quin
 	private void assignPendingTaskManagerSlot(PendingSlotRequest pendingSlotRequest, PendingTaskManagerSlot pendingTaskManagerSlot) {
 		pendingTaskManagerSlot.assignPendingSlotRequest(pendingSlotRequest);
 		pendingSlotRequest.assignPendingTaskManagerSlot(pendingTaskManagerSlot);

@@ -45,6 +45,8 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 任务执行器--RPC接口
+ *
  * {@link TaskExecutor} RPC gateway interface.
  */
 public interface TaskExecutorGateway extends RpcGateway {
@@ -110,6 +112,7 @@ public interface TaskExecutorGateway extends RpcGateway {
 	void releaseOrPromotePartitions(JobID jobId, Set<ResultPartitionID> partitionToRelease, Set<ResultPartitionID> partitionsToPromote);
 
 	/**
+	 * 触发checkpoingt
 	 * Trigger the checkpoint for the given task. The checkpoint is identified by the checkpoint ID
 	 * and the checkpoint timestamp.
 	 *
@@ -156,6 +159,7 @@ public interface TaskExecutorGateway extends RpcGateway {
 	void heartbeatFromJobManager(ResourceID heartbeatOrigin, AllocatedSlotReport allocatedSlotReport);
 
 	/**
+	 * 发送心跳
 	 * Heartbeat request from the resource manager.
 	 *
 	 * @param heartbeatOrigin unique id of the resource manager

@@ -30,6 +30,7 @@ import java.net.URL;
 import java.util.Collection;
 
 /**
+ * 作业信息
  * Container class for job information which is stored in the {@link ExecutionGraph}.
  */
 public class JobInformation implements Serializable {

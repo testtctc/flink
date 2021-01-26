@@ -23,6 +23,7 @@ import org.apache.flink.streaming.api.watermark.Watermark;
 import org.apache.flink.streaming.runtime.streamstatus.StreamStatus;
 
 /**
+ * 流元素
  * An element in a data stream. Can be a record or a Watermark.
  */
 @Internal

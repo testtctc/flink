@@ -45,7 +45,9 @@ public class TaskKvStateRegistry {
 	/** JobVertexID of the task. */
 	private final JobVertexID jobVertexId;
 
-	/** List of all registered KvState instances of this task. */
+	/**
+	 * 注册的信息列表
+	 * List of all registered KvState instances of this task. */
 	private final List<KvStateInfo> registeredKvStates = new ArrayList<>();
 
 	TaskKvStateRegistry(KvStateRegistry registry, JobID jobId, JobVertexID jobVertexId) {

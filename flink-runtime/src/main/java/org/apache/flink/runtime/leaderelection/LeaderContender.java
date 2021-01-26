@@ -21,12 +21,14 @@ package org.apache.flink.runtime.leaderelection;
 import java.util.UUID;
 
 /**
+ * 选举
  * Interface which has to be implemented to take part in the leader election process of the
  * {@link LeaderElectionService}.
  */
 public interface LeaderContender {
 
 	/**
+	 * 授予leadser
 	 * Callback method which is called by the {@link LeaderElectionService} upon selecting this
 	 * instance as the new leader. The method is called with the new leader session ID.
 	 *

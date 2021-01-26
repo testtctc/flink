@@ -166,7 +166,9 @@ public class ExecutionGraph implements AccessExecutionGraph {
 
 	// --------------------------------------------------------------------------------------------
 
-	/** Job specific information like the job id, job name, job configuration, etc. */
+	/**
+	 * job信息
+	 * Job specific information like the job id, job name, job configuration, etc. */
 	private final JobInformation jobInformation;
 
 	/** Serialized job information or a blob key pointing to the offloaded job information. */
@@ -185,19 +187,27 @@ public class ExecutionGraph implements AccessExecutionGraph {
 	/** {@code true} if all source tasks are stoppable. */
 	private boolean isStoppable = true;
 
-	/** All job vertices that are part of this graph. */
+	/** All job vertices that are part of this graph
+	 *  执行节点
+	 * . */
 	private final Map<JobVertexID, ExecutionJobVertex> tasks;
 
 	/** All vertices, in the order in which they were created. **/
 	private final List<ExecutionJobVertex> verticesInCreationOrder;
 
-	/** All intermediate results that are part of this graph. */
+	/**
+	 * 中间结果
+	 * All intermediate results that are part of this graph. */
 	private final Map<IntermediateDataSetID, IntermediateResult> intermediateResults;
 
-	/** The currently executed tasks, for callbacks. */
+	/**
+	 * 当前执行
+	 * The currently executed tasks, for callbacks. */
 	private final Map<ExecutionAttemptID, Execution> currentExecutions;
 
-	/** Listeners that receive messages when the entire job switches it status
+	/**
+	 * 监听器
+	 * Listeners that receive messages when the entire job switches it status
 	 * (such as from RUNNING to FINISHED). */
 	private final List<JobStatusListener> jobStatusListeners;
 
@@ -210,10 +220,14 @@ public class ExecutionGraph implements AccessExecutionGraph {
 	 * at {@code stateTimestamps[RUNNING.ordinal()]}. */
 	private final long[] stateTimestamps;
 
-	/** The timeout for all messages that require a response/acknowledgement. */
+	/**
+	 * 超时时间
+	 * The timeout for all messages that require a response/acknowledgement. */
 	private final Time rpcTimeout;
 
-	/** The timeout for slot allocations. */
+	/**
+	 * 分配超时时间
+	 * The timeout for slot allocations. */
 	private final Time allocationTimeout;
 
 	/** Strategy to use for restarts. */
@@ -233,13 +247,15 @@ public class ExecutionGraph implements AccessExecutionGraph {
 
 	private boolean legacyScheduling = true;
 
-	/** The total number of vertices currently in the execution graph. */
+	/**
+	 * 任务数
+	 * The total number of vertices currently in the execution graph. */
 	private int numVerticesTotal;
 
 	private final PartitionReleaseStrategy.Factory partitionReleaseStrategyFactory;
 
 	private PartitionReleaseStrategy partitionReleaseStrategy;
-
+	//执行拓扑结构
 	private DefaultExecutionTopology executionTopology;
 
 	@Nullable
@@ -782,6 +798,7 @@ public class ExecutionGraph implements AccessExecutionGraph {
 
 	// --------------------------------------------------------------------------------------------
 	//  Actions
+	//  添加节点
 	// --------------------------------------------------------------------------------------------
 
 	public void attachJobGraph(List<JobVertex> topologiallySorted) throws JobException {
@@ -835,10 +852,12 @@ public class ExecutionGraph implements AccessExecutionGraph {
 		}
 
 		// the topology assigning should happen before notifying new vertices to failoverStrategy
+		// 执行拓扑
 		executionTopology = new DefaultExecutionTopology(this);
 
+		//通知新节点
 		failoverStrategy.notifyNewVertices(newExecJobVertices);
-
+		//释放策略
 		partitionReleaseStrategy = partitionReleaseStrategyFactory.createInstance(getSchedulingTopology());
 	}
 

@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
+ * 邮箱执行器
  * Implementation of an executor service build around a mailbox-based execution model.
  */
 @Internal
@@ -49,6 +50,7 @@ public final class MailboxExecutorImpl implements MailboxExecutor {
 		this.actionExecutor = Preconditions.checkNotNull(actionExecutor);
 	}
 
+	//未来执行
 	@Override
 	public void execute(
 		@Nonnull final RunnableWithException command,
@@ -61,6 +63,7 @@ public final class MailboxExecutorImpl implements MailboxExecutor {
 		}
 	}
 
+	//可能卡住
 	@Override
 	public void yield() throws InterruptedException {
 		Mail mail = mailbox.take(priority);
@@ -71,6 +74,7 @@ public final class MailboxExecutorImpl implements MailboxExecutor {
 		}
 	}
 
+	//不卡住
 	@Override
 	public boolean tryYield() {
 		Optional<Mail> optionalMail = mailbox.tryTake(priority);

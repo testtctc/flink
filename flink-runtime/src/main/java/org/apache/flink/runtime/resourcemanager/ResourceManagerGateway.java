@@ -47,11 +47,13 @@ import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 网关
  * The {@link ResourceManager}'s RPC gateway interface.
  */
 public interface ResourceManagerGateway extends FencedRpcGateway<ResourceManagerId> {
 
 	/**
+	 * 注册job master
 	 * Register a {@link JobMaster} at the resource manager.
 	 *
 	 * @param jobMasterId The fencing token for the JobMaster leader

@@ -29,6 +29,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 实现的服务-->客户端使用
  * Interface for rpc services. An rpc service is used to start and connect to a {@link RpcEndpoint}.
  * Connecting to a rpc server will return a {@link RpcGateway} which can be used to call remote
  * procedures.
@@ -36,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 public interface RpcService {
 
 	/**
+	 * 地址
 	 * Return the hostname or host address under which the rpc service can be reached.
 	 * If the rpc service cannot be contacted remotely, then it will return an empty string.
 	 *
@@ -44,6 +46,7 @@ public interface RpcService {
 	String getAddress();
 
 	/**
+	 *  端口
 	 * Return the port under which the rpc service is reachable. If the rpc service cannot be
 	 * contacted remotely, then it will return -1.
 	 *
@@ -52,6 +55,7 @@ public interface RpcService {
 	int getPort();
 
 	/**
+	 * 客户端使用
 	 * Connect to a remote rpc server under the provided address. Returns a rpc gateway which can
 	 * be used to communicate with the rpc server. If the connection failed, then the returned
 	 * future is failed with a {@link RpcConnectionException}.
@@ -67,6 +71,7 @@ public interface RpcService {
 		Class<C> clazz);
 
 	/**
+	 * 带有token连接
 	 * Connect to a remote fenced rpc server under the provided address. Returns a fenced rpc gateway
 	 * which can be used to communicate with the rpc server. If the connection failed, then the
 	 * returned future is failed with a {@link RpcConnectionException}.
@@ -85,6 +90,7 @@ public interface RpcService {
 		Class<C> clazz);
 
 	/**
+	 * 开启服务器
 	 * Start a rpc server which forwards the remote procedure calls to the provided rpc endpoint.
 	 *
 	 * @param rpcEndpoint Rpc protocol to dispatch the rpcs to
@@ -131,6 +137,7 @@ public interface RpcService {
 	CompletableFuture<Void> getTerminationFuture();
 
 	/**
+	 * 获取主线程
 	 * Gets the executor, provided by this RPC service. This executor can be used for example for
 	 * the {@code handleAsync(...)} or {@code thenAcceptAsync(...)} methods of futures.
 	 *
@@ -168,6 +175,7 @@ public interface RpcService {
 	ScheduledFuture<?> scheduleRunnable(Runnable runnable, long delay, TimeUnit unit);
 
 	/**
+	 * 执行代码
 	 * Execute the given runnable in the executor of the RPC service. This method can be used to run
 	 * code outside of the main thread of a {@link RpcEndpoint}.
 	 *
@@ -182,6 +190,7 @@ public interface RpcService {
 	void execute(Runnable runnable);
 
 	/**
+	 * 异步执行
 	 * Execute the given callable and return its result as a {@link CompletableFuture}. This method can be used
 	 * to run code outside of the main thread of a {@link RpcEndpoint}.
 	 *

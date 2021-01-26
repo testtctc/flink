@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 执行线程工厂函数
  * A thread factory intended for use by critical thread pools. Critical thread pools here
  * mean thread pools that support Flink's core coordination and processing work, and which
  * must not simply cause unnoticed errors.
@@ -104,9 +105,11 @@ public class ExecutorThreadFactory implements ThreadFactory {
 
 	// ------------------------------------------------------------------------
 
+	// 新建线程
 	@Override
 	public Thread newThread(Runnable runnable) {
 		Thread t = new Thread(group, runnable, namePrefix + threadNumber.getAndIncrement());
+		//后台执行
 		t.setDaemon(true);
 
 		t.setPriority(threadPriority);
@@ -120,7 +123,7 @@ public class ExecutorThreadFactory implements ThreadFactory {
 	}
 
 	// --------------------------------------------------------------------------------------------
-
+	// 构建器
 	public static final class Builder {
 		private String poolName;
 		private int priority = Thread.NORM_PRIORITY;

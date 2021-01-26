@@ -173,10 +173,14 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	/** The jar files used by this task. */
 	private final Collection<PermanentBlobKey> requiredJarFiles;
 
-	/** The classpaths used by this task. */
+	/**
+	 * 路径
+	 * The classpaths used by this task. */
 	private final Collection<URL> requiredClasspaths;
 
-	/** The name of the class that holds the invokable code. */
+	/**
+	 * 代用对象
+	 * The name of the class that holds the invokable code. */
 	private final String nameOfInvokableClass;
 
 	/** Access to task manager configuration and host names. */
@@ -318,7 +322,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 		Preconditions.checkArgument(0 <= subtaskIndex, "The subtask index must be positive.");
 		Preconditions.checkArgument(0 <= attemptNumber, "The attempt number must be positive.");
 		Preconditions.checkArgument(0 <= targetSlotNumber, "The target slot number must be positive.");
-
+		//任务信息
 		this.taskInfo = new TaskInfo(
 				taskInformation.getTaskName(),
 				taskInformation.getMaxNumberOfSubtaks(),
@@ -536,6 +540,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	}
 
 	/**
+	 * 入口
 	 * The core work method that bootstraps the task and executes its code.
 	 */
 	@Override
@@ -551,8 +556,6 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 
 	//任务入口
 	private void doRun() {
-
-
 
 		// ----------------------------
 		//  Initial State transition   处理状态
@@ -593,6 +596,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 
 		// all resource acquisitions and registrations from here on
 		// need to be undone in the end
+		// 分布式缓存
 		Map<String, Future<Path>> distributedCacheEntries = new HashMap<>();
 		AbstractInvokable invokable = null;
 
@@ -639,7 +643,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			LOG.info("Registering task at network: {}.", this);
 
 			setupPartitionsAndGates(consumableNotifyingPartitionWriters, inputGates);
-
+			//
 			for (ResultPartitionWriter partitionWriter : consumableNotifyingPartitionWriters) {
 				taskEventDispatcher.registerPartition(partitionWriter.getPartitionId());
 			}
@@ -665,7 +669,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			// ----------------------------------------------------------------
 			//  call the user code initialization methods
 			// ----------------------------------------------------------------
-			//状态注册
+			//任务状态注册
 			TaskKvStateRegistry kvStateRegistry = kvStateService.createKvStateTaskRegistry(jobId, getJobVertexId());
 
 			Environment env = new RuntimeEnvironment(
@@ -700,6 +704,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			executingThread.setContextClassLoader(userCodeClassLoader);
 
 			// now load and instantiate the task's invokable code
+			//后去调用对象
 			invokable = loadAndInstantiateInvokable(userCodeClassLoader, nameOfInvokableClass, env);
 
 			// ----------------------------------------------------------------
@@ -723,7 +728,6 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			executingThread.setContextClassLoader(userCodeClassLoader);
 
 			// run the invokable
-			// 远程调用
 			invokable.invoke();
 
 			// make sure, we enter the catch block if the task leaves the invoke() method due
@@ -939,6 +943,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 		return userCodeClassLoader;
 	}
 
+	//通知最终状态
 	private void notifyFinalState() {
 		checkState(executionState.isTerminal());
 		taskManagerActions.updateTaskExecutionState(new TaskExecutionState(jobId, executionId, executionState, failureCause));
@@ -960,6 +965,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	}
 
 	/**
+	 * 上锁转移状态
 	 * Try to transition the execution state from the current state to the new state.
 	 *
 	 * @param currentState of the execution
@@ -1149,6 +1155,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 开始执行checkpoint
 	 * Calls the invokable to trigger a checkpoint.
 	 *
 	 * @param checkpointID The ID identifying the checkpoint.
@@ -1163,6 +1170,7 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 			final CheckpointOptions checkpointOptions,
 			final boolean advanceToEndOfEventTime) {
 
+		//可调用对象
 		final AbstractInvokable invokable = this.invokable;
 		final CheckpointMetaData checkpointMetaData = new CheckpointMetaData(checkpointID, checkpointTimestamp);
 
@@ -1196,6 +1204,9 @@ public class Task implements Runnable, TaskSlotPayload, TaskActions, PartitionPr
 					new CheckpointException("Task name with subtask : " + taskNameWithSubtask, CheckpointFailureReason.CHECKPOINT_DECLINED_TASK_NOT_READY));
 		}
 	}
+
+
+
 
 	@Override
 	public void notifyCheckpointComplete(final long checkpointID) {

@@ -29,6 +29,7 @@ import org.apache.flink.core.io.InputSplitAssigner;
 import org.apache.flink.core.io.InputSplitSource;
 
 /**
+ * 数据输入
  * The base interface for data sources that produces records.
  * <p>
  * The input format handles the following:
@@ -58,7 +59,7 @@ import org.apache.flink.core.io.InputSplitSource;
  * @see InputSplit
  * @see BaseStatistics
  * 
- * @param <OT> The type of the produced records.
+ * @param <OT> The type of the produced records.  分片里面包含的元素类型
  * @param <T> The type of input split.
  */
 @Public
@@ -75,6 +76,7 @@ public interface InputFormat<OT, T extends InputSplit> extends InputSplitSource<
 	void configure(Configuration parameters);
 	
 	/**
+	 * 获取统计信息
 	 * Gets the basic statistics from the input described by this format. If the input format does not know how
 	 * to create those statistics, it may return null.
 	 * This method optionally gets a cached version of the statistics. The input format may examine them and decide
@@ -122,6 +124,7 @@ public interface InputFormat<OT, T extends InputSplit> extends InputSplitSource<
 	void open(T split) throws IOException;
 	
 	/**
+	 *
 	 * Method used to check if the end of the input is reached.
 	 * <p>
 	 * When this method is called, the input format it guaranteed to be opened.
@@ -132,6 +135,7 @@ public interface InputFormat<OT, T extends InputSplit> extends InputSplitSource<
 	boolean reachedEnd() throws IOException;
 	
 	/**
+	 * 下一条记录
 	 * Reads the next record from the input.
 	 * <p>
 	 * When this method is called, the input format it guaranteed to be opened.

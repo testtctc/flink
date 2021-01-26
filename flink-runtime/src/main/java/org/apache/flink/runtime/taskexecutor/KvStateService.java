@@ -48,7 +48,9 @@ public class KvStateService {
 	/** Server for {@link InternalKvState} requests. */
 	private KvStateServer kvStateServer;
 
-	/** Proxy for the queryable state client. */
+	/**
+	 * 客户端
+	 * Proxy for the queryable state client. */
 	private KvStateClientProxy kvStateClientProxy;
 
 	private boolean isShutdown;
@@ -152,6 +154,8 @@ public class KvStateService {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 创建入口
+	 *
 	 * Creates and returns the KvState service.
 	 *
 	 * @param taskManagerServicesConfiguration task manager configuration

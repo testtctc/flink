@@ -38,13 +38,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * stream graph 节点
  * Class representing the operators in the streaming programs, with all their properties.
  */
 @Internal
 public class StreamNode implements Serializable {
 
 	private static final long serialVersionUID = 1L;
-
+	//编号
 	private final int id;
 	private int parallelism;
 	/**
@@ -56,9 +57,13 @@ public class StreamNode implements Serializable {
 	private ResourceSpec preferredResources = ResourceSpec.DEFAULT;
 	private int managedMemoryWeight = Transformation.DEFAULT_MANAGED_MEMORY_WEIGHT;
 	private long bufferTimeout;
+	//算子名字
 	private final String operatorName;
+	//资源共享组
 	private @Nullable String slotSharingGroup;
+	//CoLocationGroup类用来强制将 subtasks 放到同一个 slot 中
 	private @Nullable String coLocationGroup;
+	//状分分区器
 	private KeySelector<?, ?> statePartitioner1;
 	private KeySelector<?, ?> statePartitioner2;
 	private TypeSerializer<?> stateKeySerializer;
@@ -68,10 +73,10 @@ public class StreamNode implements Serializable {
 	private TypeSerializer<?> typeSerializerIn1;
 	private TypeSerializer<?> typeSerializerIn2;
 	private TypeSerializer<?> typeSerializerOut;
-
+	//输入边
 	private List<StreamEdge> inEdges = new ArrayList<StreamEdge>();
 	private List<StreamEdge> outEdges = new ArrayList<StreamEdge>();
-
+	//任务
 	private final Class<? extends AbstractInvokable> jobVertexClass;
 
 	private InputFormat<?, ?> inputFormat;
@@ -111,6 +116,7 @@ public class StreamNode implements Serializable {
 		this.coLocationGroup = coLocationGroup;
 	}
 
+	//添加输入边
 	public void addInEdge(StreamEdge inEdge) {
 		if (inEdge.getTargetId() != getId()) {
 			throw new IllegalArgumentException("Destination id doesn't match the StreamNode id");
@@ -135,6 +141,7 @@ public class StreamNode implements Serializable {
 		return inEdges;
 	}
 
+	//输出边的位置
 	public List<Integer> getOutEdgeIndices() {
 		List<Integer> outEdgeIndices = new ArrayList<Integer>();
 

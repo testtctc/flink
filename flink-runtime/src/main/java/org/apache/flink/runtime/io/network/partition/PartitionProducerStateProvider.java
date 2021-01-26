@@ -25,6 +25,7 @@ import org.apache.flink.types.Either;
 import java.util.function.Consumer;
 
 /**
+ * 状态提供者
  * Request execution state of partition producer, the response accepts state check callbacks.
  */
 public interface PartitionProducerStateProvider {
@@ -42,6 +43,7 @@ public interface PartitionProducerStateProvider {
 		Consumer<? super ResponseHandle> responseConsumer);
 
 	/**
+	 * 状态查询结果
 	 * Result of state query, accepts state check callbacks.
 	 */
 	interface ResponseHandle {

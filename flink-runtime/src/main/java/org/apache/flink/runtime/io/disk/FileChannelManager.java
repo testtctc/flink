@@ -34,11 +34,13 @@ public interface FileChannelManager extends AutoCloseable {
 	ID createChannel();
 
 	/**
+	 * 文件枚举
 	 * Creates an enumerator for channels that logically belong together and returns it.
 	 */
 	Enumerator createChannelEnumerator();
 
 	/**
+	 * 临时目录
 	 * Gets all the files corresponding to the config temp dirs.
 	 */
 	File[] getPaths();

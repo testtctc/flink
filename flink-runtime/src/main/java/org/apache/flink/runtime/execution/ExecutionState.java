@@ -19,6 +19,8 @@
 package org.apache.flink.runtime.execution;
 
 /**
+ *
+ * 执行状态
  * An enumeration of all states that a task can be in during its execution.
  * Tasks usually start in the state {@code CREATED} and switch states according to
  * this diagram:

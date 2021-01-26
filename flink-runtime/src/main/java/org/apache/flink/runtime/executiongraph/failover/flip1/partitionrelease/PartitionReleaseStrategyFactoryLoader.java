@@ -23,6 +23,7 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.JobManagerOptions;
 
 /**
+ * 加载器
  * Instantiates a {@link RegionPartitionReleaseStrategy}.
  */
 public final class PartitionReleaseStrategyFactoryLoader {

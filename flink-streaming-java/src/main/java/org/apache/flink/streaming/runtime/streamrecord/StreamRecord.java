@@ -141,6 +141,7 @@ public final class StreamRecord<T> extends StreamElement {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 浅拷贝
 	 * Creates a copy of this stream record. Uses the copied value as the value for the new
 	 * record, i.e., only copies timestamp fields.
 	 */

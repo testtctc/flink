@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.jobgraph;
 
 /**
+ * 调度模式
  * The ScheduleMode decides how tasks of an execution graph are started.
  */
 public enum ScheduleMode {

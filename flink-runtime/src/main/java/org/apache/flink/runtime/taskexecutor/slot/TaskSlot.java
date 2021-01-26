@@ -69,9 +69,11 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	/** Resource characteristics for this slot. */
 	private final ResourceProfile resourceProfile;
 
-	/** Tasks running in this slot. */
+	/**
+	 * 所有任务
+	 * Tasks running in this slot. */
 	private final Map<ExecutionAttemptID, T> tasks;
-
+	//内存管理器
 	private final MemoryManager memoryManager;
 
 	/** State of this slot. */
@@ -80,7 +82,9 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	/** Job id to which the slot has been allocated. */
 	private final JobID jobId;
 
-	/** Allocation id of this slot. */
+	/**
+	 * 分配id
+	 * Allocation id of this slot. */
 	private final AllocationID allocationId;
 
 	/** The closing future is completed when the slot is freed and closed. */
@@ -97,13 +101,14 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 		this.resourceProfile = Preconditions.checkNotNull(resourceProfile);
 
 		this.tasks = new HashMap<>(4);
+
 		this.state = TaskSlotState.ALLOCATED;
 
 		this.jobId = jobId;
 		this.allocationId = allocationId;
-
+		//仅仅托管堆外内存
 		this.memoryManager = createMemoryManager(resourceProfile, memoryPageSize);
-
+		//异步
 		this.closingFuture = new CompletableFuture<>();
 	}
 
@@ -143,7 +148,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 			activeJobId.equals(jobId) &&
 			activeAllocationId.equals(allocationId);
 	}
-
+	//是否已经分配
 	public boolean isAllocated(JobID jobIdToCheck, AllocationID allocationIDToCheck) {
 		Preconditions.checkNotNull(jobIdToCheck);
 		Preconditions.checkNotNull(allocationIDToCheck);
@@ -151,12 +156,13 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 		return jobIdToCheck.equals(jobId) && allocationIDToCheck.equals(allocationId) &&
 			(TaskSlotState.ACTIVE == state || TaskSlotState.ALLOCATED == state);
 	}
-
+	//是否已经释放
 	public boolean isReleasing() {
 		return TaskSlotState.RELEASING == state;
 	}
 
 	/**
+	 * 所有任务
 	 * Get all tasks running in this task slot.
 	 *
 	 * @return Iterator to all currently contained tasks in this task slot.
@@ -174,6 +180,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	// ----------------------------------------------------------------------------------
 
 	/**
+	 * 添加任务
 	 * Add the given task to the task slot. This is only possible if there is not already another
 	 * task with the same execution attempt id added to the task slot. In this case, the method
 	 * returns true. Otherwise the task slot is left unchanged and false is returned.
@@ -205,6 +212,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	}
 
 	/**
+	 * 移除任务
 	 * Remove the task identified by the given execution attempt id.
 	 *
 	 * @param executionAttemptId identifying the task to be removed
@@ -239,6 +247,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	}
 
 	/**
+	 * 标志非活跃
 	 * Mark the slot as inactive/allocated. A slot can only be marked as inactive/allocated if it's
 	 * in state allocated or active.
 	 *
@@ -255,6 +264,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 	}
 
 	/**
+	 * 分配的offer
 	 * Generate the slot offer from this TaskSlot.
 	 *
 	 * @return The sot offer which this task slot can provide
@@ -273,6 +283,7 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 			", allocationId: " + (allocationId != null ? allocationId.toString() : "none") + ", jobId: " + (jobId != null ? jobId.toString() : "none") + ')';
 	}
 
+	//异步关闭
 	@Override
 	public CompletableFuture<Void> closeAsync() {
 		return closeAsync(new FlinkException("Closing the slot"));
@@ -295,12 +306,14 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 			if (!isEmpty()) {
 				// we couldn't free the task slot because it still contains task, fail the tasks
 				// and set the slot state to releasing so that it gets eventually freed
+				//手工关闭
 				tasks.values().forEach(task -> task.failExternally(cause));
 			}
 			final CompletableFuture<Void> cleanupFuture = FutureUtils
 				.waitForAll(tasks.values().stream().map(TaskSlotPayload::getTerminationFuture).collect(Collectors.toList()))
 				.thenRun(() -> {
 					verifyMemoryFreed();
+					//关闭内存管理器
 					this.memoryManager.shutdown();
 				});
 
@@ -315,7 +328,9 @@ public class TaskSlot<T extends TaskSlotPayload> implements AutoCloseableAsync {
 		}
 	}
 
+	//创建资源管理器
 	private static MemoryManager createMemoryManager(ResourceProfile resourceProfile, int pageSize) {
+		//这里仅仅之后对外内存
 		Map<MemoryType, Long> memorySizeByType =
 			Collections.singletonMap(MemoryType.OFF_HEAP, resourceProfile.getManagedMemory().getBytes());
 		return new MemoryManager(memorySizeByType, pageSize);

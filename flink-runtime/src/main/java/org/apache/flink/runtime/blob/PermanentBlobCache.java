@@ -70,6 +70,7 @@ public class PermanentBlobCache extends AbstractBlobCache implements PermanentBl
 	}
 
 	/**
+	 * job计数
 	 * Map to store the number of references to a specific job.
 	 */
 	private final Map<JobID, RefCount> jobRefCounters = new HashMap<>();
@@ -112,6 +113,7 @@ public class PermanentBlobCache extends AbstractBlobCache implements PermanentBl
 	}
 
 	/**
+	 * 采用引用计数
 	 * Registers use of job-related BLOBs.
 	 *
 	 * <p>Using any other method to access BLOBs, e.g. {@link #getFile}, is only valid within

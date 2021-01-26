@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 /**
+ * 混洗描述
  * Interface for shuffle deployment descriptor of result partition resource.
  *
  * <p>The descriptor is used for the deployment of the partition producer/consumer and their data exchange
@@ -55,6 +56,7 @@ public interface ShuffleDescriptor extends Serializable {
 	}
 
 	/**
+	 * 返回本地资源
 	 * Returns the location of the producing task executor if the partition occupies local resources there.
 	 *
 	 * <p>Indicates that this partition occupies local resources in the producing task executor. Such partition requires

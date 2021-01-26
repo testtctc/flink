@@ -21,6 +21,7 @@ package org.apache.flink.runtime.query;
 import java.net.InetSocketAddress;
 
 /**
+ * 服务器
  * An interface for the Queryable State Server running on each Task Manager in the cluster.
  * This server is responsible for serving requests coming from the {@link KvStateClientProxy
  * Queryable State Proxy} and requesting <b>locally</b> stored state.

@@ -46,6 +46,8 @@ import java.util.Set;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ *
+ * 作业图
  * The JobGraph represents a Flink dataflow program, at the low level that the JobManager accepts.
  * All programs from higher level APIs are transformed into JobGraphs.
  *
@@ -62,7 +64,9 @@ public class JobGraph implements Serializable {
 
 	// --- job and configuration ---
 
-	/** List of task vertices included in this job graph. */
+	/**
+	 * 映射
+	 * List of task vertices included in this job graph. */
 	private final Map<JobVertexID, JobVertex> taskVertices = new LinkedHashMap<JobVertexID, JobVertex>();
 
 	/** The job configuration attached to this job. */
@@ -256,6 +260,8 @@ public class JobGraph implements Serializable {
 	}
 
 	/**
+	 *
+	 * 添加节点
 	 * Adds a new task vertex to the job graph if it is not already included.
 	 *
 	 * @param vertex

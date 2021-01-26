@@ -21,6 +21,7 @@ package org.apache.flink.runtime.rpc.messages;
 import java.io.IOException;
 
 /**
+ * 方法信息
  * Interface for rpc invocation messages. The interface allows to request all necessary information
  * to lookup a method and call it with the corresponding arguments.
  */

@@ -41,6 +41,7 @@ import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
 
 /**
+ * 便利工具
  * Collection of methods to deal with checkpoint master hooks.
  */
 public class MasterHooks {
@@ -98,6 +99,7 @@ public class MasterHooks {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 异步执行hook
 	 * Trigger master hook and return a completable future with state.
 	 * @param hook The master hook given
 	 * @param checkpointId The checkpoint ID of the triggering checkpoint

@@ -29,6 +29,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 统计信息
  * Base class for checkpoint statistics.
  */
 public abstract class AbstractCheckpointStats implements Serializable {

@@ -39,7 +39,7 @@ public class StreamGraphUserHashHasher implements StreamGraphHasher {
 			String userHash = streamNode.getUserHash();
 
 			if (null != userHash) {
-				hashResult.put(streamNode.getId(), StringUtils.hexStringToByte(userHash));
+					hashResult.put(streamNode.getId(), StringUtils.hexStringToByte(userHash));
 			}
 		}
 

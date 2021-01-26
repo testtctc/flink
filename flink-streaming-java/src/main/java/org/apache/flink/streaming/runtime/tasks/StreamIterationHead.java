@@ -35,6 +35,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 单输入任务
  * A special {@link StreamTask} that is used for executing feedback edges. This is used in
  * combination with {@link StreamIterationTail}.
  */

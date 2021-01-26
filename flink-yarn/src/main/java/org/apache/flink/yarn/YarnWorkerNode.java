@@ -25,6 +25,7 @@ import org.apache.flink.util.Preconditions;
 import org.apache.hadoop.yarn.api.records.Container;
 
 /**
+ * yarn节点
  * A stored YARN worker, which contains the YARN container.
  */
 public class YarnWorkerNode implements ResourceIDRetrievable {

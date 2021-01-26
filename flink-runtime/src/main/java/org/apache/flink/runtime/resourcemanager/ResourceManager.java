@@ -82,6 +82,8 @@ import java.util.stream.Collectors;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ *
+ * 资源管理器
  * ResourceManager implementation. The resource manager is responsible for resource de-/allocation
  * and bookkeeping.
  *

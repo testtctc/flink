@@ -31,11 +31,12 @@ import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
+ * 邮箱处理器--对邮件依次处理
  * {@link java.util.concurrent.Executor} like interface for an  build around a mailbox-based execution model (see {@link TaskMailbox}).
  * {@code MailboxExecutor} can also execute downstream messages of a mailbox by yielding control from the task thread.
  *
  * <p>All submission functions can be called from any thread and will enqueue the action for further processing in a
- * FIFO fashion.
+ * FIFO fashion.  先进先出
  *
  * <p>The yielding functions avoid the following situation: One operator cannot fully process an input record and
  * blocks the task thread until some resources are available. However, since the introduction of the mailbox model
@@ -109,6 +110,7 @@ public interface MailboxExecutor {
 	void execute(@Nonnull RunnableWithException command, String descriptionFormat, Object... descriptionArgs);
 
 	/**
+	 *
 	 * Submits the given command for execution in the future in the mailbox thread and returns a Future representing
 	 * that command. The Future's {@code get} method will return {@code null} upon <em>successful</em> completion.
 	 *
@@ -191,7 +193,8 @@ public interface MailboxExecutor {
 	}
 
 	/**
-	 * This methods starts running the command at the head of the mailbox and is intended to be used by the mailbox
+	 * 出让控制权
+	 * This methods starts running the command at the head of the mailbox and  is intendedto be used by the mailbox
 	 * thread to yield from a currently ongoing action to another command. The method blocks until another command to
 	 * run is available in the mailbox and must only be called from the mailbox thread. Must only be called from the
 	 * mailbox thread to not violate the single-threaded execution model.

@@ -25,7 +25,9 @@ import org.apache.flink.annotation.Public;
 import org.apache.flink.configuration.Configuration;
 
 /**
- * The base interface for outputs that consumes records. The output format
+ *
+ *
+ * The base interface for outputs that  consumesrecords. The output format
  * describes how to store the final records, for example in a file.
  * <p>
  * The life cycle of an output format is the following:

@@ -95,6 +95,7 @@ public class StreamGraph implements Pipeline {
 	private TimeCharacteristic timeCharacteristic;
 
 	/**
+	 * 阻塞
 	 * If there are some stream edges that can not be chained and the shuffle mode of edge is not
 	 * specified, translate these edges into {@code BLOCKING} result partition type.
 	 */
@@ -104,15 +105,21 @@ public class StreamGraph implements Pipeline {
 	private boolean allVerticesInSameSlotSharingGroupByDefault = true;
 
 	private Map<Integer, StreamNode> streamNodes;
+	//数据源
 	private Set<Integer> sources;
+	//输出
 	private Set<Integer> sinks;
+	//虚拟节点
 	private Map<Integer, Tuple2<Integer, List<String>>> virtualSelectNodes;
+	//旁路输出
 	private Map<Integer, Tuple2<Integer, OutputTag>> virtualSideOutputNodes;
 	private Map<Integer, Tuple3<Integer, StreamPartitioner<?>, ShuffleMode>> virtualPartitionNodes;
 
+	//迭代专用
 	protected Map<Integer, String> vertexIDtoBrokerID;
 	protected Map<Integer, Long> vertexIDtoLoopTimeout;
 	private StateBackend stateBackend;
+	//迭代
 	private Set<Tuple2<StreamNode, StreamNode>> iterationSourceSinkPairs;
 
 	public StreamGraph(ExecutionConfig executionConfig, CheckpointConfig checkpointConfig, SavepointRestoreSettings savepointRestoreSettings) {
@@ -240,10 +247,12 @@ public class StreamGraph implements Pipeline {
 		return chaining;
 	}
 
+	//是否迭代
 	public boolean isIterative() {
 		return !vertexIDtoLoopTimeout.isEmpty();
 	}
 
+	//添加数据源
 	public <IN, OUT> void addSource(Integer vertexID,
 		@Nullable String slotSharingGroup,
 		@Nullable String coLocationGroup,
@@ -266,6 +275,7 @@ public class StreamGraph implements Pipeline {
 		sinks.add(vertexID);
 	}
 
+	//添加算子
 	public <IN, OUT> void addOperator(
 			Integer vertexID,
 			@Nullable String slotSharingGroup,
@@ -301,6 +311,7 @@ public class StreamGraph implements Pipeline {
 		}
 	}
 
+	//添加连接算子
 	public <IN1, IN2, OUT> void addCoOperator(
 			Integer vertexID,
 			String slotSharingGroup,
@@ -330,6 +341,7 @@ public class StreamGraph implements Pipeline {
 		}
 	}
 
+	//添加节点
 	protected StreamNode addNode(Integer vertexID,
 		@Nullable String slotSharingGroup,
 		@Nullable String coLocationGroup,
@@ -340,7 +352,7 @@ public class StreamGraph implements Pipeline {
 		if (streamNodes.containsKey(vertexID)) {
 			throw new RuntimeException("Duplicate vertexID " + vertexID);
 		}
-
+		//顶点
 		StreamNode vertex = new StreamNode(
 			vertexID,
 			slotSharingGroup,
@@ -356,6 +368,7 @@ public class StreamGraph implements Pipeline {
 	}
 
 	/**
+	 * 添加选择节点
 	 * Adds a new virtual node that is used to connect a downstream vertex to only the outputs
 	 * with the selected names.
 	 *
@@ -377,6 +390,8 @@ public class StreamGraph implements Pipeline {
 	}
 
 	/**
+	 *
+	 * 添加旁路输出节点
 	 * Adds a new virtual node that is used to connect a downstream vertex to only the outputs with
 	 * the selected side-output {@link OutputTag}.
 	 *
@@ -413,6 +428,7 @@ public class StreamGraph implements Pipeline {
 	}
 
 	/**
+	 * 添加特定分区节点
 	 * Adds a new virtual node that is used to connect a downstream vertex to an input with a
 	 * certain partitioning.
 	 *
@@ -437,6 +453,7 @@ public class StreamGraph implements Pipeline {
 	}
 
 	/**
+	 * 获取资源共享组-->虚拟节点向上递归
 	 * Determines the slot sharing group of an operation across virtual nodes.
 	 */
 	public String getSlotSharingGroup(Integer id) {
@@ -455,6 +472,7 @@ public class StreamGraph implements Pipeline {
 		}
 	}
 
+	//添加边
 	public void addEdge(Integer upStreamVertexID, Integer downStreamVertexID, int typeNumber) {
 		addEdgeInternal(upStreamVertexID,
 				downStreamVertexID,
@@ -466,6 +484,8 @@ public class StreamGraph implements Pipeline {
 
 	}
 
+	//向上递推
+	//核心逻辑
 	private void addEdgeInternal(Integer upStreamVertexID,
 			Integer downStreamVertexID,
 			int typeNumber,
@@ -473,6 +493,8 @@ public class StreamGraph implements Pipeline {
 			List<String> outputNames,
 			OutputTag outputTag,
 			ShuffleMode shuffleMode) {
+
+		//思路，消除虚拟节点
 
 		if (virtualSideOutputNodes.containsKey(upStreamVertexID)) {
 			int virtualId = upStreamVertexID;
@@ -498,6 +520,7 @@ public class StreamGraph implements Pipeline {
 			shuffleMode = virtualPartitionNodes.get(virtualId).f2;
 			addEdgeInternal(upStreamVertexID, downStreamVertexID, typeNumber, partitioner, outputNames, outputTag, shuffleMode);
 		} else {
+			//
 			StreamNode upstreamNode = getStreamNode(upStreamVertexID);
 			StreamNode downstreamNode = getStreamNode(downStreamVertexID);
 
@@ -517,11 +540,12 @@ public class StreamGraph implements Pipeline {
 							" You must use another partitioning strategy, such as broadcast, rebalance, shuffle or global.");
 				}
 			}
-
+			//未明确
 			if (shuffleMode == null) {
 				shuffleMode = ShuffleMode.UNDEFINED;
 			}
 
+			//添加边
 			StreamEdge edge = new StreamEdge(upstreamNode, downstreamNode, typeNumber, outputNames, partitioner, outputTag, shuffleMode);
 
 			getStreamNode(edge.getSourceId()).addOutEdge(edge);
@@ -529,6 +553,7 @@ public class StreamGraph implements Pipeline {
 		}
 	}
 
+	//递归选择
 	public <T> void addOutputSelector(Integer vertexID, OutputSelector<T> outputSelector) {
 		if (virtualPartitionNodes.containsKey(vertexID)) {
 			addOutputSelector(virtualPartitionNodes.get(vertexID).f0, outputSelector);
@@ -544,18 +569,21 @@ public class StreamGraph implements Pipeline {
 
 	}
 
+	//设置并行度
 	public void setParallelism(Integer vertexID, int parallelism) {
 		if (getStreamNode(vertexID) != null) {
 			getStreamNode(vertexID).setParallelism(parallelism);
 		}
 	}
 
+	//设置最大并行度
 	public void setMaxParallelism(int vertexID, int maxParallelism) {
 		if (getStreamNode(vertexID) != null) {
 			getStreamNode(vertexID).setMaxParallelism(maxParallelism);
 		}
 	}
 
+	//设置资源
 	public void setResources(int vertexID, ResourceSpec minResources, ResourceSpec preferredResources) {
 		if (getStreamNode(vertexID) != null) {
 			getStreamNode(vertexID).setResources(minResources, preferredResources);
@@ -681,6 +709,7 @@ public class StreamGraph implements Pipeline {
 		return vertexIDtoLoopTimeout.get(vertexID);
 	}
 
+	//强行放在一起
 	public Tuple2<StreamNode, StreamNode> createIterationSourceAndSink(
 		int loopId,
 		int sourceId,
@@ -733,6 +762,8 @@ public class StreamGraph implements Pipeline {
 
 		return new Tuple2<>(source, sink);
 	}
+
+
 
 	public Set<Tuple2<StreamNode, StreamNode>> getIterationSourceSinkPairs() {
 		return iterationSourceSinkPairs;

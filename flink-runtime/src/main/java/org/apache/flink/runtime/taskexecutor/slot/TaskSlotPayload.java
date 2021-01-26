@@ -25,15 +25,17 @@ import org.apache.flink.runtime.executiongraph.ExecutionAttemptID;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * slot信息
  * Payload interface for {@link org.apache.flink.runtime.taskexecutor.slot.TaskSlot}.
  */
 public interface TaskSlotPayload {
+
 	JobID getJobID();
 
 	ExecutionAttemptID getExecutionId();
 
 	AllocationID getAllocationId();
-
+	//任务终结
 	CompletableFuture<?> getTerminationFuture();
 
 	/**

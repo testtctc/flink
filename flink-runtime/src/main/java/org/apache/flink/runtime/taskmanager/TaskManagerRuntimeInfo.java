@@ -22,6 +22,7 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.runtime.taskexecutor.TaskExecutor;
 
 /**
+ * TaskManager信息
  * Interface to access {@link TaskExecutor} information.
  */
 public interface TaskManagerRuntimeInfo {
@@ -34,6 +35,7 @@ public interface TaskManagerRuntimeInfo {
 	Configuration getConfiguration();
 
 	/**
+	 * 临时文件
 	 * Gets the list of temporary file directories.
 	 * 
 	 * @return The list of temporary file directories.
@@ -41,6 +43,7 @@ public interface TaskManagerRuntimeInfo {
 	String[] getTmpDirectories();
 
 	/**
+	 * 内存不足时是否退出
 	 * Checks whether the TaskManager should exit the JVM when the task thread throws
 	 * an OutOfMemoryError.
 	 * 

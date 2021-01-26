@@ -49,6 +49,8 @@ public class IterativeStream<T> extends SingleOutputStreamOperator<T> {
 	}
 
 	/**
+	 *
+	 * 结束迭代
 	 * Closes the iteration. This method defines the end of the iterative
 	 * program part that will be fed back to the start of the iteration.
 	 *

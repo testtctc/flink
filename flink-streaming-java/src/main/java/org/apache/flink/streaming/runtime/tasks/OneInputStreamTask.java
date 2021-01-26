@@ -50,6 +50,7 @@ import java.io.IOException;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 一个输入的任务
  * A {@link StreamTask} for executing a {@link OneInputStreamOperator}.
  */
 @Internal

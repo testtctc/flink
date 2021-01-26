@@ -20,6 +20,8 @@ package org.apache.flink.streaming.runtime.tasks;
 import java.util.concurrent.ScheduledFuture;
 
 /**
+ * 定时器服务
+ *
  * Defines the current processing time and handles all related actions,
  * such as register timers for tasks to be executed in the future.
  *

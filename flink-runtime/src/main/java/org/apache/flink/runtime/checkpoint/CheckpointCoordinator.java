@@ -73,6 +73,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * checkpoint 协调者
  * The checkpoint coordinator coordinates the distributed snapshots of operators and state.
  * It triggers the checkpoint by sending the messages to the relevant tasks and collects the
  * checkpoint acknowledgements. It also collects and maintains the overview of the state handles
@@ -96,16 +97,24 @@ public class CheckpointCoordinator {
 	/** Default checkpoint properties. **/
 	private final CheckpointProperties checkpointProperties;
 
-	/** The executor used for asynchronous calls, like potentially blocking I/O. */
+	/**
+	 * 执行器
+	 * The executor used for asynchronous calls, like potentially blocking I/O. */
 	private final Executor executor;
 
-	/** Tasks who need to be sent a message when a checkpoint is started. */
+	/**
+	 * 触发
+	 * Tasks who need to be sent a message when a checkpoint is started. */
 	private final ExecutionVertex[] tasksToTrigger;
 
-	/** Tasks who need to acknowledge a checkpoint before it succeeds. */
+	/**
+	 * 等待
+	 * Tasks who need to acknowledge a checkpoint before it succeeds. */
 	private final ExecutionVertex[] tasksToWaitFor;
 
-	/** Tasks who need to be sent a message when a checkpoint is confirmed. */
+	/**
+	 * 提交
+	 * Tasks who need to be sent a message when a checkpoint is confirmed. */
 	private final ExecutionVertex[] tasksToCommitTo;
 
 	/** Map from checkpoint ID to the pending checkpoint. */
@@ -119,38 +128,54 @@ public class CheckpointCoordinator {
 	 * checkpoint, storing the metadata, and cleaning up the checkpoint. */
 	private final CheckpointStorageCoordinatorView checkpointStorage;
 
-	/** A list of recent checkpoint IDs, to identify late messages (vs invalid ones). */
+	/**
+	 * 堵塞的checkpoint
+	 * A list of recent checkpoint IDs, to identify late messages (vs invalid ones). */
 	private final ArrayDeque<Long> recentPendingCheckpoints;
 
-	/** Checkpoint ID counter to ensure ascending IDs. In case of job manager failures, these
+	/**
+	 * 计数器
+	 * Checkpoint ID counter to ensure ascending IDs. In case of job manager failures, these
 	 * need to be ascending across job managers. */
 	private final CheckpointIDCounter checkpointIdCounter;
 
-	/** The base checkpoint interval. Actual trigger time may be affected by the
+	/**
+	 * 触发间隔
+	 * he base checkpoint interval. Actual trigger time may be affected by the
 	 * max concurrent checkpoints and minimum-pause values */
 	private final long baseInterval;
 
 	/** The max time (in ms) that a checkpoint may take. */
 	private final long checkpointTimeout;
 
-	/** The min time(in ms) to delay after a checkpoint could be triggered. Allows to
+	/**
+	 * 最小间隔
+	 * The min time(in ms) to delay after a checkpoint could be triggered. Allows to
 	 * enforce minimum processing time between checkpoint attempts */
 	private final long minPauseBetweenCheckpoints;
 
-	/** The maximum number of checkpoints that may be in progress at the same time. */
+	/**
+	 * 最大尝试次数
+	 * The maximum number of checkpoints that may be in progress at the same time. */
 	private final int maxConcurrentCheckpointAttempts;
 
-	/** The timer that handles the checkpoint timeouts and triggers periodic checkpoints.
+	/**
+	 * 定时器
+	 * The timer that handles the checkpoint timeouts and triggers periodic checkpoints.
 	 * It must be single-threaded. Eventually it will be replaced by main thread executor. */
 	private final ScheduledExecutor timer;
 
-	/** The master checkpoint hooks executed by this checkpoint coordinator. */
+	/**
+	 * hook
+	 * The master checkpoint hooks executed by this checkpoint coordinator. */
 	private final HashMap<String, MasterTriggerRestoreHook<?>> masterHooks;
 
 	/** Actor that receives status updates from the execution graph this coordinator works for. */
 	private JobStatusListener jobStatusListener;
 
-	/** The number of consecutive failed trigger attempts. */
+	/**
+	 * 失败的触发
+	 * The number of consecutive failed trigger attempts. */
 	private final AtomicInteger numUnsuccessfulCheckpointsTriggers = new AtomicInteger(0);
 
 	/** A handle to the current periodic trigger, to cancel it when necessary. */
@@ -160,31 +185,41 @@ public class CheckpointCoordinator {
 	 * completed. */
 	private long lastCheckpointCompletionRelativeTime;
 
-	/** Flag whether a triggered checkpoint should immediately schedule the next checkpoint.
+	/**
+	 * 周期性触发
+	 * Flag whether a triggered checkpoint should immediately schedule the next checkpoint.
 	 * Non-volatile, because only accessed in synchronized scope */
 	private boolean periodicScheduling;
 
-	/** Flag whether a trigger request could not be handled immediately. Non-volatile, because only
+	/**
+	 * 等待
+	 * Flag whether a trigger request could not be handled immediately. Non-volatile, because only
 	 * accessed in synchronized scope */
 	private boolean triggerRequestQueued;
 
-	/** Flag marking the coordinator as shut down (not accepting any messages any more). */
+	/**
+	 * 是否已经关闭
+	 * Flag marking the coordinator as shut down (not accepting any messages any more). */
 	private volatile boolean shutdown;
 
-	/** Optional tracker for checkpoint statistics. */
+	/**
+	 * 追踪器
+	 * Optional tracker for checkpoint statistics. */
 	@Nullable
 	private CheckpointStatsTracker statsTracker;
 
-	/** A factory for SharedStateRegistry objects. */
+	/**
+	 * 共享状态工厂
+	 * A factory for SharedStateRegistry objects. */
 	private final SharedStateRegistryFactory sharedStateRegistryFactory;
 
 	/** Registry that tracks state which is shared across (incremental) checkpoints. */
 	private SharedStateRegistry sharedStateRegistry;
 
 	private boolean isPreferCheckpointForRecovery;
-
+	//失败处理器
 	private final CheckpointFailureManager failureManager;
-
+	//时钟
 	private final Clock clock;
 	// --------------------------------------------------------------------------------------------
 
@@ -296,6 +331,7 @@ public class CheckpointCoordinator {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 添加插件
 	 * Adds the given master hook to the checkpoint coordinator. This method does nothing, if
 	 * the checkpoint coordinator already contained a hook with the same ID (as defined via
 	 * {@link MasterTriggerRestoreHook#getIdentifier()}).
@@ -306,7 +342,7 @@ public class CheckpointCoordinator {
 	 */
 	public boolean addMasterHook(MasterTriggerRestoreHook<?> hook) {
 		checkNotNull(hook);
-
+		//识别符号
 		final String id = hook.getIdentifier();
 		checkArgument(!StringUtils.isNullOrWhitespaceOnly(id), "The hook has a null or empty id");
 
@@ -344,6 +380,7 @@ public class CheckpointCoordinator {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 关闭
 	 * Shuts down the checkpoint coordinator.
 	 *
 	 * <p>After this method has been called, the coordinator does not accept
@@ -383,6 +420,7 @@ public class CheckpointCoordinator {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 触发savepoint
 	 * Triggers a savepoint with the given savepoint directory as a target.
 	 *
 	 * @param timestamp The timestamp for the savepoint.
@@ -402,6 +440,8 @@ public class CheckpointCoordinator {
 	}
 
 	/**
+	 * 同步触发
+	 *
 	 * Triggers a synchronous savepoint with the given savepoint directory as a target.
 	 *
 	 * @param timestamp The timestamp for the savepoint.
@@ -470,7 +510,7 @@ public class CheckpointCoordinator {
 	 * timestamp. The return value is a future. It completes when the checkpoint triggered finishes
 	 * or an error occurred.
 	 *
-	 * @param timestamp The timestamp for the checkpoint.
+	 * @param timestamp The timestamp for the checkpoint. 触发时间点
 	 * @param isPeriodic Flag indicating whether this triggered checkpoint is
 	 * periodic. If this flag is true, but the periodic scheduler is disabled,
 	 * the checkpoint will be declined.
@@ -488,6 +528,7 @@ public class CheckpointCoordinator {
 		}
 	}
 
+	//checkpoint 和savepoint 内部使用同一套逻辑
 	@VisibleForTesting
 	public CompletableFuture<CompletedCheckpoint> triggerCheckpoint(
 			long timestamp,
@@ -565,7 +606,7 @@ public class CheckpointCoordinator {
 					t);
 			throw new CheckpointException(CheckpointFailureReason.EXCEPTION, t);
 		}
-
+		//执行中的
 		final PendingCheckpoint checkpoint = new PendingCheckpoint(
 			job,
 			checkpointID,
@@ -577,6 +618,7 @@ public class CheckpointCoordinator {
 			executor);
 
 		if (statsTracker != null) {
+			//回调
 			PendingCheckpointStats callback = statsTracker.reportPendingCheckpoint(
 				checkpointID,
 				timestamp,
@@ -586,6 +628,7 @@ public class CheckpointCoordinator {
 		}
 
 		// schedule the timer that will clean up the expired checkpoints
+		// 设置定时器
 		final Runnable canceller = () -> {
 			synchronized (lock) {
 				// only do the work if the checkpoint is not discarded anyways
@@ -636,6 +679,7 @@ public class CheckpointCoordinator {
 					checkpointStorageLocation.getLocationReference());
 
 			// send the messages to the tasks that trigger their checkpoint
+			// 分别触发
 			for (Execution execution: executions) {
 				if (props.isSynchronous()) {
 					execution.triggerSynchronousSavepoint(checkpointID, timestamp, checkpointOptions, advanceToEndOfTime);
@@ -1303,6 +1347,7 @@ public class CheckpointCoordinator {
 				currentPeriodicTrigger = null;
 			}
 			// Reassign the new trigger to the currentPeriodicTrigger
+			//重新触发
 			currentPeriodicTrigger = scheduleTriggerWithDelay(durationTillNextMillis);
 
 			throw new CheckpointException(CheckpointFailureReason.MINIMUM_TIME_BETWEEN_CHECKPOINTS);
@@ -1496,6 +1541,7 @@ public class CheckpointCoordinator {
 		}
 
 		if (!forceCheckpoint) {
+			//队列中已经有了检查点
 			if (triggerRequestQueued) {
 				LOG.warn("Trying to trigger another checkpoint for job {} while one was queued already.", job);
 				throw new CheckpointException(CheckpointFailureReason.ALREADY_QUEUED);

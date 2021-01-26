@@ -35,6 +35,7 @@ import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 服务器实现
  * The default implementation of the {@link KvStateServer}.
  */
 @Internal

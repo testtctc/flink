@@ -28,6 +28,7 @@ import javax.annotation.Nullable;
 import java.io.IOException;
 
 /**
+ * 写入分区器--利用缓存
  * A buffer-oriented runtime result writer API for producing results.
  *
  * <p>If {@link ResultPartitionWriter#close()} is called before {@link ResultPartitionWriter#fail(Throwable)} or
@@ -54,6 +55,7 @@ public interface ResultPartitionWriter extends AutoCloseable, AvailabilityProvid
 	BufferBuilder getBufferBuilder() throws IOException, InterruptedException;
 
 	/**
+	 * 添加消费者
 	 * Adds the bufferConsumer to the subpartition with the given index.
 	 *
 	 * <p>This method takes the ownership of the passed {@code bufferConsumer} and thus is responsible for releasing
@@ -67,11 +69,13 @@ public interface ResultPartitionWriter extends AutoCloseable, AvailabilityProvid
 	boolean addBufferConsumer(BufferConsumer bufferConsumer, int subpartitionIndex) throws IOException;
 
 	/**
+	 * 刷出
 	 * Manually trigger consumption from enqueued {@link BufferConsumer BufferConsumers} in all subpartitions.
 	 */
 	void flushAll();
 
 	/**
+	 * 手工刷出
 	 * Manually trigger consumption from enqueued {@link BufferConsumer BufferConsumers} in one specified subpartition.
 	 */
 	void flush(int subpartitionIndex);

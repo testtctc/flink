@@ -24,6 +24,7 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.util.List;
 
 /**
+ * 输入分配器
  * An input split assigner distributes the {@link InputSplit}s among the instances on which a
  * data source exists.
  */
@@ -31,6 +32,7 @@ import java.util.List;
 public interface InputSplitAssigner {
 
 	/**
+	 * 获取分片
 	 * Returns the next input split that shall be consumed. The consumer's host is passed as a parameter
 	 * to allow localized assignments.
 	 * 
@@ -41,6 +43,7 @@ public interface InputSplitAssigner {
 	InputSplit getNextInputSplit(String host, int taskId);
 
 	/**
+	 * 获取任务失败的分片
 	 * Return the splits to assigner if the task failed to process it.
 	 *
 	 * @param splits The list of input splits to be returned.

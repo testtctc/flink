@@ -24,6 +24,7 @@ import org.apache.flink.streaming.api.datastream.SplitStream;
 import java.io.Serializable;
 
 /**
+ * 选择器
  * Interface for defining an OutputSelector for a {@link SplitStream} using
  * the {@link SingleOutputStreamOperator#split} call. Every output object of a
  * {@link SplitStream} will run through this operator to select outputs.
@@ -34,6 +35,7 @@ import java.io.Serializable;
 @PublicEvolving
 public interface OutputSelector<OUT> extends Serializable {
 	/**
+	 * 对于某条记录返回选择的名字
 	 * Method for selecting output names for the emitted objects when using the
 	 * {@link SingleOutputStreamOperator#split} method. The values will be
 	 * emitted only to output names which are contained in the returned

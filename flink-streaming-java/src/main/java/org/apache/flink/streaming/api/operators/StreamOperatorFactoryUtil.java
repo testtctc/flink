@@ -23,6 +23,7 @@ import org.apache.flink.streaming.runtime.tasks.StreamTask;
 import org.apache.flink.streaming.runtime.tasks.mailbox.MailboxExecutorFactory;
 
 /**
+ * 便利函数
  * A utility to instantiate new operators with a given factory.
  */
 public class StreamOperatorFactoryUtil {
@@ -42,9 +43,11 @@ public class StreamOperatorFactoryUtil {
 			Output<StreamRecord<OUT>> output) {
 		MailboxExecutorFactory mailboxExecutorFactory = containingTask.getMailboxExecutorFactory();
 		if (operatorFactory instanceof YieldingOperatorFactory) {
+			//邮箱执行器
 			MailboxExecutor mailboxExecutor = mailboxExecutorFactory.createExecutor(configuration.getChainIndex());
 			((YieldingOperatorFactory) operatorFactory).setMailboxExecutor(mailboxExecutor);
 		}
+
 		return operatorFactory.createStreamOperator(containingTask, configuration, output);
 	}
 }

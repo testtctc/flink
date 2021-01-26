@@ -33,13 +33,16 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 分区描述
  * Partition descriptor for {@link ShuffleMaster} to obtain {@link ShuffleDescriptor}.
  */
 public class PartitionDescriptor implements Serializable {
 
 	private static final long serialVersionUID = 6343547936086963705L;
 
-	/** The ID of the result this partition belongs to. */
+	/**
+	 * 中间结果--数据集
+	 * The ID of the result this partition belongs to. */
 	private final IntermediateDataSetID resultId;
 
 	/** The total number of partitions for the result. */

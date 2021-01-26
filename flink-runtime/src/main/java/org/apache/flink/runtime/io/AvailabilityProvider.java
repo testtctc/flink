@@ -40,6 +40,7 @@ public interface AvailabilityProvider {
 	CompletableFuture<?> getAvailableFuture();
 
 	/**
+	 * 是否可用
 	 * In order to best-effort avoid volatile access in {@link CompletableFuture#isDone()}, we check the condition
 	 * of <code>future == AVAILABLE</code> firstly for getting probable performance benefits while hot looping.
 	 *
@@ -53,6 +54,7 @@ public interface AvailabilityProvider {
 	}
 
 	/**
+	 *
 	 * Checks whether this instance is available only via constant {@link #AVAILABLE} to avoid
 	 * performance concern caused by volatile access in {@link CompletableFuture#isDone()}. So it is
 	 * mainly used in the performance sensitive scenarios which do not always need the precise state.
@@ -68,14 +70,16 @@ public interface AvailabilityProvider {
 	}
 
 	/**
+	 * 实现
 	 * A availability implementation for providing the helpful functions of resetting the
 	 * available/unavailable states.
 	 */
 	final class AvailabilityHelper implements AvailabilityProvider {
-
+		//内建
 		private CompletableFuture<?> availableFuture = new CompletableFuture<>();
 
 		/**
+		 * 重设不可用
 		 * Judges to reset the current available state as unavailable.
 		 */
 		public void resetUnavailable() {
@@ -85,6 +89,7 @@ public interface AvailabilityProvider {
 		}
 
 		/**
+		 * 重设可用性
 		 * Resets the constant completed {@link #AVAILABLE} as the current state.
 		 */
 		public void resetAvailable() {
@@ -92,6 +97,7 @@ public interface AvailabilityProvider {
 		}
 
 		/**
+		 * 设定完成
 		 *  Returns the previously not completed future and resets the constant completed
 		 *  {@link #AVAILABLE} as the current state.
 		 */
@@ -102,6 +108,7 @@ public interface AvailabilityProvider {
 		}
 
 		/**
+		 * 重设未完成
 		 *  Creates a new uncompleted future as the current state and returns the
 		 *  previous uncompleted one.
 		 */
@@ -112,6 +119,7 @@ public interface AvailabilityProvider {
 		}
 
 		/**
+		 * 返回
 		 * @return a future that is completed if the respective provider is available.
 		 */
 		@Override

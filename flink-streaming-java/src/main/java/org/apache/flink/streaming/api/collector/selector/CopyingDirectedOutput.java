@@ -28,6 +28,7 @@ import java.util.Set;
 
 
 /**
+ * 浅拷贝
  * Special version of {@link DirectedOutput} that performs a shallow copy of the
  * {@link StreamRecord} to ensure that multi-chaining works correctly.
  */

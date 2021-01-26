@@ -146,6 +146,7 @@ public class JobEdge implements java.io.Serializable {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 传输策略
 	 * Gets the name of the ship strategy for the represented input, like "forward", "partition hash",
 	 * "rebalance", "broadcast", ...
 	 *

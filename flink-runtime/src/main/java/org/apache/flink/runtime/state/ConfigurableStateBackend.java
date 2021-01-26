@@ -23,6 +23,7 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.IllegalConfigurationException;
 
 /**
+ * 可配置后端
  * An interface for state backends that pick up additional parameters from a configuration.
  */
 @Internal

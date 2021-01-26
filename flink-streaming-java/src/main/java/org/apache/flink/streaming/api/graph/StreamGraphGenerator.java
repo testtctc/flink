@@ -132,6 +132,7 @@ public class StreamGraphGenerator {
 	private boolean blockingConnectionsBetweenChains = false;
 
 	// This is used to assign a unique ID to iteration source/sink
+	//迭代计数器
 	protected static Integer iterationIdCounter = 0;
 	public static int getNewIterationNodeId() {
 		iterationIdCounter--;
@@ -194,6 +195,7 @@ public class StreamGraphGenerator {
 		this.savepointRestoreSettings = savepointRestoreSettings;
 	}
 
+	//产生图
 	public StreamGraph generate() {
 		streamGraph = new StreamGraph(executionConfig, checkpointConfig, savepointRestoreSettings);
 		streamGraph.setStateBackend(stateBackend);
@@ -203,13 +205,13 @@ public class StreamGraphGenerator {
 		streamGraph.setTimeCharacteristic(timeCharacteristic);
 		streamGraph.setJobName(jobName);
 		streamGraph.setBlockingConnectionsBetweenChains(blockingConnectionsBetweenChains);
-
+		//已经转化
 		alreadyTransformed = new HashMap<>();
 
 		for (Transformation<?> transformation: transformations) {
 			transform(transformation);
 		}
-
+		//不再发生变化
 		final StreamGraph builtStreamGraph = streamGraph;
 
 		alreadyTransformed.clear();
@@ -220,8 +222,9 @@ public class StreamGraphGenerator {
 	}
 
 	/**
+	 * 转化 -->针对不同的类型设置不一样的转化
 	 * Transforms one {@code Transformation}.
-	 *
+	 * 每次转化之后，走生成一个节点
 	 * <p>This checks whether we already transformed it and exits early in that case. If not it
 	 * delegates to one of the transformation specific methods.
 	 */
@@ -415,6 +418,7 @@ public class StreamGraphGenerator {
 			return alreadyTransformed.get(sideOutput);
 		}
 
+		//做出一条边
 		List<Integer> virtualResultIds = new ArrayList<>();
 
 		for (int inputId : resultIds) {
@@ -426,6 +430,7 @@ public class StreamGraphGenerator {
 	}
 
 	/**
+	 * 自身回调
 	 * Transforms a {@code FeedbackTransformation}.
 	 *
 	 * <p>This will recursively transform the input and the feedback edges. We return the
@@ -454,6 +459,8 @@ public class StreamGraphGenerator {
 		}
 
 		// create the fake iteration source/sink pair
+		// 新建两个节点
+		// 在执行时做特殊处理
 		Tuple2<StreamNode, StreamNode> itSourceAndSink = streamGraph.createIterationSourceAndSink(
 			iterate.getId(),
 			getNewIterationNodeId(),
@@ -473,6 +480,7 @@ public class StreamGraphGenerator {
 
 		// also add the feedback source ID to the result IDs, so that downstream operators will
 		// add both as input
+		//添加到输入
 		resultIds.add(itSource.getId());
 
 		// at the iterate to the already-seen-set with the result IDs, so that we can transform
@@ -569,6 +577,7 @@ public class StreamGraphGenerator {
 	}
 
 	/**
+	 * 数据源转化
 	 * Transforms a {@code SourceTransformation}.
 	 */
 	private <T> Collection<Integer> transformSource(SourceTransformation<T> source) {
@@ -593,6 +602,7 @@ public class StreamGraphGenerator {
 	}
 
 	/**
+	 * 转化sink
 	 * Transforms a {@code SourceTransformation}.
 	 */
 	private <T> Collection<Integer> transformSink(SinkTransformation<T> sink) {
@@ -630,11 +640,12 @@ public class StreamGraphGenerator {
 			TypeSerializer<?> keySerializer = sink.getStateKeyType().createSerializer(executionConfig);
 			streamGraph.setOneInputStateKey(sink.getId(), sink.getStateKeySelector(), keySerializer);
 		}
-
+		//空集合
 		return Collections.emptyList();
 	}
 
 	/**
+	 * 单输入节点
 	 * Transforms a {@code OneInputTransformation}.
 	 *
 	 * <p>This recursively transforms the inputs, creates a new {@code StreamNode} in the graph and
@@ -673,6 +684,7 @@ public class StreamGraphGenerator {
 			streamGraph.addEdge(inputId, transform.getId(), 0);
 		}
 
+		//返回当前节点
 		return Collections.singleton(transform.getId());
 	}
 
@@ -736,6 +748,7 @@ public class StreamGraphGenerator {
 	}
 
 	/**
+	 * 决定资源共享组
 	 * Determines the slot sharing group for an operation based on the slot sharing group set by
 	 * the user and the slot sharing groups of the inputs.
 	 *
@@ -763,6 +776,7 @@ public class StreamGraphGenerator {
 		}
 	}
 
+	//验证划分
 	private <T> void validateSplitTransformation(Transformation<T> input) {
 		if (input instanceof SelectTransformation || input instanceof SplitTransformation) {
 			throw new IllegalStateException("Consecutive multiple splits are not supported. Splits are deprecated. Please use side-outputs.");

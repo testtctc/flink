@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
+ * 执行结果
  * The result of a job execution. Gives access to the execution time of the job,
  * and to all accumulators created by this job.
  */

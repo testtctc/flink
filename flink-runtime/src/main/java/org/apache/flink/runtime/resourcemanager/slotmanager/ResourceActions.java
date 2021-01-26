@@ -32,6 +32,7 @@ import java.util.Collection;
 public interface ResourceActions {
 
 	/**
+	 * 释放
 	 * Releases the resource with the given instance id.
 	 *
 	 * @param instanceId identifying which resource to release
@@ -40,6 +41,8 @@ public interface ResourceActions {
 	void releaseResource(InstanceID instanceId, Exception cause);
 
 	/**
+	 * 分配资源
+	 *
 	 * Requests to allocate a resource with the given {@link ResourceProfile}.
 	 *
 	 * @param resourceProfile for the to be allocated resource
@@ -49,6 +52,7 @@ public interface ResourceActions {
 	Collection<ResourceProfile> allocateResource(ResourceProfile resourceProfile) throws ResourceManagerException;
 
 	/**
+	 * 通知某个任务某次资源分配失败
 	 * Notifies that an allocation failure has occurred.
 	 *
 	 * @param jobId to which the allocation belonged

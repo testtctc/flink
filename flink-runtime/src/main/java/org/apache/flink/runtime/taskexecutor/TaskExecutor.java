@@ -148,6 +148,10 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 同时实现端口服务和gateway
+ *
+ * 任务执行器-->负责多个任务的执行
+ *
  * TaskExecutor implementation. The task executor is responsible for the execution of multiple
  * {@link Task}.
  */
@@ -773,6 +777,7 @@ public class TaskExecutor extends RpcEndpoint implements TaskExecutorGateway {
 		final Task task = taskSlotTable.getTask(executionAttemptID);
 
 		if (task != null) {
+			//触发barrier
 			task.triggerCheckpointBarrier(checkpointId, checkpointTimestamp, checkpointOptions, advanceToEndOfEventTime);
 
 			return CompletableFuture.completedFuture(Acknowledge.get());

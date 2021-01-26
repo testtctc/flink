@@ -27,12 +27,14 @@ import org.apache.flink.runtime.scheduler.strategy.SchedulingTopology;
 import java.util.List;
 
 /**
+ * 分区释放策略
  * Interface for strategies that decide when to release
  * {@link IntermediateResultPartition IntermediateResultPartitions}.
  */
 public interface PartitionReleaseStrategy {
 
 	/**
+	 * 通知完成
 	 * Calling this method informs the strategy that a vertex finished.
 	 *
 	 * @param finishedVertex Id of the vertex that finished the execution
@@ -41,6 +43,7 @@ public interface PartitionReleaseStrategy {
 	List<IntermediateResultPartitionID> vertexFinished(ExecutionVertexID finishedVertex);
 
 	/**
+	 * 通知未完成
 	 * Calling this method informs the strategy that a vertex is no longer in finished state, e.g.,
 	 * when a vertex is re-executed.
 	 *
@@ -49,6 +52,7 @@ public interface PartitionReleaseStrategy {
 	void vertexUnfinished(ExecutionVertexID executionVertexID);
 
 	/**
+	 * 创建工厂寒函数
 	 * Factory for {@link PartitionReleaseStrategy}.
 	 */
 	interface Factory {

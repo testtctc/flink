@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import java.util.concurrent.CompletableFuture;
 
 /**
+ * 提供slot
  * The slot provider is responsible for preparing slots for ready-to-run tasks.
  *
  * <p>It supports two allocating modes:
@@ -43,6 +44,7 @@ import java.util.concurrent.CompletableFuture;
 public interface SlotProvider {
 
 	/**
+	 * 分配
 	 * Allocating slot with specific requirement.
 	 *
 	 * @param slotRequestId identifying the slot request
@@ -92,6 +94,7 @@ public interface SlotProvider {
 	}
 
 	/**
+	 * 取消分配
 	 * Cancels the slot request with the given {@link SlotRequestId} and {@link SlotSharingGroupId}.
 	 *
 	 * @param slotRequestId identifying the slot request to cancel

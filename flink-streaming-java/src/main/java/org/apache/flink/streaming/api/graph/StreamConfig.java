@@ -61,6 +61,7 @@ public class StreamConfig implements Serializable {
 	//  Config Keys
 	// ------------------------------------------------------------------------
 
+	//自定义udf
 	@VisibleForTesting
 	public static final String SERIALIZEDUDF = "serializedUDF";
 
@@ -250,6 +251,7 @@ public class StreamConfig implements Serializable {
 		return (T) factory.getOperator();
 	}
 
+	//获取工厂函数
 	public <T extends StreamOperatorFactory<?>> T getStreamOperatorFactory(ClassLoader cl) {
 		try {
 			return InstantiationUtil.readObjectFromConfig(this.config, SERIALIZEDUDF, cl);
@@ -330,6 +332,7 @@ public class StreamConfig implements Serializable {
 		}
 	}
 
+	//获取非连在一起的输出
 	public List<StreamEdge> getNonChainedOutputs(ClassLoader cl) {
 		try {
 			List<StreamEdge> nonChainedOutputs = InstantiationUtil.readObjectFromConfig(this.config, NONCHAINED_OUTPUTS, cl);
@@ -346,7 +349,7 @@ public class StreamConfig implements Serializable {
 			throw new StreamTaskException("Cannot serialize chained outputs.", e);
 		}
 	}
-
+	//获取连在一起的输出
 	public List<StreamEdge> getChainedOutputs(ClassLoader cl) {
 		try {
 			List<StreamEdge> chainedOutputs = InstantiationUtil.readObjectFromConfig(this.config, CHAINED_OUTPUTS, cl);
@@ -415,6 +418,7 @@ public class StreamConfig implements Serializable {
 
 	public void setOutEdgesInOrder(List<StreamEdge> outEdgeList) {
 		try {
+			//将List<StreamEdge>序列化并写入EDGES_IN_ORDER
 			InstantiationUtil.writeObjectToConfig(outEdgeList, this.config, EDGES_IN_ORDER);
 		} catch (IOException e) {
 			throw new StreamTaskException("Could not serialize outputs in order.", e);
@@ -447,7 +451,7 @@ public class StreamConfig implements Serializable {
 			throw new StreamTaskException("Could not instantiate configuration.", e);
 		}
 	}
-
+	//获取每个孙子的配置
 	public Map<Integer, StreamConfig> getTransitiveChainedTaskConfigsWithSelf(ClassLoader cl) {
 		//TODO: could this logic be moved to the user of #setTransitiveChainedTaskConfigs() ?
 		Map<Integer, StreamConfig> chainedTaskConfigs = getTransitiveChainedTaskConfigs(cl);
@@ -494,6 +498,7 @@ public class StreamConfig implements Serializable {
 		}
 	}
 
+	//获取类
 	public StateBackend getStateBackend(ClassLoader cl) {
 		try {
 			return InstantiationUtil.readObjectFromConfig(this.config, STATE_BACKEND, cl);

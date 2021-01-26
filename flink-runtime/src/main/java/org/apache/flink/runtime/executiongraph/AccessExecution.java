@@ -22,6 +22,7 @@ import org.apache.flink.runtime.execution.ExecutionState;
 import org.apache.flink.runtime.taskmanager.TaskManagerLocation;
 
 /**
+ * 获取执行信息
  * Common interface for the runtime {@link Execution and {@link ArchivedExecution}.
  */
 public interface AccessExecution {

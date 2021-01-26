@@ -26,6 +26,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 并发任务执行id
  * Id identifying {@link ExecutionVertex}.
  */
 public class ExecutionVertexID implements VertexID {

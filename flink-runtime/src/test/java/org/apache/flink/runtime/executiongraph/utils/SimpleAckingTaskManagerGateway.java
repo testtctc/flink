@@ -40,6 +40,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 /**
+ * 简单模式
  * A TaskManagerGateway that simply acks the basic operations (deploy, cancel, update) and does not
  * support any more advanced operations.
  */

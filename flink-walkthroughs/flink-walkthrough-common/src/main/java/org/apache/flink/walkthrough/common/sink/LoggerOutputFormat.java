@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * 打印日志
  * A basic output format that logs all records at level <b>INFO</b>.
  */
 @Internal

@@ -37,6 +37,7 @@ import org.apache.flink.util.OutputTag;
 public interface Output<T> extends Collector<T> {
 
 	/**
+	 * 弹出水印
 	 * Emits a {@link Watermark} from an operator. This watermark is broadcast to all downstream
 	 * operators.
 	 *

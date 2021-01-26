@@ -37,6 +37,7 @@ import org.apache.flink.yarn.YarnWorkerNode;
 import javax.annotation.Nullable;
 
 /**
+ * 工厂函数
  * {@link ResourceManagerFactory} implementation which creates a {@link YarnResourceManager}.
  */
 public class YarnResourceManagerFactory extends ActiveResourceManagerFactory<YarnWorkerNode> {
@@ -49,6 +50,7 @@ public class YarnResourceManagerFactory extends ActiveResourceManagerFactory<Yar
 		return INSTANCE;
 	}
 
+	//创建
 	@Override
 	public ResourceManager<YarnWorkerNode> createActiveResourceManager(
 			Configuration configuration,

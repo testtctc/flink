@@ -23,6 +23,7 @@ import org.apache.flink.annotation.PublicEvolving;
 import java.util.Optional;
 
 /**
+ * 可读取的的配置
  * Read access to a configuration object. Allows reading values described with meta information
  * included in {@link ConfigOption}.
  */

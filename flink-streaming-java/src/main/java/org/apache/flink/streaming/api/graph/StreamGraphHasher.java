@@ -23,11 +23,13 @@ import org.apache.flink.runtime.jobgraph.JobVertexID;
 import java.util.Map;
 
 /**
+ * hash器
  * Interface for different implementations of generating hashes over a stream graph.
  */
 public interface StreamGraphHasher {
 
 	/**
+	 * 获取hash
 	 * Returns a map with a hash for each {@link StreamNode} of the {@link
 	 * StreamGraph}. The hash is used as the {@link JobVertexID} in order to
 	 * identify nodes across job submissions if they didn't change.

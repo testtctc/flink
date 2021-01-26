@@ -223,6 +223,7 @@ public class PendingCheckpoint {
 	}
 
 	/**
+	 * 设置取消回调
 	 * Sets the handle for the canceller to this pending checkpoint. This method fails
 	 * with an exception if a handle has already been set.
 	 *

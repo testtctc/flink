@@ -32,6 +32,7 @@ import java.util.Map;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 在master上开始初始与和终结的顶点
  * A task vertex that runs an initialization and a finalization on the master. If necessary, it tries
  * to deserialize input and output formats, and initialize and finalize them on master.
  */

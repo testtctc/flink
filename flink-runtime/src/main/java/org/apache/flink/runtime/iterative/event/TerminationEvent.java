@@ -25,6 +25,7 @@ import org.apache.flink.runtime.event.TaskEvent;
 import java.io.IOException;
 
 /**
+ * 终止事件
  * Signals that the iteration is completely executed, participating tasks must terminate now.
  */
 public class TerminationEvent extends TaskEvent {

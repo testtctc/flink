@@ -44,7 +44,7 @@ import java.util.concurrent.Executor;
  */
 public interface SlotManager extends AutoCloseable {
 	int getNumberRegisteredSlots();
-
+	//获取节点注册的slot
 	int getNumberRegisteredSlotsOf(InstanceID instanceId);
 
 	int getNumberFreeSlots();
@@ -59,12 +59,13 @@ public interface SlotManager extends AutoCloseable {
 	 * Starts the slot manager with the given leader id and resource manager actions.
 	 *
 	 * @param newResourceManagerId to use for communication with the task managers
-	 * @param newMainThreadExecutor to use to run code in the ResourceManager's main thread
-	 * @param newResourceActions to use for resource (de-)allocations
+	 * @param newMainThreadExecutor to use to run code in the ResourceManager's main thread   执行任务的住线程
+	 * @param newResourceActions to use for resource (de-)allocations   任务分配
 	 */
 	void start(ResourceManagerId newResourceManagerId, Executor newMainThreadExecutor, ResourceActions newResourceActions);
 
 	/**
+	 * 暂停
 	 * Suspends the component. This clears the internal state of the slot manager.
 	 */
 	void suspend();
@@ -88,6 +89,7 @@ public interface SlotManager extends AutoCloseable {
 	boolean unregisterSlotRequest(AllocationID allocationId);
 
 	/**
+	 * 任策任务管理器
 	 * Registers a new task manager at the slot manager. This will make the task managers slots
 	 * known and, thus, available for allocation.
 	 *
@@ -107,6 +109,7 @@ public interface SlotManager extends AutoCloseable {
 	boolean unregisterTaskManager(InstanceID instanceId, Exception cause);
 
 	/**
+	 * 报告资源
 	 * Reports the current slot allocations for a task manager identified by the given instance id.
 	 *
 	 * @param instanceId identifying the task manager for which to report the slot status

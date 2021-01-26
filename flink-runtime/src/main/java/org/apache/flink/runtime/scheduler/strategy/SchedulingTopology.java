@@ -24,6 +24,7 @@ import org.apache.flink.runtime.topology.Topology;
 import java.util.Optional;
 
 /**
+ * 调度拓扑
  * Topology of {@link SchedulingExecutionVertex}.
  */
 public interface SchedulingTopology<V extends SchedulingExecutionVertex<V, R>, R extends SchedulingResultPartition<V, R>>

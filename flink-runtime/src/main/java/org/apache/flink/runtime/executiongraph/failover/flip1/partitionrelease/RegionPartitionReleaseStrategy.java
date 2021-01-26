@@ -41,6 +41,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ *
  * Releases blocking intermediate result partitions that are incident to a {@link PipelinedRegion},
  * as soon as the region's execution vertices are finished.
  */
@@ -169,6 +170,7 @@ public class RegionPartitionReleaseStrategy implements PartitionReleaseStrategy 
 	}
 
 	/**
+	 * 创建实例
 	 * Factory for {@link PartitionReleaseStrategy}.
 	 */
 	public static class Factory implements PartitionReleaseStrategy.Factory {

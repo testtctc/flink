@@ -55,16 +55,23 @@ public class JobVertex implements java.io.Serializable {
 	/** The alternative IDs of the vertex. */
 	private final ArrayList<JobVertexID> idAlternatives = new ArrayList<>();
 
-	/** The IDs of all operators contained in this vertex. */
+	/**
+	 * 算子id
+	 * The IDs of all operators contained in this vertex. */
 	private final ArrayList<OperatorID> operatorIDs = new ArrayList<>();
 
 	/** The alternative IDs of all operators contained in this vertex. */
 	private final ArrayList<OperatorID> operatorIdsAlternatives = new ArrayList<>();
 
-	/** List of produced data sets, one per writer. */
+	/**
+	 * 中间结果
+	 * List of produced data sets, one per writer. */
 	private final ArrayList<IntermediateDataSet> results = new ArrayList<>();
 
-	/** List of edges with incoming data. One per Reader. */
+	/**
+	 *
+	 * 输入
+	 * List of edges with incoming data. One per Reader. */
 	private final ArrayList<JobEdge> inputs = new ArrayList<>();
 
 	/** Number of subtasks to split this task into at runtime. */
@@ -114,7 +121,7 @@ public class JobVertex implements java.io.Serializable {
 	 * to be included in the JSON plan. */
 	private String resultOptimizerProperties;
 
-	/** The input dependency constraint to schedule this vertex. */
+	/** 依赖限制 The input dependency constraint to schedule this vertex. */
 	private InputDependencyConstraint inputDependencyConstraint = InputDependencyConstraint.ANY;
 
 	// --------------------------------------------------------------------------------------------

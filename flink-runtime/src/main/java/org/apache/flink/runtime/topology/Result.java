@@ -27,12 +27,12 @@ import org.apache.flink.runtime.io.network.partition.ResultPartitionType;
  */
 public interface Result<VID extends VertexID, RID extends ResultID,
 	V extends Vertex<VID, RID, V, R>, R extends Result<VID, RID, V, R>> {
-
+	//结果id
 	RID getId();
 
 	ResultPartitionType getResultType();
-
+	//生产者
 	V getProducer();
-
+	//消费者
 	Iterable<V> getConsumers();
 }

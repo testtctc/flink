@@ -25,7 +25,7 @@ package org.apache.flink.runtime.checkpoint;
  */
 public enum CheckpointType {
 
-	/** A checkpoint, full or incremental. */
+	/** A checkpoint, full or incremental.  这里仅仅只有异步 */
 	CHECKPOINT(false, false),
 
 	/** A regular savepoint. */

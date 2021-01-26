@@ -44,7 +44,9 @@ public abstract class BlobKey implements Serializable, Comparable<BlobKey> {
 	/** Size of the internal BLOB key in bytes. */
 	public static final int SIZE = 20;
 
-	/** The byte buffer storing the actual key data. */
+	/**
+	 * 字节数组
+	 * The byte buffer storing the actual key data. */
 	private final byte[] key;
 
 	/**

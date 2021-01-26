@@ -26,6 +26,7 @@ import org.apache.flink.core.memory.DataOutputView;
 import java.io.IOException;
 
 /**
+ * 序列化代理
  * The serialization delegate exposes an arbitrary element as a {@link IOReadableWritable} for
  * serialization, with the help of a type serializer.
  *
@@ -49,6 +50,7 @@ public class SerializationDelegate<T> implements IOReadableWritable {
 		return this.instance;
 	}
 
+	//写出到外部
 	@Override
 	public void write(DataOutputView out) throws IOException {
 		this.serializer.serialize(this.instance, out);

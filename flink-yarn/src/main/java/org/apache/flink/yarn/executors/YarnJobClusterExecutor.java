@@ -26,6 +26,7 @@ import org.apache.flink.yarn.YarnClusterClientFactory;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 
 /**
+ * yarn执行器
  * The {@link PipelineExecutor} to be used when executing a job in isolation.
  * This executor will start a cluster specifically for the job at hand and
  * tear it down when the job is finished either successfully or due to an error.

@@ -37,7 +37,9 @@ public class SlotID implements ResourceIDRetrievable, Serializable {
 	/** The resource id which this slot located */
 	private final ResourceID resourceId;
 
-	/** The numeric id for single slot */
+	/**
+	 * 编号
+	 * The numeric id for single slot */
 	private final int slotNumber;
 	
 	public SlotID(ResourceID resourceId, int slotNumber) {

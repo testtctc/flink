@@ -30,6 +30,7 @@ public interface SchedulingResultPartition<V extends SchedulingExecutionVertex<V
 	extends Result<ExecutionVertexID, IntermediateResultPartitionID, V, R> {
 
 	/**
+	 * 结果
 	 * Gets id of the intermediate result.
 	 *
 	 * @return id of the intermediate result

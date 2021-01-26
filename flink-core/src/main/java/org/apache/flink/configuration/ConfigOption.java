@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 包装--配置
  * A {@code ConfigOption} describes a configuration parameter. It encapsulates
  * the configuration key, deprecated older versions of the key, and an optional
  * default value for the configuration parameter.

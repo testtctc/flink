@@ -49,6 +49,7 @@ public class FeedbackTransformation<T> extends Transformation<T> {
 
 	private final Transformation<T> input;
 
+	//反馈边
 	private final List<Transformation<T>> feedbackEdges;
 
 	private final Long waitTime;

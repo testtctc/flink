@@ -24,6 +24,7 @@ import org.apache.flink.runtime.jobgraph.JobVertexID;
 import org.apache.flink.runtime.state.KeyGroupRange;
 
 /**
+ * 监听者
  * A listener for a {@link KvStateRegistry}.
  *
  * <p>The registry calls these methods when KvState instances are registered

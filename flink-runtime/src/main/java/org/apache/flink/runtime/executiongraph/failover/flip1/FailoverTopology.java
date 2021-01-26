@@ -22,6 +22,7 @@ import org.apache.flink.runtime.scheduler.strategy.ExecutionVertexID;
 import org.apache.flink.runtime.topology.Topology;
 
 /**
+ * 重新恢复拓扑
  * Represents a topology for failover.
  */
 public interface FailoverTopology<V extends FailoverVertex<V, R>, R extends FailoverResultPartition<V, R>>

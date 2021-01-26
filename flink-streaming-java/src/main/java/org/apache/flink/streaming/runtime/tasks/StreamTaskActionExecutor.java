@@ -24,6 +24,7 @@ import org.apache.flink.util.function.ThrowingRunnable;
 import java.util.concurrent.Callable;
 
 /**
+ * 行为执行器
  * Executes {@link Runnable}, {@link ThrowingRunnable}, or {@link Callable}.
  * Intended to customize execution in sub-types of {@link org.apache.flink.streaming.runtime.tasks.StreamTask StreamTask},
  * e.g. synchronization in {@link org.apache.flink.streaming.runtime.tasks.SourceStreamTask SourceStreamTask}.
@@ -35,7 +36,7 @@ public interface StreamTaskActionExecutor {
 	<E extends Throwable> void runThrowing(ThrowingRunnable<E> runnable) throws E;
 
 	<R> R call(Callable<R> callable) throws Exception;
-
+	//立即执行
 	StreamTaskActionExecutor IMMEDIATE = new StreamTaskActionExecutor() {
 		@Override
 		public void run(RunnableWithException runnable) throws Exception {
@@ -68,6 +69,7 @@ public interface StreamTaskActionExecutor {
 	}
 
 	/**
+	 * 任务同步执行--上锁，保障安全
 	 * A {@link StreamTaskActionExecutor} that synchronizes every operation on the provided mutex.
 	 * @deprecated this class should only be used in {@link SourceStreamTask} which exposes the checkpoint lock as part of Public API.
 	 * During transitional period it is used in {@link StreamTask} (until {@link StreamTask#getCheckpointLock()}

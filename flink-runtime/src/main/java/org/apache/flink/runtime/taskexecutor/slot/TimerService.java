@@ -31,6 +31,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 超时服务
  * Service to register timeouts for a given key. The timeouts are identified by a ticket so that
  * newly registered timeouts for the same key can be distinguished from older timeouts.
  *
@@ -49,7 +50,9 @@ public class TimerService<K> {
 	/** Map of currently active timeouts. */
 	private final Map<K, Timeout<K>> timeouts;
 
-	/** Listener which is notified about occurring timeouts. */
+	/**
+	 * 监听
+	 * Listener which is notified about occurring timeouts. */
 	private TimeoutListener<K> timeoutListener;
 
 	public TimerService(
@@ -58,12 +61,13 @@ public class TimerService<K> {
 		this.scheduledExecutorService = Preconditions.checkNotNull(scheduledExecutorService);
 
 		Preconditions.checkArgument(shutdownTimeout >= 0L, "The shut down timeout must be larger than or equal than 0.");
+		//关闭超时
 		this.shutdownTimeout = shutdownTimeout;
 
 		this.timeouts = new HashMap<>(16);
 		this.timeoutListener = null;
 	}
-
+	//开始
 	public void start(TimeoutListener<K> initialTimeoutListener) {
 		// sanity check; We only allow to assign a timeout listener once
 		Preconditions.checkState(!scheduledExecutorService.isShutdown());
@@ -71,7 +75,7 @@ public class TimerService<K> {
 
 		this.timeoutListener = Preconditions.checkNotNull(initialTimeoutListener);
 	}
-
+	//关闭
 	public void stop() {
 		unregisterAllTimeouts();
 
@@ -123,6 +127,7 @@ public class TimerService<K> {
 	}
 
 	/**
+	 * 注销超时
 	 * Unregister all timeouts.
 	 */
 	protected void unregisterAllTimeouts() {
@@ -133,6 +138,7 @@ public class TimerService<K> {
 	}
 
 	/**
+	 * 检测是有有效
 	 * Check whether the timeout for the given key and ticket is still valid (not yet unregistered
 	 * and not yet overwritten).
 	 *
@@ -154,6 +160,8 @@ public class TimerService<K> {
 	// Static utility classes
 	// ---------------------------------------------------------------------
 
+
+	//超时
 	private static final class Timeout<K> implements Runnable {
 
 		private final TimeoutListener<K> timeoutListener;
@@ -172,6 +180,7 @@ public class TimerService<K> {
 
 			this.timeoutListener = Preconditions.checkNotNull(timeoutListener);
 			this.key = Preconditions.checkNotNull(key);
+			//初始化时则注册
 			this.scheduledTimeout = scheduledExecutorService.schedule(this, delay, unit);
 			this.ticket = UUID.randomUUID();
 		}
@@ -183,7 +192,7 @@ public class TimerService<K> {
 		void cancel() {
 			scheduledTimeout.cancel(true);
 		}
-
+		//当达到点之后，自动通知
 		@Override
 		public void run() {
 			timeoutListener.notifyTimeout(key, ticket);

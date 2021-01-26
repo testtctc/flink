@@ -38,7 +38,7 @@ public class OperatorID extends AbstractID {
 	public OperatorID(long lowerPart, long upperPart) {
 		super(lowerPart, upperPart);
 	}
-
+	//复制一份
 	public static OperatorID fromJobVertexID(JobVertexID id) {
 		return new OperatorID(id.getLowerPart(), id.getUpperPart());
 	}

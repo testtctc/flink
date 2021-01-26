@@ -41,10 +41,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class KvStateRegistry {
 
-	/** All registered KvState instances. */
+	/**
+	 * 注册的状态
+	 * All registered KvState instances. */
 	private final ConcurrentHashMap<KvStateID, KvStateEntry<?, ?, ?>> registeredKvStates = new ConcurrentHashMap<>(4);
 
-	/** Registry listeners to be notified on registration/unregistration. */
+	/**
+	 * 监听者
+	 * Registry listeners to be notified on registration/unregistration. */
 	private final ConcurrentHashMap<JobID, KvStateRegistryListener> listeners = new ConcurrentHashMap<>(4);
 
 	/**
@@ -72,8 +76,7 @@ public class KvStateRegistry {
 	}
 
 	/**
-	 *
-	 * 注册
+	 * 注册状态
 	 * Registers the KvState instance and returns the assigned ID.
 	 *
 	 * @param jobId            JobId the KvState instance belongs to
@@ -89,9 +92,9 @@ public class KvStateRegistry {
 			KeyGroupRange keyGroupRange,
 			String registrationName,
 			InternalKvState<?, ?, ?> kvState) {
-
+		//编号
 		KvStateID kvStateId = new KvStateID();
-
+		//必须是之前没有注册过
 		if (registeredKvStates.putIfAbsent(kvStateId, new KvStateEntry<>(kvState)) == null) {
 			final KvStateRegistryListener listener = getKvStateRegistryListener(jobId);
 
@@ -154,6 +157,7 @@ public class KvStateRegistry {
 	// ------------------------------------------------------------------------
 
 	/**
+	 * 创建注册器
 	 * Creates a {@link TaskKvStateRegistry} facade for the {@link Task}
 	 * identified by the given JobID and JobVertexID instance.
 	 *

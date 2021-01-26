@@ -314,6 +314,7 @@ public class SlotSharingManager {
 	}
 
 	/**
+	 *
 	 * Base class for all task slots.
 	 */
 	public abstract static class TaskSlot {

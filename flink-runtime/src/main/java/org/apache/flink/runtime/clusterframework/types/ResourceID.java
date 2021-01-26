@@ -24,6 +24,7 @@ import org.apache.flink.util.Preconditions;
 import java.io.Serializable;
 
 /**
+ * 资源id
  * Class for Resource Ids identifying Flink's distributed components.
  */
 public final class ResourceID implements ResourceIDRetrievable, Serializable {

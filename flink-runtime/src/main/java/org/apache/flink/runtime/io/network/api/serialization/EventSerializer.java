@@ -41,12 +41,13 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
+ * 事件序列化器
  * Utility class to serialize and deserialize task events.
  */
 public class EventSerializer {
 
 	// ------------------------------------------------------------------------
-	//  Constants
+	//  Constants 事件类型
 	// ------------------------------------------------------------------------
 
 	private static final int END_OF_PARTITION_EVENT = 0;
@@ -283,10 +284,10 @@ public class EventSerializer {
 
 		return buffer;
 	}
-
+	//产生消费者
 	public static BufferConsumer toBufferConsumer(AbstractEvent event) throws IOException {
 		final ByteBuffer serializedEvent = EventSerializer.toSerializedEvent(event);
-
+		//数据
 		MemorySegment data = MemorySegmentFactory.wrap(serializedEvent.array());
 
 		return new BufferConsumer(data, FreeingBufferRecycler.INSTANCE, false);

@@ -19,6 +19,7 @@
 package org.apache.flink.runtime.state;
 
 /**
+ * 恢复快照
  * Interface for restore operation.
  *
  * @param <R> Generic type of the restore result.

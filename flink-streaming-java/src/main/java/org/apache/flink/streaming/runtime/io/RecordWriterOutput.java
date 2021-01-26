@@ -40,6 +40,7 @@ import java.io.IOException;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 封装RecordWriter
  * Implementation of {@link Output} that sends data using a {@link RecordWriter}.
  */
 @Internal
@@ -100,7 +101,9 @@ public class RecordWriterOutput<OUT> implements OperatorChain.WatermarkGaugeExpo
 		pushToRecordWriter(record);
 	}
 
+	//写出
 	private <X> void pushToRecordWriter(StreamRecord<X> record) {
+		//代理
 		serializationDelegate.setInstance(record);
 
 		try {

@@ -72,6 +72,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 构建执行图
  * Utility class to encapsulate the logic of building an {@link ExecutionGraph} from a {@link JobGraph}.
  */
 public class ExecutionGraphBuilder {
@@ -122,6 +123,7 @@ public class ExecutionGraphBuilder {
 			failoverStrategy);
 	}
 
+	//主逻辑
 	public static ExecutionGraph buildGraph(
 		@Nullable ExecutionGraph prior,
 		JobGraph jobGraph,
@@ -154,6 +156,7 @@ public class ExecutionGraphBuilder {
 			jobGraph.getUserJarBlobKeys(),
 			jobGraph.getClasspaths());
 
+		//最大保存历史数
 		final int maxPriorAttemptsHistoryLength =
 				jobManagerConfig.getInteger(JobManagerOptions.MAX_ATTEMPTS_HISTORY_SIZE);
 
@@ -197,7 +200,7 @@ public class ExecutionGraphBuilder {
 
 		// initialize the vertices that have a master initialization hook
 		// file output formats create directories here, input formats create splits
-
+		// 初始化master时间
 		final long initMasterStart = System.nanoTime();
 		log.info("Running initialization on master for job {} ({}).", jobName, jobId);
 
@@ -209,6 +212,7 @@ public class ExecutionGraphBuilder {
 			}
 
 			try {
+				//在master节点上初始化
 				vertex.initializeOnMaster(classLoader);
 			}
 			catch (Throwable t) {
@@ -221,10 +225,13 @@ public class ExecutionGraphBuilder {
 				(System.nanoTime() - initMasterStart) / 1_000_000);
 
 		// topologically sort the job vertices and attach the graph to the existing one
+		// 经过排序之后的节点
 		List<JobVertex> sortedTopology = jobGraph.getVerticesSortedTopologicallyFromSources();
 		if (log.isDebugEnabled()) {
 			log.debug("Adding {} vertices from job graph {} ({}).", sortedTopology.size(), jobName, jobId);
 		}
+
+		//添加jobgraph
 		executionGraph.attachJobGraph(sortedTopology);
 
 		if (log.isDebugEnabled()) {
@@ -358,6 +365,7 @@ public class ExecutionGraphBuilder {
 		return executionGraph;
 	}
 
+	//id to ExecutionJobVertex
 	private static List<ExecutionJobVertex> idToVertex(
 			List<JobVertexID> jobVertices, ExecutionGraph executionGraph) throws IllegalArgumentException {
 

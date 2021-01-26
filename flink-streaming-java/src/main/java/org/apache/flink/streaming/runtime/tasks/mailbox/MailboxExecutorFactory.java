@@ -21,6 +21,7 @@ import org.apache.flink.annotation.Internal;
 import org.apache.flink.streaming.api.operators.MailboxExecutor;
 
 /**
+ * 创建有限执行器
  * A factory for creating mailbox executors with a given priority. The factory is usually bound to a specific task.
  */
 @FunctionalInterface

@@ -23,6 +23,7 @@ import org.apache.flink.runtime.clusterframework.types.SlotID;
 import org.apache.flink.runtime.instance.InstanceID;
 
 /**
+ * TaskManagerSlot 信息
  * Basic information about a {@link TaskManagerSlot}.
  */
 public interface TaskManagerSlotInformation {

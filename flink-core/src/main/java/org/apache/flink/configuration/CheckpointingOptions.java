@@ -21,6 +21,7 @@ package org.apache.flink.configuration;
 import org.apache.flink.annotation.docs.Documentation;
 
 /**
+ * checkpoint配置
  * A collection of all configuration options that relate to checkpoints
  * and savepoints.
  */

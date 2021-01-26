@@ -43,6 +43,7 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 	private final ClassLoader userClassloader;
 	private final Map<String, PartitionableListState<?>> registeredOperatorStates;
 	private final Map<String, BackendWritableBroadcastState<?, ?>> registeredBroadcastStates;
+	//状态处理器
 	private final Collection<OperatorStateHandle> stateHandles;
 
 	public OperatorStateRestoreOperation(
@@ -60,6 +61,7 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 
 	@Override
 	public Void restore() throws Exception {
+		//流处理器，则无法恢复
 		if (stateHandles.isEmpty()) {
 			return null;
 		}
@@ -80,12 +82,14 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 				OperatorBackendSerializationProxy backendSerializationProxy =
 					new OperatorBackendSerializationProxy(userClassloader);
 
+				//读取数据
 				backendSerializationProxy.read(new DataInputViewStreamWrapper(in));
-
+				//读取元信息
 				List<StateMetaInfoSnapshot> restoredOperatorMetaInfoSnapshots =
 					backendSerializationProxy.getOperatorStateMetaInfoSnapshots();
 
 				// Recreate all PartitionableListStates from the meta info
+				// 重建算子state
 				for (StateMetaInfoSnapshot restoredSnapshot : restoredOperatorMetaInfoSnapshots) {
 
 					final RegisteredOperatorStateBackendMetaInfo<?> restoredMetaInfo =
@@ -106,6 +110,7 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 
 					PartitionableListState<?> listState = registeredOperatorStates.get(restoredSnapshot.getName());
 
+					//没有则重建
 					if (null == listState) {
 						listState = new PartitionableListState<>(restoredMetaInfo);
 
@@ -150,6 +155,7 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 				}
 
 				// Restore all the states
+				// 恢复所有状态--可能是广播状态，也可能是算子状态
 				for (Map.Entry<String, OperatorStateHandle.StateMetaInfo> nameToOffsets :
 					stateHandle.getStateNameToPartitionOffsets().entrySet()) {
 
@@ -167,6 +173,7 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 				}
 
 			} finally {
+				//关闭流
 				Thread.currentThread().setContextClassLoader(restoreClassLoader);
 				if (closeStreamOnCancelRegistry.unregisterCloseable(in)) {
 					IOUtils.closeQuietly(in);
@@ -176,11 +183,12 @@ public class OperatorStateRestoreOperation implements RestoreOperation<Void> {
 		return null;
 	}
 
+	//反序列化值
 	private <S> void deserializeOperatorStateValues(
 		PartitionableListState<S> stateListForName,
 		FSDataInputStream in,
 		OperatorStateHandle.StateMetaInfo metaInfo) throws IOException {
-
+		//逐个恢复
 		if (null != metaInfo) {
 			long[] offsets = metaInfo.getOffsets();
 			if (null != offsets) {

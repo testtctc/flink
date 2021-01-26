@@ -37,6 +37,7 @@ public interface BlobWriter {
 	Logger LOG = LoggerFactory.getLogger(BlobWriter.class);
 
 	/**
+	 * 上传数据
 	 * Uploads the data of the given byte array for the given job to the BLOB server and makes it
 	 * a permanent BLOB.
 	 *

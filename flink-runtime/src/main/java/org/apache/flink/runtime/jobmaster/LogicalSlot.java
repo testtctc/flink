@@ -50,6 +50,7 @@ public interface LogicalSlot {
 	};
 
 	/**
+	 * 获取任务管理器位置
 	 * Return the TaskManager location of this slot.
 	 *
 	 * @return TaskManager location of this slot
@@ -106,6 +107,7 @@ public interface LogicalSlot {
 	}
 
 	/**
+	 * 释放
 	 * Releases this slot.
 	 *
 	 * @param cause why the slot was released or null if none
@@ -144,6 +146,7 @@ public interface LogicalSlot {
 	SlotSharingGroupId getSlotSharingGroupId();
 
 	/**
+	 * 负载
 	 * Payload for a logical slot.
 	 */
 	interface Payload {

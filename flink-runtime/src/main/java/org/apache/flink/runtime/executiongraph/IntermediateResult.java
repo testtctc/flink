@@ -29,12 +29,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
+
+//中间结果
 public class IntermediateResult {
 
 	private final IntermediateDataSetID id;
-
+	//生产者
 	private final ExecutionJobVertex producer;
-
+	//分区
 	private final IntermediateResultPartition[] partitions;
 
 	/**
@@ -50,7 +52,7 @@ public class IntermediateResult {
 	private final AtomicInteger numberOfRunningProducers;
 
 	private int partitionsAssigned;
-
+	//消费者数量
 	private int numConsumers;
 
 	private final int connectionIndex;
@@ -139,10 +141,11 @@ public class IntermediateResult {
 		return resultType;
 	}
 
+	//注册消费者
 	public int registerConsumer() {
 		final int index = numConsumers;
 		numConsumers++;
-
+		//确认结果分区的消费者
 		for (IntermediateResultPartition p : partitions) {
 			if (p.addConsumerGroup() != index) {
 				throw new RuntimeException("Inconsistent consumer mapping between intermediate result partitions.");

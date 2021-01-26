@@ -77,6 +77,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * flink实现的远程
  * Akka based {@link RpcService} implementation. The RPC service starts an Akka actor to receive
  * RPC invocations from a {@link RpcGateway}.
  */
@@ -88,10 +89,11 @@ public class AkkaRpcService implements RpcService {
 	static final int VERSION = 1;
 
 	private final Object lock = new Object();
-
+	//内部通信
 	private final ActorSystem actorSystem;
 	private final AkkaRpcServiceConfiguration configuration;
 
+	//内部保存一个引用
 	@GuardedBy("lock")
 	private final Map<ActorRef, RpcEndpoint> actors = new HashMap<>(4);
 
@@ -148,6 +150,7 @@ public class AkkaRpcService implements RpcService {
 	}
 
 	// this method does not mutate state and is thus thread-safe
+	//线程安全
 	@Override
 	public <C extends RpcGateway> CompletableFuture<C> connect(
 			final String address,
@@ -158,7 +161,7 @@ public class AkkaRpcService implements RpcService {
 			clazz,
 			(ActorRef actorRef) -> {
 				Tuple2<String, String> addressHostname = extractAddressHostname(actorRef);
-
+				//
 				return new AkkaInvocationHandler(
 					addressHostname.f0,
 					addressHostname.f1,
@@ -188,6 +191,7 @@ public class AkkaRpcService implements RpcService {
 					() -> fencingToken);
 			});
 	}
+
 
 	@Override
 	public <C extends RpcEndpoint & RpcGateway> RpcServer startServer(C rpcEndpoint) {
@@ -264,7 +268,7 @@ public class AkkaRpcService implements RpcService {
 		// from this class . That works better in cases where Flink runs embedded and all Flink
 		// code is loaded dynamically (for example from an OSGI bundle) through a custom ClassLoader
 		ClassLoader classLoader = getClass().getClassLoader();
-
+		//返回代理对象
 		@SuppressWarnings("unchecked")
 		RpcServer server = (RpcServer) Proxy.newProxyInstance(
 			classLoader,

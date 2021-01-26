@@ -34,6 +34,7 @@ import java.util.Map;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 事件分发器
  * The task event dispatcher dispatches events flowing backwards from a consuming task to the task
  * producing the consumed result.
  *
@@ -43,6 +44,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 public class TaskEventDispatcher implements TaskEventPublisher {
 	private static final Logger LOG = LoggerFactory.getLogger(TaskEventDispatcher.class);
 
+	//注册事件处理器
 	private final Map<ResultPartitionID, TaskEventHandler> registeredHandlers = new HashMap<>();
 
 	/**
@@ -84,6 +86,7 @@ public class TaskEventDispatcher implements TaskEventPublisher {
 	}
 
 	/**
+	 * 订阅信息
 	 * Subscribes a listener to this dispatcher for events on a partition.
 	 *
 	 * @param partitionId
@@ -110,6 +113,7 @@ public class TaskEventDispatcher implements TaskEventPublisher {
 			throw new IllegalStateException(
 				"Partition " + partitionId + " not registered at task event dispatcher.");
 		}
+		//订阅
 		taskEventHandler.subscribe(eventListener, eventType);
 	}
 

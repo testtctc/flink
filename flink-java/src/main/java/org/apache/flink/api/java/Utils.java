@@ -67,6 +67,7 @@ public final class Utils {
 	// --------------------------------------------------------------------------------------------
 
 	/**
+	 * 计数器
 	 * Utility sink function that counts elements and writes the count into an accumulator,
 	 * from which it can be retrieved by the client. This sink is used by the
 	 * {@link DataSet#count()} function.

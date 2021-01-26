@@ -25,12 +25,14 @@ import org.apache.flink.runtime.io.AvailabilityProvider;
 import java.io.IOException;
 
 /**
+ * 代理--也有可能包含了多个RecordWriter
  * The record writer delegate provides the availability function for task processor, and it might represent
  * a single {@link RecordWriter} or multiple {@link RecordWriter} instances in specific implementations.
  */
 public interface RecordWriterDelegate<T extends IOReadableWritable> extends AvailabilityProvider, AutoCloseable {
 
 	/**
+	 * 广播
 	 * Broadcasts the provided event to all the internal record writer instances.
 	 *
 	 * @param event the event to be emitted to all the output channels.
@@ -38,6 +40,7 @@ public interface RecordWriterDelegate<T extends IOReadableWritable> extends Avai
 	void broadcastEvent(AbstractEvent event) throws IOException;
 
 	/**
+	 * 基于索引获取写入器
 	 * Returns the internal actual record writer instance based on the output index.
 	 *
 	 * @param outputIndex the index respective to the record writer instance.

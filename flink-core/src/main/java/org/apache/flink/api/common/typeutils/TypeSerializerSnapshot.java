@@ -83,6 +83,7 @@ public interface TypeSerializerSnapshot<T> {
 	int getCurrentVersion();
 
 	/**
+	 * 写入快照
 	 * Writes the serializer snapshot to the provided {@link DataOutputView}.
 	 * The current version of the written serializer snapshot's binary format
 	 * is specified by the {@link #getCurrentVersion()} method.
@@ -112,6 +113,7 @@ public interface TypeSerializerSnapshot<T> {
 	void readSnapshot(int readVersion, DataInputView in, ClassLoader userCodeClassLoader) throws IOException;
 
 	/**
+	 * 重建序列化器
 	 * Recreates a serializer instance from this snapshot. The returned
 	 * serializer can be safely used to read data written by the prior serializer
 	 * (i.e., the serializer that created this snapshot).
@@ -143,6 +145,7 @@ public interface TypeSerializerSnapshot<T> {
 	// ------------------------------------------------------------------------
 
 	/**
+	 *
 	 * Writes the given snapshot to the out stream. One should always use this method to write
 	 * snapshots out, rather than directly calling {@link #writeSnapshot(DataOutputView)}.
 	 *

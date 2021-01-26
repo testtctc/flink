@@ -48,7 +48,7 @@ public class OutputFormatSinkFunction<IN> extends RichSinkFunction<IN> implement
 	private static final long serialVersionUID = 1L;
 
 	private static final Logger LOG = LoggerFactory.getLogger(OutputFormatSinkFunction.class);
-
+	//输出
 	private OutputFormat<IN> format;
 	private boolean cleanupCalled = false;
 
@@ -81,6 +81,7 @@ public class OutputFormatSinkFunction<IN> extends RichSinkFunction<IN> implement
 		}
 	}
 
+	//写出
 	@Override
 	public void invoke(IN record) throws Exception {
 		try {

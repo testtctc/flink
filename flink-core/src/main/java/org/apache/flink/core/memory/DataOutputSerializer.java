@@ -31,6 +31,7 @@ import java.nio.ByteOrder;
 import java.util.Arrays;
 
 /**
+ * 序列化器
  * A simple and efficient serializer for the {@link java.io.DataOutput} interface.
  */
 public class DataOutputSerializer implements DataOutputView, MemorySegmentWritable {

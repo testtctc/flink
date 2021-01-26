@@ -23,6 +23,7 @@ import org.apache.flink.util.AbstractID;
 import org.apache.flink.shaded.netty4.io.netty.buffer.ByteBuf;
 
 /**
+ * 尝试id
  * Unique identifier for the attempt to execute a tasks. Multiple attempts happen
  * in cases of failures and recovery.
  */
