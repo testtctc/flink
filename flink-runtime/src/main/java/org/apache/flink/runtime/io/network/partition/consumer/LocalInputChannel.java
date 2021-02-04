@@ -41,6 +41,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 线程之间传递数据
  * An input channel, which requests a local subpartition.
  */
 public class LocalInputChannel extends InputChannel implements BufferAvailabilityListener {
@@ -92,6 +93,7 @@ public class LocalInputChannel extends InputChannel implements BufferAvailabilit
 
 	// ------------------------------------------------------------------------
 	// Consume
+	// 建立渠道
 	// ------------------------------------------------------------------------
 
 	@Override
@@ -142,6 +144,7 @@ public class LocalInputChannel extends InputChannel implements BufferAvailabilit
 	}
 
 	/**
+	 * 注册定时器
 	 * Retriggers a subpartition request.
 	 */
 	void retriggerSubpartitionRequest(Timer timer, final int subpartitionIndex) {
@@ -161,6 +164,7 @@ public class LocalInputChannel extends InputChannel implements BufferAvailabilit
 		}
 	}
 
+	//获取数据
 	@Override
 	Optional<BufferAndAvailability> getNextBuffer() throws IOException, InterruptedException {
 		checkError();
@@ -218,6 +222,7 @@ public class LocalInputChannel extends InputChannel implements BufferAvailabilit
 	// Task events
 	// ------------------------------------------------------------------------
 
+	//发送信号
 	@Override
 	void sendTaskEvent(TaskEvent event) throws IOException {
 		checkError();

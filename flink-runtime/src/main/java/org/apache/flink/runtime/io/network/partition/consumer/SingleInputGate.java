@@ -60,6 +60,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 仅仅只消费一个结果集
  * An input gate consumes one or more partitions of a single produced intermediate result.
  *
  * <p>Each intermediate result is partitioned over its producing parallel subtasks; each of these
@@ -129,12 +130,15 @@ public class SingleInputGate extends InputGate {
 	private final int numberOfInputChannels;
 
 	/**
+	 * 映射
 	 * Input channels. There is a one input channel for each consumed intermediate result partition.
 	 * We store this in a map for runtime updates of single channels.
 	 */
 	private final Map<IntermediateResultPartitionID, InputChannel> inputChannels;
 
-	/** Channels, which notified this input gate about available data. */
+	/**
+	 * 输入管道
+	 * Channels, which notified this input gate about available data. */
 	private final ArrayDeque<InputChannel> inputChannelsWithData = new ArrayDeque<>();
 
 	/**
@@ -611,7 +615,7 @@ public class SingleInputGate extends InputGate {
 	// ------------------------------------------------------------------------
 	// Channel notifications
 	// ------------------------------------------------------------------------
-
+	//通知数据非空
 	void notifyChannelNonEmpty(InputChannel channel) {
 		queueChannel(checkNotNull(channel));
 	}
@@ -639,16 +643,19 @@ public class SingleInputGate extends InputGate {
 		CompletableFuture<?> toNotify = null;
 
 		synchronized (inputChannelsWithData) {
+			//已经有进入队列
 			if (enqueuedInputChannelsWithData.get(channel.getChannelIndex())) {
 				return;
 			}
+
 			availableChannels = inputChannelsWithData.size();
 
 			inputChannelsWithData.add(channel);
 			enqueuedInputChannelsWithData.set(channel.getChannelIndex());
-
+			//之前不可用
 			if (availableChannels == 0) {
 				inputChannelsWithData.notifyAll();
+				//数据可用
 				toNotify = availabilityHelper.getUnavailableToResetAvailable();
 			}
 		}

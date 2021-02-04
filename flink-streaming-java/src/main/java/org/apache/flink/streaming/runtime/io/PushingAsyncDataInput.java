@@ -26,6 +26,7 @@ import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import org.apache.flink.streaming.runtime.streamstatus.StreamStatus;
 
 /**
+ * 推送数据
  * The variant of {@link PullingAsyncDataInput} that is defined for handling both network
  * input and source input in a unified way via {@link #emitNext(DataOutput)} instead
  * of returning {@code Optional.empty()} via {@link PullingAsyncDataInput#pollNext()}.
@@ -34,6 +35,7 @@ import org.apache.flink.streaming.runtime.streamstatus.StreamStatus;
 public interface PushingAsyncDataInput<T> extends AvailabilityProvider {
 
 	/**
+	 * 向output推动数据,并返回状态
 	 * Pushes the next element to the output from current data input, and returns
 	 * the input status to indicate whether there are more available data in
 	 * current input.
@@ -43,6 +45,7 @@ public interface PushingAsyncDataInput<T> extends AvailabilityProvider {
 	InputStatus emitNext(DataOutput<T> output) throws Exception;
 
 	/**
+	 * 数据输出
 	 * Basic data output interface used in emitting the next element from data input.
 	 *
 	 * @param <T> The type encapsulated with the stream record.

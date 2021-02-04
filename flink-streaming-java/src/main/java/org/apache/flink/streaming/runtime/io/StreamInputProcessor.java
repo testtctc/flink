@@ -24,6 +24,7 @@ import org.apache.flink.runtime.io.AvailabilityProvider;
 import java.io.Closeable;
 
 /**
+ * 输入管理器
  * Interface for processing records by {@link org.apache.flink.streaming.runtime.tasks.StreamTask}.
  */
 @Internal

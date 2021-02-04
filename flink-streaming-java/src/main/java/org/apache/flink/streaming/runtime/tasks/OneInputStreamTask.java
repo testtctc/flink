@@ -84,6 +84,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 		super(env, timeProvider);
 	}
 
+	//特殊的初始化
 	@Override
 	public void init() throws Exception {
 		StreamConfig configuration = getConfiguration();
@@ -93,9 +94,11 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 			CheckpointedInputGate inputGate = createCheckpointedInputGate();
 			TaskIOMetricGroup taskIOMetricGroup = getEnvironment().getMetricGroup().getIOMetricGroup();
 			taskIOMetricGroup.gauge("checkpointAlignmentTime", inputGate::getAlignmentDurationNanos);
-
+			//创建输出
 			DataOutput<IN> output = createDataOutput();
+			//创建输入
 			StreamTaskInput<IN> input = createTaskInput(inputGate, output);
+			//创建输入处理器
 			inputProcessor = new StreamOneInputProcessor<>(
 				input,
 				output,
@@ -120,6 +123,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 			getTaskNameWithSubtaskAndId());
 	}
 
+	//创建网路输出
 	private DataOutput<IN> createDataOutput() {
 		return new StreamTaskNetworkOutput<>(
 			headOperator,
@@ -128,7 +132,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 			inputWatermarkGauge,
 			setupNumRecordsInCounter(headOperator));
 	}
-
+	//输入
 	private StreamTaskInput<IN> createTaskInput(CheckpointedInputGate inputGate, DataOutput<IN> output) {
 		int numberOfInputChannels = inputGate.getNumberOfInputChannels();
 		StatusWatermarkValve statusWatermarkValve = new StatusWatermarkValve(numberOfInputChannels, output);
@@ -143,6 +147,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 	}
 
 	/**
+	 * 实现output
 	 * The network data output implementation used for processing stream elements
 	 * from {@link StreamTaskNetworkInput} in one input processor.
 	 */
@@ -160,7 +165,7 @@ public class OneInputStreamTask<IN, OUT> extends StreamTask<OUT, OneInputStreamO
 				WatermarkGauge watermarkGauge,
 				Counter numRecordsIn) {
 			super(streamStatusMaintainer, lock);
-
+			//包含的算子
 			this.operator = checkNotNull(operator);
 			this.watermarkGauge = checkNotNull(watermarkGauge);
 			this.numRecordsIn = checkNotNull(numRecordsIn);

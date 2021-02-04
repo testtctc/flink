@@ -29,7 +29,7 @@ import org.apache.flink.streaming.api.operators.YieldingOperatorFactory;
 import org.apache.flink.streaming.runtime.tasks.StreamTask;
 
 /**
- * 同步算子工厂
+ * 异步等待算子工厂
  * The factory of {@link AsyncWaitOperator}.
  *
  * @param <OUT> The output type of the operator
@@ -58,8 +58,10 @@ public class AsyncWaitOperatorFactory<IN, OUT> implements OneInputStreamOperator
 		this.mailboxExecutor = mailboxExecutor;
 	}
 
+	//创建算子
 	@Override
 	public StreamOperator createStreamOperator(StreamTask containingTask, StreamConfig config, Output output) {
+		//异步算子
 		AsyncWaitOperator asyncWaitOperator = new AsyncWaitOperator(
 				asyncFunction,
 				timeout,

@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 依赖算子提供数据
  * Implementation of {@link StreamTaskInput} that reads data from the {@link SourceReaderOperator}
  * and returns the {@link InputStatus} to indicate whether the source state is available,
  * unavailable or finished.
@@ -40,6 +41,7 @@ public final class StreamTaskSourceInput<T> implements StreamTaskInput<T> {
 		this.operator = checkNotNull(operator);
 	}
 
+	//想output写入数据
 	@Override
 	public InputStatus emitNext(DataOutput<T> output) throws Exception {
 		return operator.emitNext(output);

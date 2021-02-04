@@ -244,8 +244,11 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
-	 *
+	 * 处理邮件
 	 * 先穿件批，然后就再执行
+	 *
+	 *
+	 *
 	 * This helper method handles all special actions from the mailbox. It returns true if the mailbox loop should
 	 * continue running, false if it should stop. In the current design, this method also evaluates all control flag
 	 * changes. This keeps the hot path in {@link #runMailboxLoop()} free from any other flag checking, at the cost
@@ -270,7 +273,7 @@ public class MailboxProcessor implements Closeable {
 		// If the default action is currently not available, we can run a blocking mailbox execution until the default
 		// action becomes available again.
 		while (isDefaultActionUnavailable() && isMailboxLoopRunning()) {
-			//阻塞
+			//阻塞，等待下一步执行
 			mailbox.take(MIN_PRIORITY).run();
 		}
 
@@ -316,6 +319,7 @@ public class MailboxProcessor implements Closeable {
 	}
 
 	/**
+	 * 默认控制器
 	 * Implementation of {@link MailboxDefaultAction.Controller} that is connected to a {@link MailboxProcessor}
 	 * instance.
 	 */

@@ -21,7 +21,7 @@ package org.apache.flink.streaming.runtime.tasks;
 import org.apache.flink.annotation.Internal;
 
 /**
- * 定时任务
+ * 定时任务  回调
  * Interface for processing-time callbacks that can be registered at a
  * {@link ProcessingTimeService}.
  */

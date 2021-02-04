@@ -28,6 +28,7 @@ public interface MailboxDefaultAction {
 
 	/**
 	 * 默认行为
+	 * 运行默认行为
 	 * This method implements the default action of the mailbox loop (e.g. processing one event from the input).
 	 * Implementations should (in general) be non-blocking.
 	 *

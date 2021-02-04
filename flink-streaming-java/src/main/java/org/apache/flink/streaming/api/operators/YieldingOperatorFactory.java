@@ -18,6 +18,7 @@
 package org.apache.flink.streaming.api.operators;
 
 /**
+ * 移交控制权给下游
  * An operator that needs access to the {@link MailboxExecutor} to yield to downstream operators needs to be created
  * through a factory implementing this interface.
  */

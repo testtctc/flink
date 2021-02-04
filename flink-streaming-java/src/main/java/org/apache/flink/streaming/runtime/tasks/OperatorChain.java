@@ -238,10 +238,12 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 	public void broadcastCheckpointCancelMarker(long id) throws IOException {
 		CancelCheckpointMarker barrier = new CancelCheckpointMarker(id);
 		for (RecordWriterOutput<?> streamOutput : streamOutputs) {
+			//下游取消checkpoint
 			streamOutput.broadcastEvent(barrier);
 		}
 	}
 
+	//完成备份
 	public void prepareSnapshotPreBarrier(long checkpointId) throws Exception {
 		// go forward through the operator chain and tell each operator
 		// to prepare the checkpoint
@@ -255,6 +257,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 	}
 
 	/**
+	 * 终止输入
 	 * Ends the head operator input specified by {@code inputId}).
 	 *
 	 * @param inputId the input ID starts from 1 which indicates the first input.
@@ -354,6 +357,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 		List<Tuple2<WatermarkGaugeExposingOutput<StreamRecord<T>>, StreamEdge>> allOutputs = new ArrayList<>(4);
 
 		// create collectors for the network outputs
+		// 对外输出
 		for (StreamEdge outputEdge : operatorConfig.getNonChainedOutputs(userCodeClassloader)) {
 			@SuppressWarnings("unchecked")
 			RecordWriterOutput<T> output = (RecordWriterOutput<T>) streamOutputs.get(outputEdge);
@@ -366,7 +370,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 		for (StreamEdge outputEdge : operatorConfig.getChainedOutputs(userCodeClassloader)) {
 			//输出
 			int outputId = outputEdge.getTargetId();
-			//配置
+			//output target 配置
 			StreamConfig chainedOpConfig = chainedConfigs.get(outputId);
 			//递归
 			WatermarkGaugeExposingOutput<StreamRecord<T>> output = createChainedOperator(
@@ -431,7 +435,8 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 
 
 
-	//创建算子，返回output
+	//创建算子以及当前算子在链条中的输出、
+	// 通过operatorConfig进行识别算子
 	private <IN, OUT> WatermarkGaugeExposingOutput<StreamRecord<IN>> createChainedOperator(
 			StreamTask<OUT, ?> containingTask,
 			StreamConfig operatorConfig,
@@ -441,8 +446,9 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 			List<StreamOperator<?>> allOperators,
 			OutputTag<IN> outputTag,
 			MailboxExecutorFactory mailboxExecutorFactory) {
-		// create the output that the operator writes to first. this may recursively create more operators
 
+		// create the output that the operator writes to first. this may recursively create more operators
+		// 递归创建收集器
 		WatermarkGaugeExposingOutput<StreamRecord<OUT>> chainedOperatorOutput = createOutputCollector(
 			containingTask,
 			operatorConfig,
@@ -462,6 +468,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 		allOperators.add(chainedOperator);
 
 		WatermarkGaugeExposingOutput<StreamRecord<IN>> currentOperatorOutput;
+		//链条内输出
 		if (containingTask.getExecutionConfig().isObjectReuseEnabled()) {
 			//连接在一起
 			currentOperatorOutput = new ChainingOutput<>(chainedOperator, this, outputTag);
@@ -515,8 +522,9 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 		Gauge<Long> getWatermarkGauge();
 	}
 
+	//算子间传递
 	static class ChainingOutput<T> implements WatermarkGaugeExposingOutput<StreamRecord<T>> {
-
+		//推送到的算子
 		protected final OneInputStreamOperator<T, ?> operator;
 		//计数器
 		protected final Counter numRecordsIn;
@@ -571,7 +579,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 			pushToOperator(record);
 		}
 
-		//推送到算子
+		//直接推送费算子，运算
 		protected <X> void pushToOperator(StreamRecord<X> record) {
 			try {
 				// we know that the given outputTag matches our OutputTag so the record
@@ -581,6 +589,7 @@ public class OperatorChain<OUT, OP extends StreamOperator<OUT>> implements Strea
 
 				numRecordsIn.inc();
 				operator.setKeyContextElement1(castRecord);
+				//递归处理元素，知道写出
 				operator.processElement(castRecord);
 			}
 			catch (Exception e) {

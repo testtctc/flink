@@ -22,6 +22,7 @@ import org.apache.flink.annotation.Internal;
 import java.io.Closeable;
 
 /**
+ * 流输入
  * Basic interface for inputs of stream operators.
  */
 @Internal

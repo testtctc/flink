@@ -37,6 +37,7 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 包装，里面包含多个结果集
  * Input gate wrapper to union the input from multiple input gates.
  *
  * <p>Each input gate has input channels attached from which it reads data. At each input gate, the

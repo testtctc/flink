@@ -55,13 +55,15 @@ public class OperatorSnapshotFinalizer {
 		SnapshotResult<OperatorStateHandle> operatorRaw =
 			FutureUtils.runIfNotDoneAndGet(snapshotFutures.getOperatorStateRawFuture());
 
+		// 阻塞获取
+		//快照
 		jobManagerOwnedState = new OperatorSubtaskState(
 			operatorManaged.getJobManagerOwnedSnapshot(),
 			operatorRaw.getJobManagerOwnedSnapshot(),
 			keyedManaged.getJobManagerOwnedSnapshot(),
 			keyedRaw.getJobManagerOwnedSnapshot()
 		);
-
+		//本地快照
 		taskLocalState = new OperatorSubtaskState(
 			operatorManaged.getTaskLocalSnapshot(),
 			operatorRaw.getTaskLocalSnapshot(),

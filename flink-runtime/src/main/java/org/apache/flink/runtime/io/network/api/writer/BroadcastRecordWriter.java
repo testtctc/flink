@@ -62,12 +62,14 @@ public final class BroadcastRecordWriter<T extends IOReadableWritable> extends R
 		broadcastEmit(record);
 	}
 
+	//随机写
 	@Override
 	public void randomEmit(T record) throws IOException, InterruptedException {
 		randomEmit(record, rng.nextInt(numberOfChannels));
 	}
 
 	/**
+	 * 随机写
 	 * For non-broadcast emit, we try to finish the current {@link BufferBuilder} first, and then request
 	 * a new {@link BufferBuilder} for the random channel. If this new {@link BufferBuilder} is not full,
 	 * it can be shared for all the other channels via initializing readable position in created
@@ -90,6 +92,7 @@ public final class BroadcastRecordWriter<T extends IOReadableWritable> extends R
 		}
 	}
 
+	//仅仅写入通道1
 	@Override
 	public void broadcastEmit(T record) throws IOException, InterruptedException {
 		// We could actually select any target channel here because all the channels

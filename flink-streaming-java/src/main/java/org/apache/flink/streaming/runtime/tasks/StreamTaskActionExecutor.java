@@ -55,6 +55,7 @@ public interface StreamTaskActionExecutor {
 	};
 
 	/**
+	 * 创建同步执行执行器
 	 * Returns an ExecutionDecorator that synchronizes each invocation.
 	 */
 	static SynchronizedStreamTaskActionExecutor synchronizedExecutor() {
@@ -69,7 +70,7 @@ public interface StreamTaskActionExecutor {
 	}
 
 	/**
-	 * 任务同步执行--上锁，保障安全
+	 * 通过上锁,保证任务同步执行
 	 * A {@link StreamTaskActionExecutor} that synchronizes every operation on the provided mutex.
 	 * @deprecated this class should only be used in {@link SourceStreamTask} which exposes the checkpoint lock as part of Public API.
 	 * During transitional period it is used in {@link StreamTask} (until {@link StreamTask#getCheckpointLock()}

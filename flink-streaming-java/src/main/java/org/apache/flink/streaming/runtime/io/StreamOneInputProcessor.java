@@ -31,6 +31,7 @@ import java.util.concurrent.CompletableFuture;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 输入管理器
  * Input reader for {@link org.apache.flink.streaming.runtime.tasks.OneInputStreamTask}.
  *
  * @param <IN> The type of the record that can be read with this record reader.
@@ -59,6 +60,7 @@ public final class StreamOneInputProcessor<IN> implements StreamInputProcessor {
 		this.operatorChain = checkNotNull(operatorChain);
 	}
 
+	//是否可用
 	@Override
 	public CompletableFuture<?> getAvailableFuture() {
 		return input.getAvailableFuture();
@@ -67,7 +69,7 @@ public final class StreamOneInputProcessor<IN> implements StreamInputProcessor {
 	@Override
 	public InputStatus processInput() throws Exception {
 		InputStatus status = input.emitNext(output);
-
+		//
 		if (status == InputStatus.END_OF_INPUT) {
 			synchronized (lock) {
 				operatorChain.endHeadOperatorInput(1);

@@ -45,6 +45,8 @@ import static org.apache.flink.util.Preconditions.checkNotNull;
 import static org.apache.flink.util.Preconditions.checkState;
 
 /**
+ * 网络输入
+ *
  * Implementation of {@link StreamTaskInput} that wraps an input from network taken from {@link CheckpointedInputGate}.
  *
  * <p>This internally uses a {@link StatusWatermarkValve} to keep track of {@link Watermark} and
@@ -114,7 +116,7 @@ public final class StreamTaskNetworkInput<T> implements StreamTaskInput<T> {
 
 	@Override
 	public InputStatus emitNext(DataOutput<T> output) throws Exception {
-
+		//一直轮训
 		while (true) {
 			// get the stream element from the deserializer
 			if (currentRecordDeserializer != null) {
@@ -125,6 +127,7 @@ public final class StreamTaskNetworkInput<T> implements StreamTaskInput<T> {
 				}
 
 				if (result.isFullRecord()) {
+					//处理元素
 					processElement(deserializationDelegate.getInstance(), output);
 					return InputStatus.MORE_AVAILABLE;
 				}
@@ -146,6 +149,7 @@ public final class StreamTaskNetworkInput<T> implements StreamTaskInput<T> {
 		}
 	}
 
+	//处理元素
 	private void processElement(StreamElement recordOrMark, DataOutput<T> output) throws Exception {
 		if (recordOrMark.isRecord()){
 			output.emitRecord(recordOrMark.asRecord());
@@ -160,6 +164,7 @@ public final class StreamTaskNetworkInput<T> implements StreamTaskInput<T> {
 		}
 	}
 
+	//处理事件或者缓存
 	private void processBufferOrEvent(BufferOrEvent bufferOrEvent) throws IOException {
 		if (bufferOrEvent.isBuffer()) {
 			lastChannel = bufferOrEvent.getChannelIndex();

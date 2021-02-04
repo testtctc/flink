@@ -28,6 +28,7 @@ import org.apache.flink.streaming.runtime.tasks.StreamTask;
 import java.io.Serializable;
 
 /**
+ * 算子工厂
  * A factory to create {@link StreamOperator}.
  *
  * @param <OUT> The output type of the operator

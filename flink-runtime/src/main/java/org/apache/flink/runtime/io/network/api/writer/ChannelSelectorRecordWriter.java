@@ -36,7 +36,7 @@ import static org.apache.flink.util.Preconditions.checkState;
  * @param <T> the type of the record that can be emitted with this record writer
  */
 public final class ChannelSelectorRecordWriter<T extends IOReadableWritable> extends RecordWriter<T> {
-
+	//渠道选择
 	private final ChannelSelector<T> channelSelector;
 
 	/** Every subpartition maintains a separate buffer builder which might be null. */
@@ -60,12 +60,14 @@ public final class ChannelSelectorRecordWriter<T extends IOReadableWritable> ext
 		emit(record, channelSelector.selectChannel(record));
 	}
 
+	//随机写
 	@Override
 	public void randomEmit(T record) throws IOException, InterruptedException {
 		emit(record, rng.nextInt(numberOfChannels));
 	}
 
 	/**
+	 * 广播元素
 	 * The record is serialized into intermediate serialization buffer which is then copied
 	 * into the target buffer for every channel.
 	 */
@@ -96,6 +98,7 @@ public final class ChannelSelectorRecordWriter<T extends IOReadableWritable> ext
 		}
 	}
 
+	//建立builder
 	@Override
 	public BufferBuilder requestNewBufferBuilder(int targetChannel) throws IOException, InterruptedException {
 		checkState(bufferBuilders[targetChannel] == null || bufferBuilders[targetChannel].isFinished());

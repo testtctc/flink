@@ -28,6 +28,7 @@ import static org.apache.flink.util.Preconditions.checkArgument;
 import static org.apache.flink.util.Preconditions.checkNotNull;
 
 /**
+ * 水印和状态
  * A {@code StatusWatermarkValve} embodies the logic of how {@link Watermark} and {@link StreamStatus} are propagated to
  * downstream outputs, given a set of one or multiple input channels that continuously receive them. Usages of this
  * class need to define the number of input channels that the valve needs to handle, as well as provide a implementation of
@@ -194,6 +195,8 @@ public class StatusWatermarkValve {
 	}
 
 	/**
+	 *
+	 * 输入管道状态
 	 * An {@code InputChannelStatus} keeps track of an input channel's last watermark, stream
 	 * status, and whether or not the channel's current watermark is aligned with the overall
 	 * watermark output from the valve.

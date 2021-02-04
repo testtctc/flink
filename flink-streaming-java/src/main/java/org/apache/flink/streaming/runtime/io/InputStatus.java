@@ -30,18 +30,21 @@ import org.apache.flink.streaming.runtime.io.PushingAsyncDataInput.DataOutput;
 public enum InputStatus {
 
 	/**
+	 * 还有数据
 	 * Indicator that more data is available and the input can be called immediately again
 	 * to emit more data.
 	 */
 	MORE_AVAILABLE,
 
 	/**
+	 * 没有数据
 	 * Indicator that no data is currently available, but more data will be available in the
 	 * future again.
 	 */
 	NOTHING_AVAILABLE,
 
 	/**
+	 * 终止
 	 * Indicator that the input has reached the end of data.
 	 */
 	END_OF_INPUT

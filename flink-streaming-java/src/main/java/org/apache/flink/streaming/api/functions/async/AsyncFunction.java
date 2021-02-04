@@ -81,6 +81,7 @@ import java.util.concurrent.TimeoutException;
 public interface AsyncFunction<IN, OUT> extends Function, Serializable {
 
 	/**
+	 *
 	 * Trigger async operation for each stream input.
 	 *
 	 * @param input element coming from an upstream task

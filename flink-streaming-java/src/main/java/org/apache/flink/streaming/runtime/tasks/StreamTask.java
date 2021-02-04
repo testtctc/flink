@@ -151,7 +151,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	// ------------------------------------------------------------------------
 
 	/**
-	 * 所有在主线程之外的执行都必须在在这个线程执行，防止并发带来的问题
+	 * 所有在邮箱处理线程之外的执行都必须在在这个线程执行，防止并发带来的问题
 	 * All actions outside of the task {@link #mailboxProcessor mailbox} (i.e. performed by another thread) must be executed through this executor
 	 * to ensure that we don't have concurrent method calls that void consistent checkpoints.
 	 * <p>CheckpointLock is superseded by {@link MailboxExecutor}, with
@@ -216,11 +216,14 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 	private boolean disposedOperators;
 
-	/** Thread pool for async snapshot workers. */
+	/**
+	 * 异步执行线程池
+	 * Thread pool for async snapshot workers. */
 	private ExecutorService asyncOperationsThreadPool;
 
 	private final RecordWriterDelegate<SerializationDelegate<StreamRecord<OUT>>> recordWriter;
 
+	//邮箱
 	protected final MailboxProcessor mailboxProcessor;
 
 	private Long syncSavepointId = null;
@@ -296,7 +299,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	// ------------------------------------------------------------------------
 	//  Life cycle methods for specific implementations
 	// ------------------------------------------------------------------------
-
+	// 特殊的初始化
 	protected abstract void init() throws Exception;
 
 	protected void cancelTask() throws Exception {
@@ -309,7 +312,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	/**
-	 *
+	 * 处理输入
 	 * This method implements the default action of the task (e.g. processing one event from the input). Implementations
 	 * should (in general) be non-blocking.
 	 *
@@ -321,16 +324,19 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		if (status == InputStatus.MORE_AVAILABLE && recordWriter.isAvailable()) {
 			return;
 		}
+		//所有都完成
 		if (status == InputStatus.END_OF_INPUT) {
 			controller.allActionsCompleted();
 			return;
 		}
+		//暂停
 		CompletableFuture<?> jointFuture = getInputOutputJointFuture(status);
 		MailboxDefaultAction.Suspension suspendedDefaultAction = controller.suspendDefaultAction();
 		jointFuture.thenRun(suspendedDefaultAction::resume);
 	}
 
 	/**
+	 * 获取可用性
 	 * Considers three scenarios to combine input and output futures:
 	 * 1. Both input and output are unavailable.
 	 * 2. Only input is unavailable.
@@ -376,6 +382,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	/**
+	 * 触发所有的回调
 	 * Emits the {@link org.apache.flink.streaming.api.watermark.Watermark#MAX_WATERMARK MAX_WATERMARK}
 	 * so that all registered timers are fired.
 	 *
@@ -442,6 +449,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 		//算子链条
 		operatorChain = new OperatorChain<>(this, recordWriter);
+		//接受算子
 		headOperator = operatorChain.getHeadOperator();
 
 		// task specific initialization
@@ -478,6 +486,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			}
 
 			// let the task do its work
+			// 开始处理邮件
 			isRunning = true;
 			runMailboxLoop();
 
@@ -494,8 +503,10 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//主循环
 	private void runMailboxLoop() throws Exception {
 		try {
+			//邮箱循环
 			mailboxProcessor.runMailboxLoop();
 		}
 		catch (Exception e) {
@@ -514,6 +525,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//调用之后
 	private void afterInvoke() throws Exception {
 		LOG.debug("Finished task {}", getName());
 
@@ -632,6 +644,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	/**
+	 * 关闭算子
 	 * Execute {@link StreamOperator#close()} of each operator in the chain of this
 	 * {@link StreamTask}. Closing happens from <b>head to tail</b> operator in the chain,
 	 * contrary to {@link StreamOperator#open()} which happens <b>tail to head</b>
@@ -656,6 +669,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//关闭异步线程池
 	private void shutdownAsyncThreads() throws Exception {
 		if (!asyncOperationsThreadPool.isShutdown()) {
 			asyncOperationsThreadPool.shutdownNow();
@@ -786,6 +800,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			CheckpointOptions checkpointOptions,
 			boolean advanceToEndOfEventTime) {
 		//在主线程提交任务
+		//提交任务
 		return mailboxProcessor.getMainMailboxExecutor().submit(
 				() -> triggerCheckpoint(checkpointMetaData, checkpointOptions, advanceToEndOfEventTime),
 				"checkpoint %s with %s",
@@ -848,6 +863,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//放弃checkpoint
 	@Override
 	public void abortCheckpointOnBarrier(long checkpointId, Throwable cause) throws Exception {
 		LOG.debug("Aborting checkpoint via cancel-barrier {} for task {}", checkpointId, getName());
@@ -858,6 +874,8 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		// notify all downstream operators that they should not wait for a barrier from us
 		actionExecutor.runThrowing(() -> operatorChain.broadcastCheckpointCancelMarker(checkpointId));
 	}
+
+
 	//执行checkpoint
 	private boolean performCheckpoint(
 			CheckpointMetaData checkpointMetaData,
@@ -871,13 +889,13 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		final long checkpointId = checkpointMetaData.getCheckpointId();
 
 		if (isRunning) {
-			//异步执行
+			//
 			actionExecutor.runThrowing(() -> {
 
 				if (checkpointOptions.getCheckpointType().isSynchronous()) {
 					//同步
 					setSynchronousSavepointId(checkpointId);
-
+					//移动事件
 					if (advanceToEndOfTime) {
 						advanceToEndOfEventTime();
 					}
@@ -888,6 +906,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 				// We generally try to emit the checkpoint barrier as soon as possible to not affect downstream
 				// checkpoint alignments
 
+				//准备工作
 				// Step (1): Prepare the checkpoint, allow operators to do some pre-barrier work.
 				//           The pre-barrier work should be nothing or minimal in the common case.
 				operatorChain.prepareSnapshotPreBarrier(checkpointId);
@@ -901,13 +920,14 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 				// Step (3): Take the state snapshot. This should be largely asynchronous, to not
 				//           impact progress of the streaming topology
-				// 备份
+				// 开始执行
 				checkpointState(checkpointMetaData, checkpointOptions, checkpointMetrics);
 
 			});
 
 			return true;
 		} else {
+			//取消
 			actionExecutor.runThrowing(() -> {
 				// we cannot perform our checkpoint - let the downstream operators know that they
 				// should not wait for any input from this operator
@@ -990,6 +1010,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//备份checkpoint
 	private void checkpointState(
 			CheckpointMetaData checkpointMetaData,
 			CheckpointOptions checkpointOptions,
@@ -1021,6 +1042,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 		for (StreamOperator<?> operator : allOperators) {
 			if (null != operator) {
+				//初始化状态，然后再打开
 				operator.initializeState();
 				operator.open();
 			}
@@ -1051,6 +1073,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		return timerService;
 	}
 
+	//后去时间服务
 	public ProcessingTimeService getProcessingTimeService(int operatorIndex) {
 		Preconditions.checkState(timerService != null, "The timer service has not been initialized.");
 		MailboxExecutor mailboxExecutor = mailboxProcessor.getMailboxExecutor(operatorIndex);
@@ -1111,6 +1134,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	/**
+	 * 异步备份
 	 * This runnable executes the asynchronous parts of all involved backend snapshots for the subtask.
 	 */
 	@VisibleForTesting
@@ -1144,12 +1168,13 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 
 		@Override
 		public void run() {
+			//文件系统初始化
 			FileSystemSafetyNet.initializeSafetyNetForThread();
 			try {
-
+				//任务快照--jobmanager
 				TaskStateSnapshot jobManagerTaskOperatorSubtaskStates =
 					new TaskStateSnapshot(operatorSnapshotsInProgress.size());
-
+				//本地任务快照
 				TaskStateSnapshot localTaskOperatorSubtaskStates =
 					new TaskStateSnapshot(operatorSnapshotsInProgress.size());
 
@@ -1159,6 +1184,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 					OperatorSnapshotFutures snapshotInProgress = entry.getValue();
 
 					// finalize the async part of all by executing all snapshot runnables
+
 					OperatorSnapshotFinalizer finalizedSnapshots =
 						new OperatorSnapshotFinalizer(snapshotInProgress);
 
@@ -1330,7 +1356,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 	}
 
 	// ------------------------------------------------------------------------
-
+	// 备份操作
 	private static final class CheckpointingOperation {
 
 		private final StreamTask<?, ?> owner;
@@ -1362,10 +1388,12 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 			this.checkpointMetrics = Preconditions.checkNotNull(checkpointMetrics);
 			this.storageLocation = Preconditions.checkNotNull(checkpointStorageLocation);
 			this.allOperators = owner.operatorChain.getAllOperators();
+			//进行中
 			this.operatorSnapshotsInProgress = new HashMap<>(allOperators.length);
 		}
 
 		public void executeCheckpointing() throws Exception {
+			//时间点1
 			startSyncPartNano = System.nanoTime();
 
 			try {
@@ -1377,9 +1405,9 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 					LOG.debug("Finished synchronous checkpoints for checkpoint {} on task {}",
 						checkpointMetaData.getCheckpointId(), owner.getName());
 				}
-
+				//开始时间
 				startAsyncPartNano = System.nanoTime();
-
+				//同步执行时间
 				checkpointMetrics.setSyncDurationMillis((startAsyncPartNano - startSyncPartNano) / 1_000_000);
 
 				// we are transferring ownership over snapshotInProgressList for cleanup to the thread, active on submit
@@ -1389,8 +1417,9 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 					checkpointMetaData,
 					checkpointMetrics,
 					startAsyncPartNano);
-
+				//注册可取消任务
 				owner.cancelables.registerCloseable(asyncCheckpointRunnable);
+				//执行任务
 				owner.asyncOperationsThreadPool.execute(asyncCheckpointRunnable);
 
 				if (LOG.isDebugEnabled()) {
@@ -1435,12 +1464,13 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		@SuppressWarnings("deprecation")
 		private void checkpointStreamOperator(StreamOperator<?> op) throws Exception {
 			if (null != op) {
-
+				//异步执行
 				OperatorSnapshotFutures snapshotInProgress = op.snapshotState(
 						checkpointMetaData.getCheckpointId(),
 						checkpointMetaData.getTimestamp(),
 						checkpointOptions,
 						storageLocation);
+				//进行中
 				operatorSnapshotsInProgress.put(op.getOperatorID(), snapshotInProgress);
 			}
 		}
@@ -1452,6 +1482,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		}
 	}
 
+	//代理
 	@VisibleForTesting
 	public static <OUT> RecordWriterDelegate<SerializationDelegate<StreamRecord<OUT>>> createRecordWriterDelegate(
 			StreamConfig configuration,
@@ -1518,10 +1549,12 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		return output;
 	}
 
+	//处理异常
 	private void handleTimerException(Exception ex) {
 		handleAsyncException("Caught exception while processing timer.", new TimerException(ex));
 	}
 
+	//延迟回调到邮箱上执行
 	private ProcessingTimeCallback deferCallbackToMailbox(MailboxExecutor mailboxExecutor, ProcessingTimeCallback callback) {
 		return timestamp -> {
 			mailboxExecutor.execute(
@@ -1532,6 +1565,7 @@ public abstract class StreamTask<OUT, OP extends StreamOperator<OUT>>
 		};
 	}
 
+	//触发回调
 	private void invokeProcessingTimeCallback(ProcessingTimeCallback callback, long timestamp) {
 		try {
 			callback.onProcessingTime(timestamp);

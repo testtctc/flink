@@ -30,6 +30,7 @@ import javax.annotation.Nonnull;
 import java.util.concurrent.RunnableFuture;
 
 /**
+ * snapshotState 执行结果
  * Result of {@link StreamOperator#snapshotState}.
  */
 public class OperatorSnapshotFutures {

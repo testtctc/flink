@@ -69,6 +69,7 @@ public class SimpleOperatorFactory<OUT> implements StreamOperatorFactory<OUT> {
 		return operator;
 	}
 
+	//入口，获取工厂函数
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T extends StreamOperator<OUT>> T createStreamOperator(StreamTask<?, ?> containingTask,

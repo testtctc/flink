@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 /**
- *范围序列化器
+ * 跨节点序列化器
  * Record serializer which serializes the complete record to an intermediate
  * data serialization buffer and copies this buffer to target buffers
  * one-by-one using {@link #copyToBufferBuilder(BufferBuilder)}.
@@ -63,7 +63,7 @@ public class SpanningRecordSerializer<T extends IOReadableWritable> implements R
 				throw new IllegalStateException("Pending serialization of previous record.");
 			}
 		}
-
+		//清空
 		serializationBuffer.clear();
 		// the initial capacity of the serialization buffer should be no less than 4
 		serializationBuffer.skipBytesToWrite(4);
@@ -75,11 +75,12 @@ public class SpanningRecordSerializer<T extends IOReadableWritable> implements R
 		serializationBuffer.setPosition(0);
 		serializationBuffer.writeInt(len);
 		serializationBuffer.skipBytesToWrite(len);
-
+		//重新构建
 		dataBuffer = serializationBuffer.wrapAsByteBuffer();
 	}
 
 	/**
+	 * 拷贝
 	 * Copies an intermediate data serialization buffer into the target BufferBuilder.
 	 *
 	 * @param targetBuffer the target BufferBuilder to copy to
@@ -108,6 +109,8 @@ public class SpanningRecordSerializer<T extends IOReadableWritable> implements R
 		dataBuffer.position(0);
 	}
 
+
+	//清空
 	@Override
 	public void prune() {
 		serializationBuffer.pruneBuffer();

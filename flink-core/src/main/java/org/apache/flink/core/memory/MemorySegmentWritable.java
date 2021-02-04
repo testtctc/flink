@@ -29,6 +29,7 @@ import java.io.IOException;
 public interface MemorySegmentWritable {
 
 	/**
+	 * 从MemorySegment写入
 	 * Writes {@code len} bytes from memory segment {@code segment} starting at offset {@code off}, in order,
 	 * to the output.
 	 *

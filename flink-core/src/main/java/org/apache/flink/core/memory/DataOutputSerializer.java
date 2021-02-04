@@ -41,11 +41,11 @@ public class DataOutputSerializer implements DataOutputView, MemorySegmentWritab
 	private static final int PRUNE_BUFFER_THRESHOLD = 5 * 1024 * 1024;
 
 	// ------------------------------------------------------------------------
-
+	//刚开始时候的buffer
 	private final byte[] startBuffer;
 
 	private byte[] buffer;
-
+	//当前位置
 	private int position;
 
 	private ByteBuffer wrapper;
@@ -62,6 +62,7 @@ public class DataOutputSerializer implements DataOutputView, MemorySegmentWritab
 		this.wrapper = ByteBuffer.wrap(buffer);
 	}
 
+	//包裹
 	public ByteBuffer wrapAsByteBuffer() {
 		this.wrapper.position(0);
 		this.wrapper.limit(this.position);
@@ -101,7 +102,7 @@ public class DataOutputSerializer implements DataOutputView, MemorySegmentWritab
 	public byte[] getCopyOfBuffer() {
 		return Arrays.copyOf(buffer, position);
 	}
-
+	//移动位置
 	public void clear() {
 		this.position = 0;
 	}
@@ -156,6 +157,7 @@ public class DataOutputSerializer implements DataOutputView, MemorySegmentWritab
 		this.position += len;
 	}
 
+	//将segment写入buffe
 	@Override
 	public void write(MemorySegment segment, int off, int len) throws IOException {
 		if (len < 0 || off > segment.size() - len) {
@@ -314,6 +316,7 @@ public class DataOutputSerializer implements DataOutputView, MemorySegmentWritab
 		this.position = count;
 	}
 
+	//重新调整
 	private void resize(int minCapacityAdd) throws IOException {
 		int newLen = Math.max(this.buffer.length * 2, this.buffer.length + minCapacityAdd);
 		byte[] nb;

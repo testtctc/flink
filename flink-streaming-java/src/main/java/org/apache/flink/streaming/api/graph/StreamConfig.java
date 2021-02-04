@@ -425,6 +425,7 @@ public class StreamConfig implements Serializable {
 		}
 	}
 
+	//获取输出的边
 	public List<StreamEdge> getOutEdgesInOrder(ClassLoader cl) {
 		try {
 			List<StreamEdge> outEdgesInOrder = InstantiationUtil.readObjectFromConfig(this.config, EDGES_IN_ORDER, cl);

@@ -50,6 +50,7 @@ public interface ResultPartitionWriter extends AutoCloseable, AvailabilityProvid
 	int getNumTargetKeyGroups();
 
 	/**
+	 * 新建
 	 * Requests a {@link BufferBuilder} from this partition for writing data.
 	 */
 	BufferBuilder getBufferBuilder() throws IOException, InterruptedException;

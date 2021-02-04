@@ -110,7 +110,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 		}
 	}
 
-	//每次都序列化，因此对象可以重用
+	//选择通道
 	protected void emit(T record, int targetChannel) throws IOException, InterruptedException {
 		checkErroneous();
 		//写入buffer
@@ -131,7 +131,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 		// We should reset the initial position of the intermediate serialization buffer before
 		// copying, so the serialization results can be copied to multiple target buffers.
 		serializer.reset();
-
+		//拷贝缓冲区域
 		boolean pruneTriggered = false;
 		BufferBuilder bufferBuilder = getBufferBuilder(targetChannel);
 		SerializationResult result = serializer.copyToBufferBuilder(bufferBuilder);
@@ -207,6 +207,7 @@ public abstract class RecordWriter<T extends IOReadableWritable> implements Avai
 	public abstract void emit(T record) throws IOException, InterruptedException;
 
 	/**
+	 * 随机写
 	 * This is used to send LatencyMarks to a random target channel.
 	 */
 	public abstract void randomEmit(T record) throws IOException, InterruptedException;
